@@ -1,0 +1,42 @@
+#!/bin/sh
+# chkconfig: 2345 26 74
+# description: RabbitMQ PDF processing
+### BEGIN INIT INFO
+# Provides:		rmq_metadata.py
+# Required-Start:	$local_fs
+# Required-Stop:
+# X-Start-Before:	
+# Default-Start:	2 3 4 5
+# Default-Stop:		0 1 6
+# Short-Description:	Start and stop the RabbitMQ PDF processing
+# Description:		Processes PDF files from RabbitMQ, decode the PDF file,
+#			extract meta-data, tokenize and summarize meta-data,
+#			insert meta-data into Mongo database and save PDF to file.
+### END INIT INFO
+
+BASE_PATH="PYTHON_PROJECT/rmq-metadata"
+MOD_LIBRARY="rabbitmq"
+USER_ACCOUNT="USER_NAME"
+
+case $1 in
+   start)
+      su - ${USER_ACCOUNT} -c "${BASE_PATH}/daemon_rmq_metadata.py -a start -c ${MOD_LIBRARY} -d ${BASE_PATH}/config -M"
+      touch /var/lock/subsys/$MOD_LIBRARY
+      ;;
+
+   stop)
+      su - ${USER_ACCOUNT} -c "${BASE_PATH}/daemon_rmq_metadata.py -a stop -c ${MOD_LIBRARY} -d ${BASE_PATH}/config -M"
+      rm -f /var/lock/subsys/$MOD_LIBRARY
+      ;;
+
+   restart)
+      rm -f /var/lock/subsys/$MOD_LIBRARY
+      su - ${USER_ACCOUNT} -c "${BASE_PATH}/daemon_rmq_metadata.py -a restart -c ${MOD_LIBRARY} -d ${BASE_PATH}/config -M"
+      touch /var/lock/subsys/$MOD_LIBRARY
+      ;;
+
+   *)
+      echo $"Usage: $0 {start|stop|restart}"
+
+esac
+
