@@ -26,21 +26,22 @@ log_dir = "DIRECTORY_PATH/logs"
 # File name to program log.
 log_file = "rmq_2_sysmon.log"
 # Directory name for archived messages.
-# NOTE:  Must be set if archive in any of the queue entries is set to True.
+# Must be set if archive in any of the queue entries is set to True.
+# None states no archiving will take place.
 # Syntax:  archive_dir = "DIRECTORY_PATH/archive"
 archive_dir = None
 # List of queues to monitor.
 # Make a copy of the dictionary for each combination of a queue name and routing key.
 # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
 # -> routing_key:  "ROUTING_KEY" - Name of the routing key for the queue.
-# -> directory:  "/DIR_PATH" - Directory path to where a report will be written to.
+# -> directory:  "/DIR_PATH" - Directory path to where a PDF will be written to.
 # -> prename:  "NAME" - Static pre-file name string.
 # -> postname:  "NAME" - Static post-file name string.
 # -> mode:  "a"|"w" - Write mode to the file: write or append to a file.
 # -> ext:  "NAME" - Extension name to the file name.
 # -> dtg:  True|False - Add a date and time group to the file name.
 # -> date:  True|False - Add a date to the file name.
-# -> stype:  "encoded" - Format of the messages that are allowed in the message.
+# -> stype:  "encoded" - Require the PDF file to be decoded.
 # -> archive:  True|False - Archive the RMQ body.
 queue_list = [
         {"queue": "QUEUE_NAME",
