@@ -2,7 +2,7 @@
 # Classification (U)
 # Unclassified until filled.
 user = "USER"
-passwd = "PASSWORD"
+japd = "PASSWORD"
 host = "HOSTNAME"
 # RabbitMQ Exchange name being monitored.
 exchange_name = "EXCHANGE_NAME"
@@ -25,6 +25,10 @@ message_dir = "DIRECTORY_PATH/message_dir"
 log_dir = "DIRECTORY_PATH/logs"
 # File name to program log.
 log_file = "rmq_2_sysmon.log"
+# Directory name for archived messages.
+# NOTE:  Must be set if archive in any of the queue entries is set to True.
+# Syntax:  archive_dir = "DIRECTORY_PATH/archive"
+archive_dir = None
 # List of queues to monitor.
 # Make a copy of the dictionary for each combination of a queue name and routing key.
 # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
