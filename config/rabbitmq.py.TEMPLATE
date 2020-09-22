@@ -30,6 +30,8 @@ log_file = "rmq_2_sysmon.log"
 # None states no archiving will take place.
 # Syntax:  archive_dir = "DIRECTORY_PATH/archive"
 archive_dir = None
+# Directory name for temporary message processing.
+tmp_dir = "DIRECTORY_PATH/tmp"
 # List of queues to monitor.
 # Make a copy of the dictionary for each combination of a queue name and routing key.
 # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
