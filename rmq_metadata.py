@@ -234,30 +234,36 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
     """
 
     log.log_info(
-        "non_proc_msg:  Processing failed message from Routing Key: %s" %
-        (r_key))
+        "non_proc_msg:  Processing failed message: Routing Key: %s" % (r_key))
     frm_line = getpass.getuser() + "@" + socket.gethostname()
     rdtg = datetime.datetime.now()
-    msecs = str(rdtg.microsecond / 1000)
+    msecs = str(rdtg.microsecond / 100)
     dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + "." + msecs
     f_name = rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
     subj = "rmq_metadata: " + subj
+    line1 = "RabbitMQ message was not processed due to: %s" % (subj)
+    line2 = "Exchange: %s, Routing Key: %s" % (rmq.exchange, r_key)
+    line3 = "The body of the message is encoded data."
+    line4 = "Body of message saved to: %s" % (f_path)
 
     if cfg.to_line:
         log.log_info("Sending email to: %s..." % (cfg.to_line))
         email = gen_class.Mail(cfg.to_line, subj, frm_line)
-        email.add_2_msg(data)
+        email.add_2_msg(line1)
+        email.add_2_msg(line2)
+        email.add_2_msg(line3)
+        email.add_2_msg(line4)
         email.send_mail()
 
     else:
         log.log_warn("No email being sent as TO line is empty.")
 
-    log.log_err("RabbitMQ message was not processed due to: %s" % (subj))
-    log.log_info("Saving message to: %s" % (f_path))
-    gen_libs.write_file(f_path, data="Exchange: %s, Routing Key: %s"
-                        % (rmq.exchange, r_key))
-    gen_libs.write_file(f_path, data=data)
+    log.log_err(line1)
+    log.log_err(line2)
+    log.log_err(line3)
+    log.log_err(line4)
+    gen_libs.write_file(f_path, data=data, mode="w")
 
 
 def process_msg(rmq, log, cfg, method, body, **kwargs):
