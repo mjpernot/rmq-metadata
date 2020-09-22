@@ -290,10 +290,20 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
 
         if item["routing_key"] == r_key:
             queue = item
+
+            if queue["archive"] and cfg.archive_dir:
+                rdtg = datetime.datetime.now()
+                msecs = str(rdtg.microsecond / 100)
+                dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + \
+                      "." + msecs
+                f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
+                         dtg + ".body"
+                f_path = os.path.join(cfg.archive_dir, f_name)
+                gen_libs.write_file(f_path, data=body, mode="w")
+
             break
 
     if queue:
-
         _convert_data(rmq, log, cfg, queue, body, r_key)
 
     else:
