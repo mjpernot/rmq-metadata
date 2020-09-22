@@ -59,6 +59,8 @@
             # Directory name for archived messages.
             # Must be set if archive in any of the queues is set to True.
             archive_dir = "DIRECTORY_PATH/archive"|None
+            # Directory name for temporary message processing.
+            tmp_dir = "DIRECTORY_PATH/tmp"
             # List of queues to monitor.
             # Make a copy of the dictionary for each combination of a queue
                 name and routing key.
@@ -205,6 +207,16 @@ def validate_create_settings(cfg, **kwargs):
         if not status:
             err_msg = err_msg + msg
             status_flag = False
+
+    if not os.path.isabs(cfg.tmp_dir):
+        cfg.message_dir = os.path.join(base_dir, cfg.tmp_dir)
+
+    status, msg = gen_libs.chk_crt_dir(cfg.tmp_dir, write=True, read=True,
+                                       no_print=True)
+
+    if not status:
+        err_msg = err_msg + msg
+        status_flag = False
 
     for queue in cfg.queue_list:
         status, msg = gen_libs.chk_crt_dir(queue["directory"], write=True,
