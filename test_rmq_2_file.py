@@ -153,6 +153,7 @@ def monitor_queue(cfg, **kwargs):
         print("Failed to connnect to RabbuitMQ -> Msg: %s" % (err_msg))
 
 
+### DONE
 def process_msg(rmq, cfg, method, body, **kwargs):
     r_key = method.routing_key
     queue = None
@@ -167,9 +168,15 @@ def process_msg(rmq, cfg, method, body, **kwargs):
 
             if queue["archive"] and cfg.archive_dir:
                 # Must make this an unique name.
-                f_name = rmq.exchange + queue["routing_key"] + ".body"
+                rdtg = datetime.datetime.now()
+                msecs = str(rdtg.microsecond / 100)
+                dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + \
+                      "." + msecs
+                f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
+                         dtg + ".body"
+                #f_name = rmq.exchange + queue["routing_key"] + ".body"
                 f_path = os.path.join(cfg.archive_dir, f_name)
-                gen_libs.write_file(f_path, data=body)
+                gen_libs.write_file(f_path, data=body, mode="w")
             break
 
     if queue:
@@ -178,28 +185,54 @@ def process_msg(rmq, cfg, method, body, **kwargs):
         non_proc_msg(rmq, cfg, body, "No queue detected", r_key)
 
 
+### DONE
 def non_proc_msg(rmq, cfg, data, subj, r_key, **kwargs):
-    f_name = "myfile" + rmq.exchange + r_key + ".pdf"
+    f_name = "myfile" + rmq.exchange + r_key + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
     #print("RabbitMQ message was not processed due to: %s" % (subj))
     #gen_libs.write_file(f_path, data="Exchange: %s, Routing Key: %s"
     #                    % (rmq.exchange, r_key))
-    gen_libs.write_file(f_path, data=data)
+    gen_libs.write_file(f_path, data=data, mode="w")
 
 
 def _convert_data(rmq, cfg, queue, body, r_key, **kwargs):
-    t_file = "./tmp/mytmpfile.txt"
-    f_name = "./final_data/myfile.pdf"
+    prename = ""
+    postname = ""
+    ext = ""
+    rdtg = datetime.datetime.now()
+    msecs = str(rdtg.microsecond / 100)
+    dtg = datetime.datetime.strftime(rdtg, "%Y%m%d%H%M%S") + "." + msecs
+
+    t_filename = "tmp_" + rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
+    t_file = os.path.join(cfg.tmp_dir, t_filename)
+
+    # Need to check ext, prename, and postname settings in queue_list.
+    if queue["prename"]:
+        prename = queue["prename"] + "_"
+
+    if queue["postname"]:
+        postname = "_" + queue["postname"]
+
+    if queue["ext"]:
+        ext = "." + queue["ext"]
+    
+    f_filename = prename + rmq.exchange + "_" + r_key + "_" + dtg + \
+                 postname + ext
+    f_name = os.path.join(cfg.tmp_dir, f_filename)
+
     gen_libs.write_file(t_file, data=body, mode="w")
 
-    # Need to check code.  Think I made the correct changes in the next line.
-    #if queue["stype"] == "decode":
-    base64.decode(open(t_file, 'rb'), open(f_name, 'wb'))
-        #os.remove(t_file)
-    #else:
-    #    f_name = t_file
+    if queue["stype"] == "encoded":
+        # Can decode string using the following command:
+        # decoded_body = base64.decodestring(body)
+        # But can textract andPyPDF2 handle a string?
+        base64.decode(open(t_file, 'rb'), open(f_name, 'wb'))
+        os.remove(t_file)
 
-    _process_queue(f_name, queue, body, r_key, cfg, rmq, **kwargs)
+    else:
+        gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
+
+    _process_queue(queue, body, r_key, cfg, rmq, f_name)
 
 
 def create_metadata(f_name, final_data, final_data2, **kwargs):
@@ -222,7 +255,7 @@ def create_metadata(f_name, final_data, final_data2, **kwargs):
     return metadata
 
 
-def _process_queue(f_name, queue, body, r_key, cfg, rmq, **kwargs):
+def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     #"""
     # Using PyPDF2 process to extract data.
     rawtext = read_pdf(f_name)
@@ -274,6 +307,7 @@ def _process_queue(f_name, queue, body, r_key, cfg, rmq, **kwargs):
     # Create metadata object.
     metadata = create_metadata(f_name, final_data, final_data2, **kwargs)
 
+    gen_libs.mv_file2(f_name, "./final_data", "myfinalpdf.pdf")
     print(metadata)
     # Insert data into Mongo database here.
 
