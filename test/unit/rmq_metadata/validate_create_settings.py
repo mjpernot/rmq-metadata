@@ -67,6 +67,7 @@ class CfgTest(object):
         self.log_dir = "logs"
         self.log_file = "rmq_2_isse.log"
         self.archive_dir = "/dir/path"
+        self.tmp_dir = "/dir/tmp_path"
         self.queue_list = [
             {"queue": "rmq_2_isse_unit_test",
              "routing_key": "ROUTING_KEY",
@@ -81,6 +82,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_tmp_dir_false -> Test if tmp_dir check returns False.
+        test_tmp_dir_true -> Test if tmp_dir check returns True.
         test_archive_dir_false -> Test if archive_dir check returns False.
         test_archive_dir_true -> Test if archive_dir check returns True.
         test_multi_queues_two_fail -> Test with multi queues and two failure.
@@ -123,6 +126,44 @@ class UnitTest(unittest.TestCase):
             base_name + "_" + self.cfg.exchange_name + "_" + ext_name
 
     @mock.patch("rmq_metadata.gen_libs")
+    def test_tmp_dir_false(self, mock_lib):
+
+        """Function:  test_tmp_dir_false
+
+        Description:  Test if tmp_dir check returns False.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (False, self.err_msg1), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (False, self.err_msg1))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_tmp_dir_true(self, mock_lib):
+
+        """Function:  test_tmp_dir_true
+
+        Description:  Test if tmp_dir check returns True.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
+
+    @mock.patch("rmq_metadata.gen_libs")
     def test_archive_dir_false(self, mock_lib):
 
         """Function:  test_archive_dir_false
@@ -134,7 +175,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (True, None), (False, self.err_msg1), (True, None)]
+            (True, None), (True, None), (False, self.err_msg1), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -151,8 +193,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_lib.chk_crt_dir.side_effect = [(True, None), (True, None),
-                                            (True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -170,8 +213,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (True, None), (True, None), (False, self.err_msg4),
-            (False, self.err_msg4)]
+            (True, None), (True, None), (True, None), (True, None),
+            (False, self.err_msg4), (False, self.err_msg4)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg2)
 
@@ -191,7 +234,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
-            (False, self.err_msg4)]
+            (True, None), (False, self.err_msg4)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg2)
 
@@ -210,7 +253,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
-            (True, None)]
+            (True, None), (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -229,7 +272,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_dir.side_effect = [
             (False, self.err_msg1), (False, self.err_msg2), (True, None),
-            (False, self.err_msg3)]
+            (True, None), (False, self.err_msg3)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -250,7 +293,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_dir.side_effect = [
             (False, self.err_msg1), (False, self.err_msg2), (True, None),
-            (True, None)]
+            (True, None), (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -269,7 +312,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (False, self.err_msg3), (True, None), (True, None)]
+            (True, None), (False, self.err_msg3), (True, None), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -286,8 +330,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_lib.chk_crt_dir.side_effect = [(True, None), (True, None),
-                                            (True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -305,7 +350,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (False, self.err_msg2), (True, None), (True, None)]
+            (True, None), (False, self.err_msg2), (True, None), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -322,8 +368,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_lib.chk_crt_dir.side_effect = [(True, None), (True, None),
-                                            (True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
         cfg_mod, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -343,7 +390,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.chk_crt_dir.side_effect = [
-            (False, self.err_msg1), (True, None), (True, None), (True, None)]
+            (False, self.err_msg1), (True, None), (True, None), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
@@ -360,8 +408,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_lib.chk_crt_dir.side_effect = [(True, None), (True, None),
-                                            (True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
