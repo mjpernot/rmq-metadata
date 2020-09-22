@@ -127,6 +127,7 @@ import datetime
 # Third-party
 import ast
 import json
+import base64
 
 # Local
 import lib.arg_parser as arg_parser
@@ -340,32 +341,36 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
     """
 
-    try:
-        data = ast.literal_eval(body)
+    log.log_info("_convert_data:  Converting data in message body.")
+    rdtg = datetime.datetime.now()
+    msecs = str(rdtg.microsecond / 100)
+    dtg = datetime.datetime.strftime(rdtg, "%Y%m%d%H%M%S") + "." + msecs
+    t_filename = "tmp_" + rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
+    t_file = os.path.join(cfg.tmp_dir, t_filename)
+    f_filename = rmq.exchange + "_" + r_key + "_" + dtg + "." + queue["ext"]
 
-        if queue["stype"] == "any" \
-           or (queue["stype"] == "dict" and isinstance(data, dict)) \
-           or (queue["stype"] == "list" and isinstance(data, list)) \
-           or (queue["stype"] == "str" and isinstance(data, str)):
+    if queue["prename"]:
+        prename = queue["prename"] + "_"
 
-            _process_queue(queue, data, r_key, cfg.exchange_name)
+    if queue["postname"]:
+        postname = "_" + queue["postname"]
 
-        else:
-            msg = "Incorrect type detected: %s" % (type(data))
-            non_proc_msg(rmq, log, cfg, body, msg, r_key)
+    if queue["ext"]:
+        ext = "." + queue["ext"]
 
-    except (SyntaxError) as err:
+    f_name = os.path.join(cfg.tmp_dir, f_filename)
+    gen_libs.write_file(t_file, data=body, mode="w")
 
-        if isinstance(body, str) and (queue["stype"] == "any" or
-                                      queue["stype"] == "str"):
+    if queue["stype"] == "encoded":
+        log.log_info("_convert_data:  Decoding data in message body.")
+        base64.decode(open(t_file, 'rb'), open(f_name, 'wb'))
+        os.remove(t_file)
 
-            _process_queue(queue, body, r_key, cfg.exchange_name)
+    else:
+        log.log_info("_convert_data:  No encoding setting detected.")
+        gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-        else:
-            non_proc_msg(rmq, log, cfg, body, str(err), r_key)
-
-    except (ValueError) as err:
-        non_proc_msg(rmq, log, cfg, body, str(err), r_key)
+    _process_queue(queue, body, r_key, cfg, rmq, f_name)
 
 
 def _process_queue(queue, data, r_key, x_name, **kwargs):
