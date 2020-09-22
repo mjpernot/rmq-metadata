@@ -311,6 +311,8 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
                          dtg + ".body"
                 f_path = os.path.join(cfg.archive_dir, f_name)
+                log.log_info(
+                    "process_msg:  Archiving message to: %s" % (f_path))
                 gen_libs.write_file(f_path, data=body, mode="w")
 
             break
