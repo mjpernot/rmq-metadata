@@ -92,6 +92,8 @@ Make the appropriate changes to the RabbitMQ environment.
     - archive_dir = "DIRECTORY_PATH/archive"|None
       -> Directory name for archived messages.  
       -> If set to None, then no archiving will take place.
+    - tmp_dir = "DIRECTORY_PATH/tmp"
+      -> Directory for temporary processing of messages.
   * Do not change these unless you are familar with RabbitMQ.
     - port = 5672
     - exchange_type = "direct"
@@ -99,7 +101,7 @@ Make the appropriate changes to the RabbitMQ environment.
     - q_durable = True
     - auto_delete = False
   * The next entry is the queue_list.  This is a list of dictionaries.  Each dictionary within the list is the unique combination of queue name and routing key.  Therefore, each queue name and routing key will have its own dictionary entry within the list.  Make a copy of the dictionary for each combination and modify it for that queue/routing key setup.  Below is a break out of the dictionary.
-  *  Recommend the mode, ext, stype settings are not changed.
+  *  Recommend the mode, ext, stype settings ARE NOT changed, unless you have a good understanding of the system.
     - "queue": "QUEUE_NAME"
       -> Name of queue to monitor.
     - "routing_key": "ROUTING_KEY"
