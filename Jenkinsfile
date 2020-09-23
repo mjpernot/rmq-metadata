@@ -37,12 +37,13 @@ pipeline {
                 ./test/unit/rmq_metadata/_convert_data.py
                 ./test/unit/rmq_metadata/_process_queue.py
                 ./test/unit/rmq_metadata/help_message.py
-                ./test/unit/rmq_metadata/process_msg.py
-                ./test/unit/rmq_metadata/non_proc_msg.py
-                ./test/unit/rmq_metadata/monitor_queue.py
-                ./test/unit/rmq_metadata/validate_create_settings.py
-                ./test/unit/rmq_metadata/run_program.py
                 ./test/unit/rmq_metadata/main.py
+                ./test/unit/rmq_metadata/monitor_queue.py
+                ./test/unit/rmq_metadata/non_proc_msg.py
+                ./test/unit/rmq_metadata/process_msg.py
+                ./test/unit/rmq_metadata/read_pdf.py
+                ./test/unit/rmq_metadata/run_program.py
+                ./test/unit/rmq_metadata/validate_create_settings.py
                 ./test/unit/daemon_rmq_metadata/is_active.py
                 ./test/unit/daemon_rmq_metadata/main.py
                 deactivate
