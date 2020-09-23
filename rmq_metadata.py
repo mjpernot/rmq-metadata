@@ -61,6 +61,20 @@
             archive_dir = "DIRECTORY_PATH/archive"|None
             # Directory name for temporary message processing.
             tmp_dir = "DIRECTORY_PATH/tmp"
+            # These entries for the Stanford NLP library module.
+            # Path to Stanford language module.
+            # By default lang_module will point to the English language module.
+            lang_module = 
+            "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
+            # Path to Stanford jar.
+            stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
+            # Encoding code for Stanford module.
+            # Default setting is the utf-8 encoding code.
+            encoding = "utf-8"
+            # List of Token types.
+            # Do not change unless you understand Stanford NLP and textract
+            #   modules.
+            token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
             # List of queues to monitor.
             # Make a copy of the dictionary for each combination of a queue
                 name and routing key.
@@ -375,7 +389,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    _process_queue(queue, body, r_key, cfg, rmq, f_name)
+    _process_queue(queue, body, r_key, cfg, rmq, f_name, log)
 
 
 def read_pdf(filename, **kwargs):
@@ -404,7 +418,122 @@ def read_pdf(filename, **kwargs):
     return text
 
 
-def _process_queue(queue, data, r_key, cfg, rmq, f_name, **kwargs):
+def find_tokens(tokenized_text, cfg, **kwargs):
+
+    """Function:  find_tokens
+
+    Description:  Using the Stanford NLP module to classify a list of set of
+        tokens.
+
+    Arguments:
+        (input) tokenized_text -> List of tokens.
+        (input) cfg -> Configuration settings module for the program.
+        (output) categorized_text -> List of categorized tokens.
+
+    """
+
+    tokenized_text = list(tokenized_text)
+    snt = StanfordNERTagger(cfg.lang_module, cfg.stanford_jar, cfg.encoding)
+    categorized_text = snt.tag(tokenized_text)
+
+    return categorized_text
+
+
+def summarize_data(categorized_text, token_types, **kwargs):
+
+    """Function:  summarize_data
+
+    Description:  Summarize a list of classified tokens and merging them into
+        a single unique list.
+
+    Arguments:
+        (input) categorized_text -> List of categorized tokens.
+        (input) token_types -> List of token types to be accepted.
+        (output) data_list -> List of summarized categorized tokens.
+
+    """
+
+    categorized_text = list(categorized_text)
+    token_types = list(token_types)
+    data_list = []
+    tmp_data = []
+    current_type = ""
+
+    for item in categorized_text:
+        current_type, data_list, tmp_data = _sort_data(
+            item, current_type, data_list, tmp_data, token_types)
+
+    else:
+        if tmp_data:
+            data_list = merge_data(data_list, tmp_data)
+
+    return data_list
+
+
+def _sort_data(item, current_type, data_list, tmp_data, token_types):
+
+    """Function:  _sort_data
+
+    Description:  Private function for summarize_data.  STOPPED HERE.
+
+    Arguments:
+        (input) categorized_text -> List of categorized tokens.
+        (input) token_types -> List of token types to be accepted.
+        (output) data_list -> List of summarized categorized tokens.
+
+    """
+
+    data_list = list(data_list)
+    tmp_data = list(tmp_data)
+    token_types = list(token_types)
+
+    if item[1] == "O":
+        current_type = item[1]
+
+        if tmp_data:
+            data_list = merge_data(data_list, tmp_data)
+            tmp_data = []
+
+    elif item[1] in token_types and item[1] == current_type:
+        tmp_data.append(item)
+
+    elif item[1] in token_types:
+        if tmp_data:
+            data_list = merge_data(data_list, tmp_data)
+
+        tmp_data = []
+        tmp_data.append(item)
+        current_type = item[1]
+
+    return current_type, data_list, tmp_data
+
+    
+def get_pypdf2_data(f_name, cfg, **kwargs):
+
+    """Function:  get_pypdf2_data
+
+    Description:  Tokenize, categorize, summarize the raw data from the PDF
+        file extracted using PyPDF2 module.
+
+    Arguments:
+        (input) f_name -> PDF file name.
+        (input) cfg -> Configuration settings module for the program.
+        (output) final_data -> List of classified tokens from PDF file.
+
+    """
+
+    final_data = []
+    rawtext = read_pdf(f_name)
+    tokens = word_tokenize(rawtext)
+    categorized_text = find_tokens(tokens, cfg)
+
+    if categorized_text:
+        final_data = summarize_data(categorized_text, cfg.token_types)
+
+    return final_data
+
+
+def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
 
     """Function:  _process_queue
 
@@ -412,11 +541,18 @@ def _process_queue(queue, data, r_key, cfg, rmq, f_name, **kwargs):
 
     Arguments:
         (input) queue -> RabbitMQ queue.
-        (input) data -> Converted message body.
+        (input) body -> Message body.
         (input) r_key -> Routing key.
-        (input) x_name -> Exchange name.
+        (input) cfg -> Configuration settings module for the program.
+        (input) rmq -> RabbitMQ class instance.
+        (input) f_name -> PDF file name.
+        (input) log -> Log class instance.
+        
 
     """
+
+    # Use the PyPDF2 module to extract data.
+    final_data = get_pypdf2_data(f_name, cfg)
 
     """
     k_name = ""
