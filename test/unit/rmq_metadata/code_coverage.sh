@@ -11,12 +11,13 @@ echo "Running unit test modules in conjunction with coverage"
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/_convert_data.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/_process_queue.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/help_message.py 
-coverage run -a --source=rmq_metadata test/unit/rmq_metadata/validate_create_settings.py
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/main.py 
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/monitor_queue.py 
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/non_proc_msg.py 
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/process_msg.py 
-coverage run -a --source=rmq_metadata test/unit/rmq_metadata/monitor_queue.py 
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/read_pdf.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/run_program.py
-coverage run -a --source=rmq_metadata test/unit/rmq_metadata/main.py 
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/validate_create_settings.py
 
 echo ""
 echo "Producing code coverage report"
