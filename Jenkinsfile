@@ -26,10 +26,14 @@ pipeline {
                 sh """
                 virtualenv test_env
                 source test_env/bin/activate
+                pip2 install PyPDF2==1.26.0 --user
                 pip2 install mock==2.0.0 --user
+                pip2 install nltk==3.4.0 --user
                 pip2 install pika==0.11.0 --user
                 pip2 install psutil==5.4.3 --user
                 pip2 install pymongo==3.2.0 --user
+                pip2 install simplejson==2.0.9 --user
+                pip2 install textract==1.6.3 --user
                 ./test/unit/rmq_metadata/_convert_data.py
                 ./test/unit/rmq_metadata/_process_queue.py
                 ./test/unit/rmq_metadata/help_message.py
