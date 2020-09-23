@@ -128,6 +128,7 @@ import datetime
 import ast
 import json
 import base64
+import PyPDF2
 
 # Local
 import lib.arg_parser as arg_parser
@@ -377,7 +378,33 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
     _process_queue(queue, body, r_key, cfg, rmq, f_name)
 
 
-def _process_queue(queue, data, r_key, x_name, **kwargs):
+def read_pdf(filename, **kwargs):
+
+    """Function:  read_pdf
+
+    Description:  Open a a PDF file and extract metadata from the file using
+        the PyPDF2 module.
+
+    Arguments:
+        (input) filename -> PDF file name.
+
+    """
+
+    pdf = open(filename, "rb")
+    pdfreader = PyPDF2.PdfFileReader(pdf)
+    num_pages = pdfreader.numPages
+    count = 0
+    text = ""
+
+    while count < num_pages:
+        page = pdfreader.getPage(count)
+        count += 1
+        text += page.extractText()
+
+    return text
+
+
+def _process_queue(queue, data, r_key, cfg, rmq, f_name, **kwargs):
 
     """Function:  _process_queue
 
@@ -391,6 +418,7 @@ def _process_queue(queue, data, r_key, x_name, **kwargs):
 
     """
 
+    """
     k_name = ""
     ext = ""
     indent = 4
@@ -423,6 +451,7 @@ def _process_queue(queue, data, r_key, x_name, **kwargs):
     f_name = os.path.join(queue["directory"], f_name + ext)
 
     gen_libs.write_file(fname=f_name, mode=queue["mode"], data=data)
+    """
 
 
 def monitor_queue(cfg, log, **kwargs):
