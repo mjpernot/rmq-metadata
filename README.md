@@ -95,6 +95,15 @@ Make the appropriate changes to the RabbitMQ environment.
       -> If set to None, then no archiving will take place.
     - tmp_dir = "DIRECTORY_PATH/tmp"
       -> Directory for temporary processing of messages.
+    - lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
+      -> Path and file name to the Stanford NLP language module.
+      -> By default the lang_module will point to the English language module.
+    - stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
+      -> Path and file name to the Stanford NLP jar file.
+    - encoding = "utf-8"
+      -> Encoding set used in the Stanford NLP processing.
+      -> Default setting is the utf-8 encoding code.
+      -> The utf-8 code will work in most cases, do not recommend changing.
   * Do not change these unless you are familar with RabbitMQ.
     - port = 5672
     - exchange_type = "direct"
