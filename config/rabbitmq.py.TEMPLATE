@@ -32,6 +32,18 @@ log_file = "rmq_2_sysmon.log"
 archive_dir = None
 # Directory name for temporary message processing.
 tmp_dir = "DIRECTORY_PATH/tmp"
+# These entries for the Stanford NLP library module.
+# Path to Stanford language module.
+# By default lang_module will point to the English language module.
+lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
+# Path to Stanford jar.
+stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
+# Encoding code for Stanford module.
+# Default setting is the utf-8 encoding code.
+encoding = "utf-8"
+# List of Token types.
+# Do not change unless you understand Stanford NLP and textract modules.
+token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
 # List of queues to monitor.
 # Make a copy of the dictionary for each combination of a queue name and routing key.
 # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
