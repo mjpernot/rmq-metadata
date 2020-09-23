@@ -341,13 +341,15 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
     """
 
+    prename = ""
+    postname = ""
+    ext = ""
     log.log_info("_convert_data:  Converting data in message body.")
     rdtg = datetime.datetime.now()
     msecs = str(rdtg.microsecond / 100)
     dtg = datetime.datetime.strftime(rdtg, "%Y%m%d%H%M%S") + "." + msecs
     t_filename = "tmp_" + rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     t_file = os.path.join(cfg.tmp_dir, t_filename)
-    f_filename = rmq.exchange + "_" + r_key + "_" + dtg + "." + queue["ext"]
 
     if queue["prename"]:
         prename = queue["prename"] + "_"
@@ -358,6 +360,8 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
     if queue["ext"]:
         ext = "." + queue["ext"]
 
+    f_filename = prename + rmq.exchange + "_" + r_key + "_" + dtg + \
+                 postname + ext
     f_name = os.path.join(cfg.tmp_dir, f_filename)
     gen_libs.write_file(t_file, data=body, mode="w")
 
