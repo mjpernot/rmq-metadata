@@ -32,6 +32,7 @@
   * List of Linux packages that need to be installed on the server.
     - git
     - python-pip
+    - openjdk-8-jdk
 
   * Local class/library dependencies within the program structure.
     - lib/gen_class
