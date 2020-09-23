@@ -7,7 +7,8 @@ import datetime
 
 import PyPDF2
 import textract
-from PyPDF2 import PdfFileReader
+import PyPDF2
+#from PyPDF2 import PdfFileReader
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.tag import StanfordNERTagger
@@ -55,17 +56,18 @@ def read_pdf(filename):
     return text
 
 
-def find_tokens(tokenized_text):
-    st = StanfordNERTagger(
-    '/home/mark.j.pernot/stanford_ner/stanford-ner-4.0.0/classifiers/english.all.3class.distsim.crf.ser.gz',
-    '/home/mark.j.pernot/stanford_ner/stanford-ner-4.0.0/stanford-ner.jar',
-    encoding='utf-8')
+def find_tokens(tokenized_text, cfg):
+    #st = StanfordNERTagger(
+    #'/home/mark.j.pernot/stanford_ner/stanford-ner-4.0.0/classifiers/english.all.3class.distsim.crf.ser.gz',
+    #'/home/mark.j.pernot/stanford_ner/stanford-ner-4.0.0/stanford-ner.jar',
+    #encoding='utf-8')
+    st = StanfordNERTagger(cfg.lang_module, cfg.stanford_jar, cfg.encoding)
     classified_text = st.tag(tokenized_text)
 
     return classified_text
 
 
-def combine_data(data_list, tmp_data):
+def merge_data(data_list, tmp_data):
     data_list = list(data_list)
     tmp_data = list(tmp_data)
 
@@ -80,35 +82,66 @@ def combine_data(data_list, tmp_data):
 
     return data_list
 
-        
-def simplfy_data(classified_text):
+def _sort_data(item, current_type, data_list, tmp_data, token_types):
+    data_list = list(data_list)
+    tmp_data = list(tmp_data)
+    token_types = list(token_types)
+
+    if item[1] == "O":
+        current_type = item[1]
+
+        if tmp_data:
+            data_list = merge_data(data_list, tmp_data)
+            tmp_data = []
+
+    elif item[1] in token_types and item[1] == current_type:
+        tmp_data.append(item)
+
+    elif item[1] in token_types:
+        if tmp_data:
+            data_list = merge_data(data_list, tmp_data)
+
+        tmp_data = []
+        tmp_data.append(item)
+        current_type = item[1]
+
+    return current_type, data_list, tmp_data
+
+    
+def summarize_data(classified_text, token_types):
     data_list = []
-    data_types = ["LOCATION", "PERSON", "ORGANIZATION"]
+    #token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
+    token_types = list(token_types)
     tmp_data = []
     current_type = ""
 
     for item in classified_text:
+
+        current_type, data_list, tmp_data = _sort_data(
+            item, current_type, data_list, tmp_data, token_types)
+        """
         if item[1] == "O":
             current_type = item[1]
 
             if tmp_data:
-                data_list = combine_data(data_list, tmp_data)
+                data_list = merge_data(data_list, tmp_data)
                 tmp_data = []
 
-        elif item[1] in data_types and item[1] == current_type:
+        elif item[1] in token_types and item[1] == current_type:
             tmp_data.append(item)
 
-        elif item[1] in data_types:
+        elif item[1] in token_types:
             if tmp_data:
-                data_list = combine_data(data_list, tmp_data)
+                data_list = merge_data(data_list, tmp_data)
 
             tmp_data = []
             tmp_data.append(item)
             current_type = item[1]
+        """
 
     else:
         if tmp_data:
-            data_list = combine_data(data_list, tmp_data)
+            data_list = merge_data(data_list, tmp_data)
 
     return data_list            
 
@@ -195,6 +228,7 @@ def non_proc_msg(rmq, cfg, data, subj, r_key, **kwargs):
     gen_libs.write_file(f_path, data=data, mode="w")
 
 
+### DONE
 def _convert_data(rmq, cfg, queue, body, r_key, **kwargs):
     prename = ""
     postname = ""
@@ -257,18 +291,22 @@ def create_metadata(f_name, final_data, final_data2, **kwargs):
 
 def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     #"""
+    ############################################################
     # Using PyPDF2 process to extract data.
     rawtext = read_pdf(f_name)
     tokens = word_tokenize(rawtext)
-    classified_text = find_tokens(tokens)
+    classified_text = find_tokens(tokens, cfg)
 
     if classified_text:
-        final_data = simplfy_data(classified_text)
+        final_data = summarize_data(classified_text, cfg.token_types)
 
+    # Not needed for final program.
     gen_libs.write_file("mypypdf2_data.txt", data=final_data, mode="w")
+    ############################################################
     #"""
 
     #"""
+    ############################################################
     # Using textract process to extract data.
     suberrstr = "codec can't decode byte"
     available_sets = ["utf-8", "ascii", "iso-8859-1"]
@@ -276,6 +314,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     status = True
     tmptext = extract_pdf4(f_name)
     data = chardet.detect(tmptext)
+    final_data2 = [] # Is it a list?
 
     if data["confidence"] == 1.0:
         #print("Changing character encoding to: %s" % (data["encoding"]))
@@ -293,15 +332,19 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
             tokens2 = word_tokenize(rawtext2)
         else:
             status = False
-            non_proc_msg(rmq, cfg, body, "Failed word tokenization", r_key)
+            # Do I want to do this if the previous PyPDF2 works?
+            # Probably not.
+            #non_proc_msg(rmq, cfg, body, "Failed word tokenization", r_key)
 
     if status:
-        classified_text2 = find_tokens(tokens2)
+        classified_text2 = find_tokens(tokens2, cfg)
 
         if classified_text2:
-            final_data2 = simplfy_data(classified_text2)
+            final_data2 = summarize_data(classified_text2, cfg.token_types)
 
+        # Not needed for final program.
         gen_libs.write_file("mytextract_data.txt", data=final_data2, mode="w")
+    ############################################################
     #"""
 
     # Create metadata object.
