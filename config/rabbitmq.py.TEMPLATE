@@ -44,6 +44,9 @@ encoding = "utf-8"
 # List of Token types.
 # Do not change unless you understand Stanford NLP and textract modules.
 token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
+# List of textract module decodes.
+# Do not change unless you understand textract module.
+textract_codes = ["utf-8", "ascii", "iso-8859-1"]
 # List of queues to monitor.
 # Make a copy of the dictionary for each combination of a queue name and routing key.
 # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
