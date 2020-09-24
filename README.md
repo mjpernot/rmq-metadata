@@ -104,6 +104,12 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Encoding set used in the Stanford NLP processing.
       -> Default setting is the utf-8 encoding code.
       -> The utf-8 code will work in most cases, do not recommend changing.
+    - token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
+      -> Categories for the tokens for Stanford NLP and textract.
+      -> Do not change unless you understand Stanford NLP and textract modules.
+    - textract_codes = ["utf-8", "ascii", "iso-8859-1"]
+      -> Encoding values for the textract module.
+      -> Do not change unless you understand textract module.
   * Do not change these unless you are familar with RabbitMQ.
     - port = 5672
     - exchange_type = "direct"
