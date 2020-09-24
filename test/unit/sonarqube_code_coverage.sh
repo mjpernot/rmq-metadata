@@ -19,6 +19,7 @@ coverage run -a --source=rmq_metadata test/unit/rmq_metadata/non_proc_msg.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/process_msg.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/read_pdf.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/run_program.py
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/summarize_data.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/validate_create_settings.py
 coverage run -a --source=daemon_rmq_metadata test/unit/daemon_rmq_metadata/is_active.py
 coverage run -a --source=daemon_rmq_metadata test/unit/daemon_rmq_metadata/main.py
