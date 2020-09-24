@@ -570,6 +570,37 @@ def get_pypdf2_data(f_name, cfg, **kwargs):
     return final_data
 
 
+def create_metadata(metadata, data, **kwargs):
+
+    """Function:  create_metadata2
+
+    Description:  Merge a list of data sets into an existing dictionary based
+        on the keys in the dictionary or create new keys in the dictionary
+        based on the data set in the list.
+
+    Arguments:
+        (input) metadata -> Dictionary of meta-data.
+        (input) data -> List of data sets.
+        (output) metadata -> Dictionary of meta-data.
+        
+
+    """
+
+    data = list(data)
+
+    for item in data:
+
+        # Create new key.
+        if item[1] not in metadata.keys():
+            metadata[item[1]] = [item[0]]
+
+        # Check for duplicate entry in dictionary's list.
+        elif item[0] not in metadata[item[1]]:
+            metadata[item[1]].append(item[0])
+
+    return metadata
+
+
 def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
 
     """Function:  _process_queue
@@ -588,8 +619,16 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
 
     """
 
+    dtg = datetime.datetime.strftime(datetime.datetime.now(),
+                                     "%Y-%m-%d_%H:%M:%S")
+    filename = os.path.join(queue["directory"], os.path.basename(f_name))
+    metadata2 = {"filename": filename, "datetime": dtg}
+
     # Use the PyPDF2 module to extract data.
     final_data = get_pypdf2_data(f_name, cfg)
+    metadata = create_metadata(metadata, final_data)
+
+    # Use the textract module to extract data.
 
     """
     k_name = ""
