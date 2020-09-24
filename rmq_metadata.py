@@ -544,6 +544,7 @@ def merge_data(data_list, tmp_data, **kwargs):
 
     return data_list
 
+
 def get_pypdf2_data(f_name, cfg, **kwargs):
 
     """Function:  get_pypdf2_data
