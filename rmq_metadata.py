@@ -470,16 +470,23 @@ def summarize_data(categorized_text, token_types, **kwargs):
     return data_list
 
 
-def _sort_data(item, current_type, data_list, tmp_data, token_types):
+def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
 
     """Function:  _sort_data
 
-    Description:  Private function for summarize_data.  STOPPED HERE.
+    Description:  Private function for summarize_data.  Combines a series of
+        same token types into a data set and ignores the "O" (OTHER) token
+        type.
 
     Arguments:
-        (input) categorized_text -> List of categorized tokens.
-        (input) token_types -> List of token types to be accepted.
+        (input) item -> Single set token.
+        (input) current_type -> Current token type.
+        (input) data_list -> List of summarized categorized tokens.
+        (input) tmp_data -> List of current series of token data.
+        (input) token_types -> List of token types.
+        (output) current_type -> Current token type.
         (output) data_list -> List of summarized categorized tokens.
+        (output) tmp_data -> List of current series of token data.
 
     """
 
@@ -508,6 +515,33 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types):
     return current_type, data_list, tmp_data
 
     
+def merge_data(data_list, tmp_data, **kwargs):
+
+    """Function:  merge_data
+
+    Description:  Adds a series of similar token data into a single string
+        and adds the token type and string as set to a list.
+
+    Arguments:
+        (input) data_list -> List of summarized categorized tokens.
+        (input) tmp_data -> List of current series of token data.
+        (output) data_list -> List of summarized categorized tokens.
+
+    """
+
+    data_list = list(data_list)
+    tmp_data = list(tmp_data)
+    data = tmp_data.pop(0)
+    tmp_a = data[0]
+    data_type = data[1]
+
+    for item in tmp_data:
+        tmp_a = tmp_a + " " + item[0]
+
+    data_list.append((tmp_a, data_type))
+
+    return data_list
+
 def get_pypdf2_data(f_name, cfg, **kwargs):
 
     """Function:  get_pypdf2_data
