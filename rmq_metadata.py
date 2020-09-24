@@ -75,6 +75,9 @@
             # Do not change unless you understand Stanford NLP and textract
             #   modules.
             token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
+            # List of textract module decodes.
+            # Do not change unless you understand textract module.
+            textract_codes = ["utf-8", "ascii", "iso-8859-1"]
             # List of queues to monitor.
             # Make a copy of the dictionary for each combination of a queue
                 name and routing key.
@@ -142,6 +145,7 @@ import datetime
 import ast
 import json
 import base64
+import chardet
 import PyPDF2
 from nltk.tokenize import word_tokenize
 from nltk.tag import StanfordNERTagger
@@ -601,6 +605,28 @@ def create_metadata(metadata, data, **kwargs):
     return metadata
 
 
+def extract_pdf(filename, char_encoding=None, **kwargs):
+    if char_encoding:
+        text = textract.process(filename, encoding=char_encoding)
+
+    else:
+        text = textract.process(filename)
+
+    return text
+
+
+def get_textract_data(f_name, cfg, **kwargs):
+    suberrstr = "codec can't decode byte"
+    char_encoding = None
+    status = True
+    final_data = []
+
+    # Get character encoding.
+    tmptext = extract_pdf(f_name)
+    data = chardet.detect(tmptext)
+    STOPPED HERE
+
+
 def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
 
     """Function:  _process_queue
@@ -622,13 +648,15 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     dtg = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     filename = os.path.join(queue["directory"], os.path.basename(f_name))
-    metadata2 = {"filename": filename, "datetime": dtg}
+    metadata = {"filename": filename, "datetime": dtg}
 
     # Use the PyPDF2 module to extract data.
     final_data = get_pypdf2_data(f_name, cfg)
     metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
+    final_data = get_textract_data(f_name, cfg)
+    metadata = create_metadata(metadata, final_data)
 
     """
     k_name = ""
