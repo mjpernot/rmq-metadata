@@ -143,6 +143,8 @@ import ast
 import json
 import base64
 import PyPDF2
+from nltk.tokenize import word_tokenize
+from nltk.tag import StanfordNERTagger
 
 # Local
 import lib.arg_parser as arg_parser
