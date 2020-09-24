@@ -8,6 +8,7 @@ echo ""
 echo "Unit test:  rmq_metadata.py"
 test/unit/rmq_metadata/_convert_data.py
 test/unit/rmq_metadata/_process_queue.py
+test/unit/rmq_metadata/get_pypdf2_data.py
 test/unit/rmq_metadata/help_message.py
 test/unit/rmq_metadata/main.py
 test/unit/rmq_metadata/monitor_queue.py
