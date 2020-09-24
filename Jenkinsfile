@@ -36,6 +36,7 @@ pipeline {
                 pip2 install textract==1.6.3 --user
                 ./test/unit/rmq_metadata/_convert_data.py
                 ./test/unit/rmq_metadata/_process_queue.py
+                ./test/unit/rmq_metadata/_sort_data.py
                 ./test/unit/rmq_metadata/find_tokens.py
                 ./test/unit/rmq_metadata/get_pypdf2_data.py
                 ./test/unit/rmq_metadata/help_message.py
