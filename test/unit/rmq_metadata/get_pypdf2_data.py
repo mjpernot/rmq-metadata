@@ -34,6 +34,54 @@ import version
 __version__ = version.__version__
 
 
+class Logger(object):
+
+    """Class:  Logger
+
+    Description:  Class which is a representation of gen_class.Logger class.
+
+    Methods:
+        __init__ -> Initialize configuration environment.
+        log_info -> log_info method.
+
+    """
+
+    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the IsseGuard class.
+
+        Arguments:
+            (input) job_name -> Instance name.
+            (input) job_log -> Log name.
+            (input) log_type -> Log type.
+            (input) log_format -> Log format.
+            (input) log_time -> Time format.
+
+        """
+
+        self.job_name = job_name
+        self.job_log = job_log
+        self.log_type = log_type
+        self.log_format = log_format
+        self.log_time = log_time
+        self.data = None
+
+    def log_info(self, data):
+
+        """Method:  log_info
+
+        Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+
 class CfgTest(object):
 
     """Class:  CfgTest
@@ -121,6 +169,8 @@ class UnitTest(unittest.TestCase):
             'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
             'datetime': '20200924_082717'}
         self.cfg = CfgTest()
+        self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
+                             "%m-%d-%YT%H:%M:%SZ|")
 
     @mock.patch("rmq_metadata.find_tokens")
     @mock.patch("rmq_metadata.word_tokenize")
@@ -139,8 +189,9 @@ class UnitTest(unittest.TestCase):
         mock_token.return_value = self.tokens
         mock_find.return_value = []
 
-        self.assertEqual(rmq_metadata.get_pypdf2_data(self.f_name, self.cfg),
-                         [])
+        self.assertEqual(
+            rmq_metadata.get_pypdf2_data(self.f_name, self.cfg, self.logger),
+            [])
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -162,8 +213,9 @@ class UnitTest(unittest.TestCase):
         mock_find.return_value = self.categorized_text
         mock_summ.return_value = self.final_data
 
-        self.assertEqual(rmq_metadata.get_pypdf2_data(self.f_name, self.cfg),
-                         self.final_data)
+        self.assertEqual(
+            rmq_metadata.get_pypdf2_data(self.f_name, self.cfg, self.logger),
+            self.final_data)
 
 
 if __name__ == "__main__":
