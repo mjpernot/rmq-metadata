@@ -34,6 +34,68 @@ import version
 __version__ = version.__version__
 
 
+class Logger(object):
+
+    """Class:  Logger
+
+    Description:  Class which is a representation of gen_class.Logger class.
+
+    Methods:
+        __init__ -> Initialize configuration environment.
+        log_info -> log_info method.
+        log_warn -> log_warn method.
+
+    """
+
+    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the IsseGuard class.
+
+        Arguments:
+            (input) job_name -> Instance name.
+            (input) job_log -> Log name.
+            (input) log_type -> Log type.
+            (input) log_format -> Log format.
+            (input) log_time -> Time format.
+
+        """
+
+        self.job_name = job_name
+        self.job_log = job_log
+        self.log_type = log_type
+        self.log_format = log_format
+        self.log_time = log_time
+        self.data = None
+
+    def log_info(self, data):
+
+        """Method:  log_info
+
+        Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_warn(self, data):
+
+        """Method:  log_warn
+
+        Description:  log_warn method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+
 class CfgTest(object):
 
     """Class:  CfgTest
@@ -123,6 +185,8 @@ class UnitTest(unittest.TestCase):
         self.categorized_text2 = []
         self.final_data = [("Place", "LOCATION")]
         self.results = [("Place", "LOCATION")]
+        self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
+                             "%m-%d-%YT%H:%M:%SZ|")
 
     @mock.patch("rmq_metadata.find_tokens")
     @mock.patch("rmq_metadata.word_tokenize")
@@ -144,8 +208,9 @@ class UnitTest(unittest.TestCase):
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text2
 
-        self.assertEqual(rmq_metadata.get_textract_data(self.f_name, self.cfg),
-                         [])
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            [])
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -169,8 +234,9 @@ class UnitTest(unittest.TestCase):
         mock_find.return_value = self.categorized_text
         mock_sum.return_value = self.final_data
 
-        self.assertEqual(rmq_metadata.get_textract_data(self.f_name, self.cfg),
-                         self.results)
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            self.results)
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -194,8 +260,9 @@ class UnitTest(unittest.TestCase):
         mock_find.return_value = self.categorized_text
         mock_sum.return_value = self.final_data
 
-        self.assertEqual(rmq_metadata.get_textract_data(self.f_name, self.cfg),
-                         self.results)
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            self.results)
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -219,8 +286,9 @@ class UnitTest(unittest.TestCase):
         mock_find.return_value = self.categorized_text
         mock_sum.return_value = self.final_data
 
-        self.assertEqual(rmq_metadata.get_textract_data(self.f_name, self.cfg),
-                         self.results)
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            self.results)
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -244,8 +312,9 @@ class UnitTest(unittest.TestCase):
         mock_find.return_value = self.categorized_text
         mock_sum.return_value = self.final_data
 
-        self.assertEqual(rmq_metadata.get_textract_data(self.f_name, self.cfg),
-                         self.results)
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            self.results)
 
 
 if __name__ == "__main__":
