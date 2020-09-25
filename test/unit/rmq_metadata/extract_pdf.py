@@ -57,7 +57,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.filename = "Filename.pdf"
+        self.f_name = "Filename.pdf"
         self.encoding = "ascii"
         self.text = "ASCII Text"
         self.text2 = "UTF-8 text"
@@ -78,7 +78,7 @@ class UnitTest(unittest.TestCase):
         mock_tract.return_value = self.text
 
         self.assertEqual(rmq_metadata.extract_pdf(
-            self.filename, char_encoding=self.encoding), self.results)
+            self.f_name, char_encoding=self.encoding), self.results)
 
     @mock.patch("rmq_metadata.textract.process")
     def test_extract_pdf(self, mock_tract):
@@ -93,7 +93,7 @@ class UnitTest(unittest.TestCase):
 
         mock_tract.return_value = self.text2
 
-        self.assertEqual(rmq_metadata.extract_pdf(self.filename),
+        self.assertEqual(rmq_metadata.extract_pdf(self.f_name),
                          self.results2)
 
 
