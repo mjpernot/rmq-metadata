@@ -147,6 +147,7 @@ import json
 import base64
 import chardet
 import PyPDF2
+import textract
 from nltk.tokenize import word_tokenize
 from nltk.tag import StanfordNERTagger
 
@@ -402,8 +403,7 @@ def read_pdf(filename, **kwargs):
 
     """Function:  read_pdf
 
-    Description:  Open a a PDF file and extract metadata from the file using
-        the PyPDF2 module.
+    Description:  Extract text from a PDF file using the PyPDF2 module.
 
     Arguments:
         (input) filename -> PDF file name.
@@ -559,7 +559,7 @@ def get_pypdf2_data(f_name, cfg, **kwargs):
     Arguments:
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
-        (output) final_data -> List of classified tokens from PDF file.
+        (output) final_data -> List of categorized tokens from PDF file.
 
     """
 
@@ -605,17 +605,41 @@ def create_metadata(metadata, data, **kwargs):
     return metadata
 
 
-def extract_pdf(filename, char_encoding=None, **kwargs):
+def extract_pdf(f_name, char_encoding=None, **kwargs):
+
+    """Function:  extract_pdf
+
+    Description:  Extract text from PDF using textract module.
+
+    Arguments:
+        (input) f_name -> PDF file name.
+        (input) char_encoding -> Character encoding code.
+        (output) text -> Raw text.
+
+    """
+
     if char_encoding:
-        text = textract.process(filename, encoding=char_encoding)
+        text = textract.process(f_name, encoding=char_encoding)
 
     else:
-        text = textract.process(filename)
+        text = textract.process(f_name)
 
     return text
 
 
 def get_textract_data(f_name, cfg, **kwargs):
+
+    """Function:  get_textract_data
+
+    Description:  .
+
+    Arguments:
+        (input) f_name -> PDF file name.
+        (input) cfg -> Configuration settings module for the program.
+        (output) final_data -> List of categorized tokens from PDF file.
+
+    """
+
     suberrstr = "codec can't decode byte"
     char_encoding = None
     status = True
@@ -624,7 +648,32 @@ def get_textract_data(f_name, cfg, **kwargs):
     # Get character encoding.
     tmptext = extract_pdf(f_name)
     data = chardet.detect(tmptext)
-    STOPPED HERE
+
+    if data["confidence"] == 1.0:
+        char_encoding = data["encoding"]
+
+    rawtext = extract_pdf(f_name, char_encoding)
+
+    try:
+        tokens = word_tokenize(rawtext)
+
+    except UnicodeDecodeError as msg:
+
+        if str(msg).find(suberrstr) >= 0 and msg.args[0] in cfg.textract_codes:
+            char_encoding = msg.args[0]
+            rawtext = extract_pdf(f_name, char_encoding)
+            tokens = word_tokenize(rawtext)
+
+        else:
+            status = False
+
+    if status:
+        classified_text = find_tokens(tokens, cfg)
+
+        if classified_text:
+            final_data = summarize_data(classified_text, cfg.token_types)
+
+    return final_data
 
 
 def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
@@ -657,6 +706,8 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     # Use the textract module to extract data.
     final_data = get_textract_data(f_name, cfg)
     metadata = create_metadata(metadata, final_data)
+
+    ### What happens if neither final_data returns data?
 
     """
     k_name = ""
