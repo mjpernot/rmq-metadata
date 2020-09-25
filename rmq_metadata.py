@@ -363,6 +363,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
     """
 
+# Add a log entry stating what filename is being processed.
     prename = ""
     postname = ""
     ext = ""
@@ -725,7 +726,11 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     final_data = get_textract_data(f_name, cfg, log)
     metadata = create_metadata(metadata, final_data)
 
-    
+    STOPPED HERE
+    1.  Insert data into Mongo database.
+    2.  Move PDF file to file system.
+    3.  Add a log entry stating what filename has been processed.
+        (See corresponding entry in _convert_data()
 
     """
     f_name = os.path.join(queue["directory"], f_name + ext)
