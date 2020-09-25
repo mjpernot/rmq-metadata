@@ -41,6 +41,7 @@ def extract_pdf(filename):
     return text
 
 
+### DONE
 def read_pdf(filename):
     pdf = open(filename, "rb")
     pdfreader = PyPDF2.PdfFileReader(pdf)
@@ -56,6 +57,7 @@ def read_pdf(filename):
     return text
 
 
+### DONE
 def find_tokens(tokenized_text, cfg):
     #st = StanfordNERTagger(
     #'/home/mark.j.pernot/stanford_ner/stanford-ner-4.0.0/classifiers/english.all.3class.distsim.crf.ser.gz',
@@ -67,6 +69,7 @@ def find_tokens(tokenized_text, cfg):
     return classified_text
 
 
+### DONE
 def merge_data(data_list, tmp_data):
     data_list = list(data_list)
     tmp_data = list(tmp_data)
@@ -82,6 +85,8 @@ def merge_data(data_list, tmp_data):
 
     return data_list
 
+
+### DONE
 def _sort_data(item, current_type, data_list, tmp_data, token_types):
     data_list = list(data_list)
     tmp_data = list(tmp_data)
@@ -107,7 +112,8 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types):
 
     return current_type, data_list, tmp_data
 
-    
+
+### DONE
 def summarize_data(classified_text, token_types):
     data_list = []
     #token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
@@ -293,6 +299,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     #"""
     ############################################################
     # Using PyPDF2 process to extract data.
+    # See get_pypdf2_data() in rmq_metadata program.
     rawtext = read_pdf(f_name)
     tokens = word_tokenize(rawtext)
     classified_text = find_tokens(tokens, cfg)
@@ -300,7 +307,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     if classified_text:
         final_data = summarize_data(classified_text, cfg.token_types)
 
-    # Not needed for final program.
+    # Not needed in final program.
     gen_libs.write_file("mypypdf2_data.txt", data=final_data, mode="w")
     ############################################################
     #"""
@@ -309,12 +316,14 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     ############################################################
     # Using textract process to extract data.
     suberrstr = "codec can't decode byte"
-    available_sets = ["utf-8", "ascii", "iso-8859-1"]
+    #available_sets = ["utf-8", "ascii", "iso-8859-1"]
+    #available_sets = cfg.textract_codes
     char_encoding = None
     status = True
+
     tmptext = extract_pdf4(f_name)
     data = chardet.detect(tmptext)
-    final_data2 = [] # Is it a list?
+    final_data2 = [] # Is it a list?  Yes
 
     if data["confidence"] == 1.0:
         #print("Changing character encoding to: %s" % (data["encoding"]))
@@ -326,7 +335,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     try:
         tokens2 = word_tokenize(rawtext2)
     except UnicodeDecodeError as msg:
-        if str(msg).find(suberrstr) >= 0 and msg.args[0] in available_sets:
+        if str(msg).find(suberrstr) >= 0 and msg.args[0] in cfg.textract_codes:
             char_encoding = msg.args[0]
             rawtext2 = extract_pdf4(f_name, char_encoding)
             tokens2 = word_tokenize(rawtext2)
@@ -348,11 +357,36 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, **kwargs):
     #"""
 
     # Create metadata object.
-    metadata = create_metadata(f_name, final_data, final_data2, **kwargs)
+    #metadata = create_metadata(f_name, final_data, final_data2, **kwargs)
+    #print(metadata)
+
+    dtg = datetime.datetime.strftime(datetime.datetime.now(),
+                                     "%Y-%m-%d_%H:%M:%S")
+    filename = os.path.join(queue["directory"], os.path.basename(f_name))
+    metadata = {"filename": filename,
+                 "datetime": dtg}
+    #print(final_data)
+    #print(final_data2)
+    #sys.exit()
+    metadata = create_metadata2(metadata, final_data)
+    metadata = create_metadata2(metadata, final_data2)
+    print(metadata)
+    #print(metadata == metadata2)
+
+    
 
     gen_libs.mv_file2(f_name, "./final_data", "myfinalpdf.pdf")
-    print(metadata)
     # Insert data into Mongo database here.
+
+def create_metadata2(metadata, data, **kwargs):
+    for item in data:
+        if item[1] not in metadata.keys():
+            metadata[item[1]] = [item[0]]
+        elif item[0] not in metadata[item[1]]:
+            metadata[item[1]].append(item[0])
+
+    return metadata
+
 
 def main():
     test_path = "/home/mark.j.pernot/pdf_docs"
