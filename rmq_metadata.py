@@ -549,7 +549,7 @@ def merge_data(data_list, tmp_data, **kwargs):
     return data_list
 
 
-def get_pypdf2_data(f_name, cfg, **kwargs):
+def get_pypdf2_data(f_name, cfg, log, **kwargs):
 
     """Function:  get_pypdf2_data
 
@@ -559,16 +559,21 @@ def get_pypdf2_data(f_name, cfg, **kwargs):
     Arguments:
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
+        (input) log -> Log class instance.
         (output) final_data -> List of categorized tokens from PDF file.
 
     """
 
+    log.log_info("get_pypdf2_data:  Extracting data using PyPDF2.")
     final_data = []
     rawtext = read_pdf(f_name)
+    log.log_info("get_pypdf2_data:  Running word_tokenizer...")
     tokens = word_tokenize(rawtext)
+    log.log_info("get_pypdf2_data:  Finding tokens.")
     categorized_text = find_tokens(tokens, cfg)
 
     if categorized_text:
+        log.log_info("get_pypdf2_data:  Summarizing data")
         final_data = summarize_data(categorized_text, cfg.token_types)
 
     return final_data
@@ -627,7 +632,7 @@ def extract_pdf(f_name, char_encoding=None, **kwargs):
     return text
 
 
-def get_textract_data(f_name, cfg, **kwargs):
+def get_textract_data(f_name, cfg, log, **kwargs):
 
     """Function:  get_textract_data
 
@@ -636,41 +641,53 @@ def get_textract_data(f_name, cfg, **kwargs):
     Arguments:
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
+        (input) log -> Log class instance.
         (output) final_data -> List of categorized tokens from PDF file.
 
     """
 
+    log.log_info("get_textract_data:  Extracting data using textract.")
     suberrstr = "codec can't decode byte"
     char_encoding = None
     status = True
     final_data = []
 
     # Get character encoding.
+    log.log_info("get_textract_data:  Detecting encode in PDF file.")
     tmptext = extract_pdf(f_name)
     data = chardet.detect(tmptext)
 
     if data["confidence"] == 1.0:
         char_encoding = data["encoding"]
+        log.log_info("get_textract_data:  Detected character encode: %s" %
+                     (char_encoding))
 
     rawtext = extract_pdf(f_name, char_encoding)
+    log.log_info("get_textract_data:  Running word_tokenizer...")
 
     try:
         tokens = word_tokenize(rawtext)
 
     except UnicodeDecodeError as msg:
+        log.log_warn("get_textract_data:  UnicodeDecodeError detected.")
 
         if str(msg).find(suberrstr) >= 0 and msg.args[0] in cfg.textract_codes:
             char_encoding = msg.args[0]
+            log.log_info("get_textract_data:  New encoding code detected: %s" %
+                         (char_encoding))
             rawtext = extract_pdf(f_name, char_encoding)
             tokens = word_tokenize(rawtext)
 
         else:
+            log.log_warn("get_textract_data:  No encoding code detected.")
             status = False
 
     if status:
+        log.log_info("get_textract_data:  Finding tokens.")
         categorized_text = find_tokens(tokens, cfg)
 
         if categorized_text:
+            log.log_info("get_textract_data:  Summarizing data")
             final_data = summarize_data(categorized_text, cfg.token_types)
 
     return final_data
@@ -694,51 +711,23 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
 
     """
 
+    log.log_info("_process_queue:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     filename = os.path.join(queue["directory"], os.path.basename(f_name))
     metadata = {"filename": filename, "datetime": dtg}
 
     # Use the PyPDF2 module to extract data.
-    final_data = get_pypdf2_data(f_name, cfg)
+    final_data = get_pypdf2_data(f_name, cfg, log)
     metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
-    final_data = get_textract_data(f_name, cfg)
+    final_data = get_textract_data(f_name, cfg, log)
     metadata = create_metadata(metadata, final_data)
 
-    ### What happens if neither final_data returns data?
+    
 
     """
-    k_name = ""
-    ext = ""
-    indent = 4
-    dtg = ""
-
-    if queue["key"] and queue["key"] in data and queue["stype"] == "dict":
-        k_name = str(data[queue["key"]].split(".")[0])
-
-    if queue["ext"]:
-        ext = "." + queue["ext"]
-
-    if queue["flatten"]:
-        indent = None
-
-    if queue["dtg"]:
-        dtg = datetime.datetime.strftime(datetime.datetime.now(),
-                                         "%Y%m%d_%H%M%S")
-
-    elif queue["date"]:
-        dtg = datetime.datetime.strftime(datetime.datetime.now(), "%Y%m%d")
-
-    if isinstance(data, dict):
-        data = json.dumps(data, indent=indent)
-
-    f_name = queue["prename"] + k_name + queue["postname"] + dtg
-
-    if not f_name:
-        f_name = "Default_" + x_name + "_" + r_key
-
     f_name = os.path.join(queue["directory"], f_name + ext)
 
     gen_libs.write_file(fname=f_name, mode=queue["mode"], data=data)
