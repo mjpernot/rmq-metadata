@@ -449,7 +449,7 @@ def summarize_data(categorized_text, token_types, **kwargs):
 
     """Function:  summarize_data
 
-    Description:  Summarize a list of classified tokens and merging them into
+    Description:  Summarize a list of categorized tokens and merging them into
         a single unique list.
 
     Arguments:
@@ -668,10 +668,10 @@ def get_textract_data(f_name, cfg, **kwargs):
             status = False
 
     if status:
-        classified_text = find_tokens(tokens, cfg)
+        categorized_text = find_tokens(tokens, cfg)
 
-        if classified_text:
-            final_data = summarize_data(classified_text, cfg.token_types)
+        if categorized_text:
+            final_data = summarize_data(categorized_text, cfg.token_types)
 
     return final_data
 
