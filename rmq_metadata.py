@@ -771,8 +771,8 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
     log.log_info("_process_queue:  Insert metadata into MongoDB.")
     mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
     log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
-    gen_libs.mv_file2(f_name, os.path.dirname(f_name),
-                      os.path.basename(f_name))
+    gen_libs.mv_file2(f_name, os.path.dirname(filename),
+                      os.path.basename(filename))
     log.log_info("Finished processing of: %s" % (f_name))
 
 
