@@ -386,7 +386,7 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
 
 def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
-    """Function:  _process_queue
+    """Function:  _convert_data
 
     Description:  Private function to process message queue.
 
@@ -435,7 +435,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    _process_queue(queue, body, r_key, cfg, rmq, f_name, log)
+    _process_queue(queue, body, r_key, cfg, f_name, log)
 
 
 def read_pdf(filename, **kwargs):
@@ -732,7 +732,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
     return final_data
 
 
-def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
+def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
 
     """Function:  _process_queue
 
@@ -743,7 +743,6 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
         (input) body -> Message body.
         (input) r_key -> Routing key.
         (input) cfg -> Configuration settings module for the program.
-        (input) rmq -> RabbitMQ class instance.
         (input) f_name -> PDF file name.
         (input) log -> Log class instance.
         
@@ -765,7 +764,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     metadata = create_metadata(metadata, final_data)
 
     log.log_info("_process_queue:  Insert metadata into MongoDB.")
-    mongo_libs.ins_doc(cfg.mongo, cfg.mongo.db, cfg.mongo.tbl, metadata)
+    mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
     log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
     gen_libs.mv_file2(f_name, os.path.dirname(f_name),
                       os.path.basename(f_name))
