@@ -122,6 +122,9 @@
             # Mongo configuration file
             # Default is the name used in the README setup.
             mongo_cfg = "mongo"
+            # Mongo config setup.
+            # For internal use.  Do not change.
+            mongo = None
 
         Mongo configuration file format (config/mongo.py.TEMPLATE).
 
@@ -761,11 +764,11 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     metadata = create_metadata(metadata, final_data)
 
     
-    STOPPED HERE
-    1.  Insert data into Mongo database.
-    2.  Move PDF file to file system.
-    3.  Add a log entry stating what filename has been processed.
-        (See corresponding entry in _convert_data()
+#    STOPPED HERE
+#    1.  Insert data into Mongo database.
+#    2.  Move PDF file to file system.
+#    3.  Add a log entry stating what filename has been processed.
+#        (See corresponding entry in _convert_data())
 
     """
     f_name = os.path.join(queue["directory"], f_name + ext)
@@ -876,6 +879,7 @@ def run_program(args_array, func_dict, **kwargs):
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    cfg.config_dir = args_array["-d"]
     cfg, status_flag, err_msg = validate_create_settings(cfg)
 
     if status_flag:
