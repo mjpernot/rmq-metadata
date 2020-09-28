@@ -65,7 +65,7 @@ class UnitTest(unittest.TestCase):
                       psutil(12347, "proc_name3"), psutil(12348, "proc_name4")]
         self.procs2 = [psutil(12345, "proc_name1"),
                        psutil(12346, "proc_name2"),
-                       psutil(12348, "daemon_rmq_2_sy")]
+                       psutil(12348, "daemon_rmq_meta")]
         self.pfile = "./test/unit/daemon_rmq_metadata/basefiles/pidfile.txt"
         self.pfile2 = "./test/unit/daemon_rmq_metadata/basefiles/pidfile2.txt"
         self.pfile3 = "./test/unit/daemon_rmq_metadata/basefiles/pidfile3.txt"
