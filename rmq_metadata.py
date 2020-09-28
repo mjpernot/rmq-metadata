@@ -14,7 +14,7 @@
             [-v | -h]
 
     Arguments:
-        -c config_file => RabbitMQ and Mongo configuration file.
+        -c config_file => RabbitMQ/Mongo configuration file.
             Required argument.
         -d dir_path => Directory path for option '-c'.
             Required argument.
@@ -29,7 +29,7 @@
         and can only be killed with a CTRL-C on the command line, stopping the
         daemon, or shutting down of the service.
 
-        RabbitMQ/Mongo configuration file format (config/rabbitmq.py.TEMPLATE).
+        RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
 
             # RabbitMQ Configuration file
             user = "USER"
@@ -119,6 +119,11 @@
                      "flatten": True
                     }
                 ]
+            # Mongo configuration file
+            # Default is the name used in the README setup.
+            mongo_cfg = "mongo"
+
+        Mongo configuration file format (config/mongo.py.TEMPLATE).
 
             # Mongo DB Configuration file
             # All Mongo configuration settings.
