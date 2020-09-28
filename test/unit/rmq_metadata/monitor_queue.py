@@ -58,7 +58,7 @@ class CfgTest(object):
         self.user = "USER"
         self.japd = ""
         self.host = "HOSTNAME"
-        self.exchange_name = "rmq_2_isse_unit_test"
+        self.exchange_name = "rmq_metadata_unit_test"
         self.to_line = None
         self.port = 5672
         self.exchange_type = "direct"
@@ -67,7 +67,7 @@ class CfgTest(object):
         self.auto_delete = False
         self.message_dir = "message_dir"
         self.log_dir = "logs"
-        self.log_file = "rmq_2_isse.log"
+        self.log_file = "rmq_metadata.log"
         self.tmp_dir = "./test/unit/rmq_metadata/testfiles"
         self.lang_module = \
             "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
@@ -76,7 +76,7 @@ class CfgTest(object):
         self.token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
         self.textract_codes = ["utf-8", "ascii", "iso-8859-1"]
         self.queue_list = [
-            {"queue": "rmq_2_isse_unit_test",
+            {"queue": "rmq_metadata_unit_test",
              "routing_key": "ROUTING_KEY",
              "directory": "/dir/path",
              "prename": "",
@@ -87,32 +87,8 @@ class CfgTest(object):
              "date": False,
              "stype": "encoded",
              "archive": False}]
+        self.mongo_cfg = "mongo"
         self.mongo = None
-
-        """
-        self.user = "USER"
-        self.japd = ""
-        self.host = "SERVER_NAME"
-        self.port = 5672
-        self.exchange_name = "EXCHANGE_NAME"
-        self.exchange_type = "direct"
-        self.x_durable = True
-        self.q_durable = True
-        self.auto_delete = False
-        self.queue_list = [
-            {"queue": "rmq_2_isse_unit_test",
-             "routing_key": "ROUTING_KEY",
-             "directory": "/SYSMON_DIR_PATH",
-             "prename": "Pre-filename",
-             "postname": "Post-filename",
-             "key": "Server",
-             "mode": "a",
-             "ext": "",
-             "dtg": False,
-             "date": False,
-             "stype": "dict",
-             "flatten": True}]
-        """
 
 
 class UnitTest(unittest.TestCase):
