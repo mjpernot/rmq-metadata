@@ -33,6 +33,7 @@ pipeline {
                 pip2 install psutil==5.4.3 --user
                 pip2 install pymongo==3.2.0 --user
                 pip2 install simplejson==2.0.9 --user
+                pip2 install soupsieve==1.9.6 --user
                 pip2 install textract==1.6.3 --user
                 ./test/unit/rmq_metadata/_convert_data.py
                 ./test/unit/rmq_metadata/_process_queue.py
