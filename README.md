@@ -14,8 +14,8 @@
  * Program Help Function
  * Testing
    - Unit
-   - Integration (Not yet implemented)
-   - Blackbox (Not yet implemented)
+   - Integration (Not yet implementedi - ignore this section)
+   - Blackbox (Not yet implemented - ignore this section)
 
 
 # Features:
@@ -97,9 +97,11 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Directory for temporary processing of messages.
     - lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
       -> Path and file name to the Stanford NLP language module.
-      -> By default the lang_module will point to the English language module.
+      -> This entry is pointing to the English language module.
+      -> Path is available once the nltk module is installed via pip.
     - stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
       -> Path and file name to the Stanford NLP jar file.
+      -> Path is available once the nltk module is installed via pip.
     - encoding = "utf-8"
       -> Encoding set used in the Stanford NLP processing.
       -> Default setting is the utf-8 encoding code.
