@@ -1,6 +1,7 @@
 # RabbitMQ Configuration file
 # Classification (U)
 # Unclassified until filled.
+
 user = "USER"
 japd = "PASSWORD"
 host = "HOSTNAME"
@@ -47,6 +48,7 @@ token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
 # List of textract module decodes.
 # Do not change unless you understand textract module.
 textract_codes = ["utf-8", "ascii", "iso-8859-1"]
+
 # List of queues to monitor.
 # Make a copy of the dictionary for each combination of a queue name and routing key.
 # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
@@ -86,4 +88,11 @@ queue_list = [
          "archive": True
         }
     ]
+
+# Mongo configuration file
+# Default is the name used in the README setup.
+mongo_cfg = "mongo"
+# Mongo config setup.
+# For internal use.  Do not change.
+mongo = None
 
