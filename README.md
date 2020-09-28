@@ -152,6 +152,10 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Archive the raw body of the RMQ PDF file.
       -> The archive_dir must be set above for this to take place.
       -> Default:  True.
+  * Mongo configuration file name.
+    - mongo_cfg = "mongo"
+      -> Do not change the default unless changing the mongo configuration file name in the next section.
+      -> Only requires the base name of the file name.
 
 ```
 cd config
