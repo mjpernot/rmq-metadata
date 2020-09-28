@@ -873,7 +873,7 @@ def run_program(args_array, func_dict, **kwargs):
     args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
-    cfg.config_dir = args_array["-d"]
+    cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args_array["-d"])
     cfg, status_flag, err_msg = validate_create_settings(cfg)
 
     if status_flag:
