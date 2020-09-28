@@ -26,6 +26,7 @@ pipeline {
                 sh """
                 virtualenv test_env
                 source test_env/bin/activate
+                pip2 install Pillow==6.2.2 --user
                 pip2 install PyPDF2==1.26.0 --user
                 pip2 install mock==2.0.0 --user
                 pip2 install nltk==3.4.0 --user
