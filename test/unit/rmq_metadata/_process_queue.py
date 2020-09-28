@@ -221,6 +221,5 @@ class UnitTest(unittest.TestCase):
             self.f_name, self.logger))
 
 
-
 if __name__ == "__main__":
     unittest.main()
