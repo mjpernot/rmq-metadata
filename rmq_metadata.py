@@ -64,7 +64,7 @@
             # These entries for the Stanford NLP library module.
             # Path to Stanford language module.
             # By default lang_module will point to the English language module.
-            lang_module = 
+            lang_module =
             "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
             # Path to Stanford jar.
             stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
@@ -367,9 +367,9 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
                 rdtg = datetime.datetime.now()
                 msecs = str(rdtg.microsecond / 100)
                 dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + \
-                      "." + msecs
+                    "." + msecs
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
-                         dtg + ".body"
+                    dtg + ".body"
                 f_path = os.path.join(cfg.archive_dir, f_name)
                 log.log_info(
                     "process_msg:  Archiving message to: %s" % (f_path))
@@ -421,7 +421,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         ext = "." + queue["ext"]
 
     f_filename = prename + rmq.exchange + "_" + r_key + "_" + dtg + \
-                 postname + ext
+        postname + ext
     f_name = os.path.join(cfg.tmp_dir, f_filename)
     log.log_info("Starting processing of: %s" % (f_name))
     gen_libs.write_file(t_file, data=body, mode="w")
@@ -559,7 +559,7 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
 
     return current_type, data_list, tmp_data
 
-    
+
 def merge_data(data_list, tmp_data, **kwargs):
 
     """Function:  merge_data
@@ -630,7 +630,6 @@ def create_metadata(metadata, data, **kwargs):
         (input) metadata -> Dictionary of meta-data.
         (input) data -> List of data sets.
         (output) metadata -> Dictionary of meta-data.
-        
 
     """
 
@@ -745,7 +744,6 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
         (input) cfg -> Configuration settings module for the program.
         (input) f_name -> PDF file name.
         (input) log -> Log class instance.
-        
 
     """
 
