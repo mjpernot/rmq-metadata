@@ -186,7 +186,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_multiple_queue_archive -> 
+        test_multiple_queue_archive -> Test archiving body in multiple queues.
         test_multiple_queue_found -> Test with multiple queues in queue_list.
         test_archive_body -> Test with archiving message body.
         test_queue_found -> Test with queue found in queue_list.
@@ -222,7 +222,7 @@ class UnitTest(unittest.TestCase):
                        "directory": "/dir/path3", "prename": "Pre-filename",
                        "postname": "Post-filename", "mode": "w", "ext": "pdf",
                        "dtg": False, "date": False,
-                      " stype": "encoded", "archive": True}
+                       "stype": "encoded", "archive": True}
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
                 mock.Mock(return_value=True))
