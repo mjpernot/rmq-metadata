@@ -14,7 +14,7 @@
             [-v | -h]
 
     Arguments:
-        -c config_file => RabbitMQ configuration file.
+        -c config_file => RabbitMQ and Mongo configuration file.
             Required argument.
         -d dir_path => Directory path for option '-c'.
             Required argument.
@@ -29,7 +29,7 @@
         and can only be killed with a CTRL-C on the command line, stopping the
         daemon, or shutting down of the service.
 
-        RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
+        RabbitMQ/Mongo configuration file format (config/rabbitmq.py.TEMPLATE).
 
             # RabbitMQ Configuration file
             user = "USER"
@@ -119,6 +119,35 @@
                      "flatten": True
                     }
                 ]
+
+            # Mongo DB Configuration file
+            # All Mongo configuration settings.
+            user = "USER"
+            japd = "PSWORD"
+            # Mongo DB host information
+            host = "IP_ADDRESS"
+            name = "HOSTNAME"
+            # Mongo database port (default is 27017)
+            port = 27017
+            # Mongo configuration settings
+            conf_file = None
+            # Authentication required:  True|False
+            auth = True
+            # Name of Mongo database.
+            db = "DATABASE"
+            # Name of Mongo table/collection.
+            tbl = "TABLE"
+            # Replica Set Mongo configuration settings.
+            # None means the Mongo database is not part of a replica set.
+            # Replica set name.
+            #    Format:  repset = "REPLICA_SET_NAME"
+            repset = None
+            # Replica host listing.
+            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+            repset_hosts = None
+            # Database to authentication to.
+            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
+            db_auth = None
 
     Example:
         Command Line:
@@ -726,6 +755,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     final_data = get_textract_data(f_name, cfg, log)
     metadata = create_metadata(metadata, final_data)
 
+    
     STOPPED HERE
     1.  Insert data into Mongo database.
     2.  Move PDF file to file system.
