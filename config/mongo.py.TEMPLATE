@@ -15,7 +15,7 @@ conf_file = None
 # Authentication required:  True|False
 auth = True
 # Name of Mongo database.
-db = "DATABASE"
+dbs = "DATABASE"
 # Name of Mongo table/collection.
 tbl = "TABLE"
 
