@@ -423,6 +423,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
     f_filename = prename + rmq.exchange + "_" + r_key + "_" + dtg + \
                  postname + ext
     f_name = os.path.join(cfg.tmp_dir, f_filename)
+    log.log_info("Starting processing of: %s" % (f_name))
     gen_libs.write_file(t_file, data=body, mode="w")
 
     if queue["stype"] == "encoded":
@@ -753,7 +754,7 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     dtg = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     filename = os.path.join(queue["directory"], os.path.basename(f_name))
-    metadata = {"filename": filename, "datetime": dtg}
+    metadata = {"FileName": filename, "DateTime": dtg}
 
     # Use the PyPDF2 module to extract data.
     final_data = get_pypdf2_data(f_name, cfg, log)
@@ -763,18 +764,12 @@ def _process_queue(queue, body, r_key, cfg, rmq, f_name, log, **kwargs):
     final_data = get_textract_data(f_name, cfg, log)
     metadata = create_metadata(metadata, final_data)
 
-    
-#    STOPPED HERE
-#    1.  Insert data into Mongo database.
-#    2.  Move PDF file to file system.
-#    3.  Add a log entry stating what filename has been processed.
-#        (See corresponding entry in _convert_data())
-
-    """
-    f_name = os.path.join(queue["directory"], f_name + ext)
-
-    gen_libs.write_file(fname=f_name, mode=queue["mode"], data=data)
-    """
+    log.log_info("_process_queue:  Insert metadata into MongoDB.")
+    mongo_libs.ins_doc(cfg.mongo, cfg.mongo.db, cfg.mongo.tbl, metadata)
+    log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
+    gen_libs.mv_file2(f_name, os.path.dirname(f_name),
+                      os.path.basename(f_name))
+    log.log_info("Finished processing of: %s" % (f_name))
 
 
 def monitor_queue(cfg, log, **kwargs):
