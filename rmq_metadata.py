@@ -198,6 +198,9 @@ import version
 
 __version__ = version.__version__
 
+# Global
+DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
+
 
 def help_message(**kwargs):
 
@@ -305,12 +308,14 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
 
     """
 
+    global DTG_FORMAT
+
     log.log_info(
         "non_proc_msg:  Processing failed message: Routing Key: %s" % (r_key))
     frm_line = getpass.getuser() + "@" + socket.gethostname()
     rdtg = datetime.datetime.now()
     msecs = str(rdtg.microsecond / 100)
-    dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + "." + msecs
+    dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + "." + msecs
     f_name = rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
     subj = "rmq_metadata: " + subj
@@ -353,6 +358,8 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
 
     """
 
+    global DTG_FORMAT
+
     r_key = method.routing_key
     queue = None
     log.log_info(
@@ -366,7 +373,7 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
             if queue["archive"] and cfg.archive_dir:
                 rdtg = datetime.datetime.now()
                 msecs = str(rdtg.microsecond / 100)
-                dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + \
+                dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + \
                     "." + msecs
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
                     dtg + ".body"
@@ -400,7 +407,6 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
     """
 
-# Add a log entry stating what filename is being processed.
     prename = ""
     postname = ""
     ext = ""
@@ -747,9 +753,10 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
 
     """
 
+    global DTG_FORMAT
+
     log.log_info("_process_queue:  Extracting and processing metadata.")
-    dtg = datetime.datetime.strftime(datetime.datetime.now(),
-                                     "%Y-%m-%d_%H:%M:%S")
+    dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
     filename = os.path.join(queue["directory"], os.path.basename(f_name))
     metadata = {"FileName": filename, "DateTime": dtg}
 
