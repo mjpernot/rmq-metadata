@@ -62,18 +62,19 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.name = u'United Kingdom'
         self.metadata = {}
         self.metadata2 = {u'LOCATION': [u'London']}
         self.data = []
         self.data2 = [(u'London', u'LOCATION')]
         self.data3 = [(u'Steve Jones', u'PERSON')]
-        self.data4 = [(u'United Kingdom', u'LOCATION')]
+        self.data4 = [(self.name, u'LOCATION')]
         self.data5 = [(u'London', u'LOCATION'),
-                      (u'United Kingdom', u'LOCATION')]
+                      (self.name, u'LOCATION')]
         self.results = {}
         self.results2 = {u'LOCATION': [u'London']}
         self.results3 = {u'PERSON': [u'Steve Jones'], u'LOCATION': [u'London']}
-        self.results4 = {u'LOCATION': [u'London', u'United Kingdom']}
+        self.results4 = {u'LOCATION': [u'London', self.name]}
 
     def test_multiple_sets2(self):
 
