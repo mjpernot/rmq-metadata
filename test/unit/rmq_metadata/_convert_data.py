@@ -172,8 +172,6 @@ class CfgTest(object):
              "postname": "",
              "mode": "w",
              "ext": "pdf",
-             "dtg": False,
-             "date": False,
              "stype": "encoded",
              "archive": False}]
 
