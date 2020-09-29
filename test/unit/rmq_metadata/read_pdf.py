@@ -49,7 +49,7 @@ class PageExtract(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the IsseGuard class.
+        Description:  Initialization instance of the class.
 
         Arguments:
 
@@ -86,7 +86,7 @@ class PyPDF2(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the IsseGuard class.
+        Description:  Initialization instance of the class.
 
         Arguments:
 
