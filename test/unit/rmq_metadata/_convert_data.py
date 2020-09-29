@@ -50,7 +50,7 @@ class RabbitMQCon(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the IsseGuard class.
+        Description:  Initialization instance of the class.
 
         Arguments:
 
@@ -75,7 +75,7 @@ class Logger(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the IsseGuard class.
+        Description:  Initialization instance of the class.
 
         Arguments:
             (input) job_name -> Instance name.
@@ -153,7 +153,7 @@ class CfgTest(object):
         """
 
         self.host = "HOSTNAME"
-        self.exchange_name = "rmq_2_isse_unit_test"
+        self.exchange_name = "rmq_metadata_unit_test"
         self.to_line = None
         self.port = 5672
         self.exchange_type = "direct"
@@ -162,10 +162,10 @@ class CfgTest(object):
         self.auto_delete = False
         self.message_dir = "message_dir"
         self.log_dir = "logs"
-        self.log_file = "rmq_2_isse.log"
+        self.log_file = "rmq_metadata.log"
         self.tmp_dir = "./test/unit/rmq_metadata/testfiles"
         self.queue_list = [
-            {"queue": "rmq_2_isse_unit_test",
+            {"queue": "rmq_metadata_unit_test",
              "routing_key": "ROUTING_KEY",
              "directory": "/dir/path",
              "prename": "",
