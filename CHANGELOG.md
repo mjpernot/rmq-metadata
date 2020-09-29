@@ -5,7 +5,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.0.2] - 2020-09-29
+### Added
+- \_validate_files:  Validates the file entries in the configuration file.
+
 ### Changed
+- validate_create_settings:  Added call to \_validate_files function.
 - config/rabbitmq.py.TEMPLATE:  Removed dtg and date entries from queue_list.
 - Documentation updates.
 
