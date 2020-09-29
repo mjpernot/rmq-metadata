@@ -20,12 +20,13 @@ x_durable = True
 q_durable = True
 # Queues automatically delete message after processing: True|False
 auto_delete = False
-# Archive directory name for non-processed messages.
+# Directory name for non-processed messages.
 message_dir = "DIRECTORY_PATH/message_dir"
 # Directory name for log files.
 log_dir = "DIRECTORY_PATH/logs"
 # File name to program log.
-log_file = "rmq_2_sysmon.log"
+# Note:  Name will be changed to include the exchange name being processed.
+log_file = "rmq_metadata.log"
 # Directory name for archived messages.
 # Must be set if archive in any of the queue entries is set to True.
 # None states no archiving will take place.
