@@ -89,8 +89,6 @@
             # -> postname:  "NAME" - Static post-file name string.
             # -> mode:  "a"|"w" - Write mode to the file.
             # -> ext:  "pdf" - Extension name to the file name.
-            # -> dtg:  True|False - Add a date and time group to the file name.
-            # -> date:  True|False - Add a date to the file name.
             # -> stype:  "encode" - Require the PDF file to be decoded.
             # -> archive:  True|False - Archive the RMQ body.
             queue_list = [
@@ -101,8 +99,6 @@
                      "postname": "",
                      "mode": "w",
                      "ext": "pdf",
-                     "dtg": False,
-                     "date":  False,
                      "stype": "encoded",
                      "archive": True
                     },
