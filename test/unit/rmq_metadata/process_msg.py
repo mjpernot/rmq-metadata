@@ -172,8 +172,6 @@ class CfgTest(object):
              "postname": "Post-filename",
              "mode": "w",
              "ext": "pdf",
-             "dtg": False,
-             "date": False,
              "stype": "encoded",
              "archive": False}]
 
@@ -215,13 +213,11 @@ class UnitTest(unittest.TestCase):
                       "routing_key": "MY_ROUTING_KEY2",
                       "directory": "/dir/path2", "prename": "Pre-filename",
                       "postname": "Post-filename", "mode": "w", "ext": "pdf",
-                      "dtg": False, "date": False,
                       "stype": "encoded", "archive": False}
         self.queue2 = {"queue": "rmq_2_isse_unit_test3",
                        "routing_key": "MY_ROUTING_KEY3",
                        "directory": "/dir/path3", "prename": "Pre-filename",
                        "postname": "Post-filename", "mode": "w", "ext": "pdf",
-                       "dtg": False, "date": False,
                        "stype": "encoded", "archive": True}
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
