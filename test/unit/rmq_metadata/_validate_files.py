@@ -56,7 +56,7 @@ class CfgTest(object):
         """
 
         self.host = "HOSTNAME"
-        self.exchange_name = "rmq_2_isse_unit_test"
+        self.exchange_name = "rmq_metadata_unit_test"
         self.to_line = None
         self.port = 5672
         self.exchange_type = "direct"
@@ -65,7 +65,7 @@ class CfgTest(object):
         self.auto_delete = False
         self.message_dir = "message_dir"
         self.log_dir = "logs"
-        self.log_file = "rmq_2_isse.log"
+        self.log_file = "rmq_metadata.log"
         self.archive_dir = "/dir/path"
         self.tmp_dir = "/dir/tmp_path"
         self.lang_module = "/path/Stanford_lang_module"
