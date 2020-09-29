@@ -68,10 +68,12 @@ class CfgTest(object):
         self.log_file = "rmq_2_isse.log"
         self.archive_dir = "/dir/path"
         self.tmp_dir = "/dir/tmp_path"
+        self.lang_module = "/path/Stanford_lang_module"
+        self.stanford_jar = "/path/Stanford.jar"
         self.queue_list = [
-            {"queue": "rmq_2_isse_unit_test",
-             "routing_key": "ROUTING_KEY",
-             "directory": "/SYSMON_DIR_PATH"}]
+            {"queue": "rmq_metadata_unit_test",
+             "routing_key": "MY_ROUTING_KEY",
+             "directory": "/dir/path"}]
 
 
 class UnitTest(unittest.TestCase):
@@ -82,6 +84,14 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_stanford_jar_path_false -> Test stanford_jar path check is False.
+        test_stanford_jar_path_true -> Test if stanford_jar path check is True.
+        test_stanford_jar_false -> Test if stanford_jar check returns False.
+        test_stanford_jar_true -> Test if stanford_jar check returns True.
+        test_lang_module_path_false -> Test if lang_module path check is False.
+        test_lang_module_path_true -> Test if lang_module path check is True.
+        test_lang_module_false -> Test if lang_module check returns False.
+        test_lang_module_true -> Test if lang_module check returns True.
         test_tmp_dir_false -> Test if tmp_dir check returns False.
         test_tmp_dir_true -> Test if tmp_dir check returns True.
         test_archive_dir_false -> Test if archive_dir check returns False.
@@ -97,7 +107,6 @@ class UnitTest(unittest.TestCase):
         test_log_dir_true -> Test if log_dir check returns True.
         test_message_dir_false -> Test if message_dir check returns False.
         test_message_dir_true -> Test if message_dir check returns True.
-        tearDown -> Clean up of testing environment.
 
     """
 
@@ -114,16 +123,188 @@ class UnitTest(unittest.TestCase):
         self.cfg = CfgTest()
         self.cfg2 = CfgTest()
         self.cfg2.queue_list.append(
-            {"queue": "rmq_2_isse_unit_test", "routing_key": "ROUTING_KEY",
-             "directory": "/DIR_PATH"})
+            {"queue": "rmq_metadata_unit_test2", "routing_key": "ROUTING_KEY",
+             "directory": "/dir/path"})
         self.base_dir = "/BASE_DIR_PATH"
         self.err_msg1 = "Missing Message Dir "
         self.err_msg2 = "Missing Log Dir "
         self.err_msg3 = "Missing Sysmon Dir "
         self.err_msg4 = "Error Queue Dir"
+        self.err_msg5 = "Lang Module File"
+        self.err_msg6 = "Stanford Jar File"
         base_name, ext_name = os.path.splitext(self.cfg.log_file)
         self.log_name = \
             base_name + "_" + self.cfg.exchange_name + "_" + ext_name
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_stanford_jar_path_false(self, mock_lib):
+
+        """Function:  test_stanford_jar_path_false
+
+        Description:  Test stanford_jar path check is False.
+
+        Arguments:
+
+        """
+
+        self.cfg.stanford_jar = "./path/Stanford.jar"
+        msg = "stanford_jar not set to absolute path: %s" % \
+              (self.cfg.stanford_jar)
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (False, msg))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_stanford_jar_path_true(self, mock_lib):
+
+        """Function:  test_stanford_jar_path_true
+
+        Description:  Test if stanford_jar path check is True.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_stanford_jar_false(self, mock_lib):
+
+        """Function:  test_stanford_jar_false
+
+        Description:  Test if stanford_jar check returns False.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_file.side_effect = [(False, self.err_msg6),
+                                             (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (False, self.err_msg6))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_stanford_jar_true(self, mock_lib):
+
+        """Function:  test_stanford_jar_true
+
+        Description:  Test if stanford_jar check returns True.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_lang_module_path_false(self, mock_lib):
+
+        """Function:  test_lang_module_path_false
+
+        Description:  Test if lang_module path check is False.
+
+        Arguments:
+
+        """
+
+        self.cfg.lang_module = "./path/Stanford_lang_module"
+        msg = "lang_module not set to absolute path: %s" % \
+              (self.cfg.lang_module)
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (False, msg))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_lang_module_path_true(self, mock_lib):
+
+        """Function:  test_lang_module_path_true
+
+        Description:  Test if lang_module path check is True.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_lang_module_false(self, mock_lib):
+
+        """Function:  test_lang_module_false
+
+        Description:  Test if lang_module check returns False.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
+                                             (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (False, self.err_msg5))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_lang_module_true(self, mock_lib):
+
+        """Function:  test_lang_module_true
+
+        Description:  Test if lang_module check returns True.
+
+        Arguments:
+
+        """
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_tmp_dir_false(self, mock_lib):
@@ -136,6 +317,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (False, self.err_msg1), (True, None),
             (True, None)]
@@ -155,6 +337,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None)]
@@ -174,6 +357,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (False, self.err_msg1), (True, None),
             (True, None)]
@@ -193,6 +377,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None)]
@@ -212,6 +397,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (False, self.err_msg4), (False, self.err_msg4)]
@@ -232,6 +418,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None), (False, self.err_msg4)]
@@ -251,6 +438,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None), (True, None)]
@@ -270,6 +458,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (False, self.err_msg1), (False, self.err_msg2), (True, None),
             (True, None), (False, self.err_msg3)]
@@ -291,6 +480,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (False, self.err_msg1), (False, self.err_msg2), (True, None),
             (True, None), (True, None)]
@@ -311,6 +501,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (False, self.err_msg3), (True, None), (True, None),
             (True, None)]
@@ -330,6 +521,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None)]
@@ -349,6 +541,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (False, self.err_msg2), (True, None), (True, None),
             (True, None)]
@@ -368,6 +561,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None)]
@@ -389,6 +583,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (False, self.err_msg1), (True, None), (True, None), (True, None),
             (True, None)]
@@ -408,6 +603,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (True, None), (True, None), (True, None), (True, None),
             (True, None)]
@@ -415,18 +611,6 @@ class UnitTest(unittest.TestCase):
             rmq_metadata.validate_create_settings(self.cfg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
-
-    def tearDown(self):
-
-        """Function:  tearDown
-
-        Description:  Clean up of unit testing.
-
-        Arguments:
-
-        """
-
-        pass
 
 
 if __name__ == "__main__":
