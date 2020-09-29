@@ -101,8 +101,6 @@ class UnitTest(unittest.TestCase):
         test_multiple_queues -> Test with multiple queues.
         test_multiple_false2 -> Test if multiple checks return False.
         test_multiple_false -> Test if multiple checks return False.
-        test_sysmon_dir_false -> Test if sysmon_dir check returns False.
-        test_sysmon_dir_true -> Test if sysmon_dir check returns True.
         test_log_dir_false -> Test if log_dir check returns False.
         test_log_dir_true -> Test if log_dir check returns True.
         test_message_dir_false -> Test if message_dir check returns False.
@@ -128,7 +126,6 @@ class UnitTest(unittest.TestCase):
         self.base_dir = "/BASE_DIR_PATH"
         self.err_msg1 = "Missing Message Dir "
         self.err_msg2 = "Missing Log Dir "
-        self.err_msg3 = "Missing Sysmon Dir "
         self.err_msg4 = "Error Queue Dir"
         self.err_msg5 = "Lang Module File"
         self.err_msg6 = "Stanford Jar File"
@@ -461,13 +458,13 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
             (False, self.err_msg1), (False, self.err_msg2), (True, None),
-            (True, None), (False, self.err_msg3)]
+            (True, None), (False, self.err_msg4)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
         self.assertEqual((status_flag, err_msg),
                          (False,
-                          self.err_msg1 + self.err_msg2 + self.err_msg3))
+                          self.err_msg1 + self.err_msg2 + self.err_msg4))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_multiple_false(self, mock_lib):
@@ -489,46 +486,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual((status_flag, err_msg),
                          (False, self.err_msg1 + self.err_msg2))
-
-    @mock.patch("rmq_metadata.gen_libs")
-    def test_sysmon_dir_false(self, mock_lib):
-
-        """Function:  test_sysmon_dir_false
-
-        Description:  Test if sysmon_dir check returns False.
-
-        Arguments:
-
-        """
-
-        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
-        mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (False, self.err_msg3), (True, None), (True, None),
-            (True, None)]
-        _, status_flag, err_msg = \
-            rmq_metadata.validate_create_settings(self.cfg)
-
-        self.assertEqual((status_flag, err_msg), (False, self.err_msg3))
-
-    @mock.patch("rmq_metadata.gen_libs")
-    def test_sysmon_dir_true(self, mock_lib):
-
-        """Function:  test_sysmon_dir_true
-
-        Description:  Test if sysmon_dir check returns True.
-
-        Arguments:
-
-        """
-
-        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
-        mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (True, None), (True, None), (True, None),
-            (True, None)]
-        _, status_flag, err_msg = \
-            rmq_metadata.validate_create_settings(self.cfg)
-
-        self.assertEqual((status_flag, err_msg), (True, ""))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_log_dir_false(self, mock_lib):
