@@ -33,7 +33,7 @@
 
             # RabbitMQ Configuration file
             user = "USER"
-            japd = "PASSWORD"
+            japd = "PSWORD"
             host = "HOSTNAME"
             # RabbitMQ Exchange name being monitored.
             exchange_name = "EXCHANGE_NAME"
@@ -87,7 +87,7 @@
                 be written to.
             # -> prename:  "NAME" - Static pre-file name string.
             # -> postname:  "NAME" - Static post-file name string.
-            # -> mode:  "a"|"w" - Write mode to the file.
+            # -> mode:  "a"|"w" - Write mode to the file.  Default is write.
             # -> ext:  "pdf" - Extension name to the file name.
             # -> stype:  "encode" - Require the PDF file to be decoded.
             # -> archive:  True|False - Archive the RMQ body.
@@ -109,8 +109,6 @@
                      "postname": "",
                      "mode": "w",
                      "ext": "pdf",
-                     "dtg": False,
-                     "date":  False,
                      "stype": "encoded",
                      "flatten": True
                     }
