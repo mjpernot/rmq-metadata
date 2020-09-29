@@ -808,8 +808,9 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
 
     log.log_info("_process_queue:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
-    filename = os.path.join(queue["directory"], os.path.basename(f_name))
-    metadata = {"FileName": filename, "DateTime": dtg}
+    metadata = {"FileName": os.path.basename(f_name),
+                "Directory": queue["directory"],
+                "DateTime": dtg}
 
     # Use the PyPDF2 module to extract data.
     final_data = get_pypdf2_data(f_name, cfg, log)
@@ -822,8 +823,7 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
     log.log_info("_process_queue:  Insert metadata into MongoDB.")
     mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
     log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
-    gen_libs.mv_file2(f_name, os.path.dirname(filename),
-                      os.path.basename(filename))
+    gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
     log.log_info("Finished processing of: %s" % (f_name))
 
 

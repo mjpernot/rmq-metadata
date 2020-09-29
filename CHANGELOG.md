@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - \_validate_files:  Validates the file entries in the configuration file.
 
 ### Changed
+- \_process_queue:  Changed format of metadata dictionary to break FileName into directory path and file name.
 - validate_create_settings:  Added call to \_validate_files function.
 - config/rabbitmq.py.TEMPLATE:  Removed dtg and date entries from queue_list.
 - Documentation updates.
