@@ -13,6 +13,7 @@ test/unit/rmq_metadata/_validate_files.py
 test/unit/rmq_metadata/create_metadata.py
 test/unit/rmq_metadata/extract_pdf.py
 test/unit/rmq_metadata/find_tokens.py
+test/unit/rmq_metadata/get_pdfminer_data.py
 test/unit/rmq_metadata/get_pypdf2_data.py
 test/unit/rmq_metadata/get_textract_data.py
 test/unit/rmq_metadata/help_message.py
