@@ -33,7 +33,7 @@
 
             # RabbitMQ Configuration file
             user = "USER"
-            japd = "PASSWORD"
+            japd = "PSWORD"
             host = "HOSTNAME"
             # RabbitMQ Exchange name being monitored.
             exchange_name = "EXCHANGE_NAME"
@@ -55,6 +55,8 @@
             # Directory name for log files.
             log_dir = "DIRECTORY_PATH/logs"
             # File name to program log.
+            # Note:  Name will be changed to include the exchange name being
+            #   processed.
             log_file = "rmq_metadata.log"
             # Directory name for archived messages.
             # Must be set if archive in any of the queues is set to True.
@@ -87,10 +89,8 @@
                 be written to.
             # -> prename:  "NAME" - Static pre-file name string.
             # -> postname:  "NAME" - Static post-file name string.
-            # -> mode:  "a"|"w" - Write mode to the file.
+            # -> mode:  "a"|"w" - Write mode to the file.  Default is write.
             # -> ext:  "pdf" - Extension name to the file name.
-            # -> dtg:  True|False - Add a date and time group to the file name.
-            # -> date:  True|False - Add a date to the file name.
             # -> stype:  "encode" - Require the PDF file to be decoded.
             # -> archive:  True|False - Archive the RMQ body.
             queue_list = [
@@ -101,8 +101,6 @@
                      "postname": "",
                      "mode": "w",
                      "ext": "pdf",
-                     "dtg": False,
-                     "date":  False,
                      "stype": "encoded",
                      "archive": True
                     },
@@ -113,8 +111,6 @@
                      "postname": "",
                      "mode": "w",
                      "ext": "pdf",
-                     "dtg": False,
-                     "date":  False,
                      "stype": "encoded",
                      "flatten": True
                     }
@@ -235,6 +231,7 @@ def validate_create_settings(cfg, **kwargs):
     status_flag = True
     base_dir = gen_libs.get_base_dir(__file__)
 
+    # Check on non-processed messages directory.
     if not os.path.isabs(cfg.message_dir):
         cfg.message_dir = os.path.join(base_dir, cfg.message_dir)
 
@@ -245,6 +242,7 @@ def validate_create_settings(cfg, **kwargs):
         err_msg = err_msg + msg
         status_flag = False
 
+    # Check on log files directory.
     if not os.path.isabs(cfg.log_dir):
         cfg.log_dir = os.path.join(base_dir, cfg.log_dir)
 
@@ -260,6 +258,7 @@ def validate_create_settings(cfg, **kwargs):
         err_msg = err_msg + msg
         status_flag = False
 
+    # Check on archived messages directory.
     if cfg.archive_dir and not os.path.isabs(cfg.archive_dir):
         cfg.archive_dir = os.path.join(base_dir, cfg.archive_dir)
 
@@ -271,6 +270,7 @@ def validate_create_settings(cfg, **kwargs):
             err_msg = err_msg + msg
             status_flag = False
 
+    # Check on temporary message processing directory.
     if not os.path.isabs(cfg.tmp_dir):
         cfg.message_dir = os.path.join(base_dir, cfg.tmp_dir)
 
@@ -281,6 +281,10 @@ def validate_create_settings(cfg, **kwargs):
         err_msg = err_msg + msg
         status_flag = False
 
+    # Check on file entries.
+    status_flag, err_msg = _validate_files(cfg, status_flag, err_msg)
+
+    # Check on final directory for each queue.
     for queue in cfg.queue_list:
         status, msg = gen_libs.chk_crt_dir(queue["directory"], write=True,
                                            read=True, no_print=True)
@@ -290,6 +294,53 @@ def validate_create_settings(cfg, **kwargs):
             status_flag = False
 
     return cfg, status_flag, err_msg
+
+
+def _validate_files(cfg, status_flag, err_msg, **kwargs):
+
+    """Function:  _validate_files
+
+    Description:  Private function for validate_create_settings.  Validates the
+        file entries in the configuration file.
+
+    Arguments:
+        (input) cfg -> Configuration settings module for the program.
+        (input) status_flag -> True|False - successfully validation.
+        (input) err_msg -> Error message from checks.
+        (output) status_flag -> True|False - successfully validation.
+        (output) err_msg -> Error message from checks.
+
+    """
+
+    # Check on Stanford NLP language module file.
+    if not os.path.isabs(cfg.lang_module):
+        msg = "lang_module not set to absolute path: %s" % (cfg.lang_module)
+        err_msg = err_msg + msg
+        status_flag = False
+
+    else:
+        status, msg = gen_libs.chk_crt_file(cfg.lang_module, read=True,
+                                            no_print=True)
+
+        if not status:
+            err_msg = err_msg + msg
+            status_flag = False
+
+    # Check on Stanford NLP jar file.
+    if not os.path.isabs(cfg.stanford_jar):
+        msg = "stanford_jar not set to absolute path: %s" % (cfg.stanford_jar)
+        err_msg = err_msg + msg
+        status_flag = False
+
+    else:
+        status, msg = gen_libs.chk_crt_file(cfg.stanford_jar, read=True,
+                                            no_print=True)
+
+        if not status:
+            err_msg = err_msg + msg
+            status_flag = False
+
+    return status_flag, err_msg
 
 
 def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
@@ -757,8 +808,9 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
 
     log.log_info("_process_queue:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
-    filename = os.path.join(queue["directory"], os.path.basename(f_name))
-    metadata = {"FileName": filename, "DateTime": dtg}
+    metadata = {"FileName": os.path.basename(f_name),
+                "Directory": queue["directory"],
+                "DateTime": dtg}
 
     # Use the PyPDF2 module to extract data.
     final_data = get_pypdf2_data(f_name, cfg, log)
@@ -771,8 +823,7 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
     log.log_info("_process_queue:  Insert metadata into MongoDB.")
     mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
     log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
-    gen_libs.mv_file2(f_name, os.path.dirname(filename),
-                      os.path.basename(filename))
+    gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
     log.log_info("Finished processing of: %s" % (f_name))
 
 

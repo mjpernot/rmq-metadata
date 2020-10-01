@@ -50,7 +50,7 @@ class RabbitMQCon(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the IsseGuard class.
+        Description:  Initialization instance of the class.
 
         Arguments:
 
@@ -75,7 +75,7 @@ class Logger(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the IsseGuard class.
+        Description:  Initialization instance of the class.
 
         Arguments:
             (input) job_name -> Instance name.
@@ -153,7 +153,7 @@ class CfgTest(object):
         """
 
         self.host = "HOSTNAME"
-        self.exchange_name = "rmq_2_isse_unit_test"
+        self.exchange_name = "rmq_metadata_unit_test"
         self.to_line = None
         self.port = 5672
         self.exchange_type = "direct"
@@ -162,18 +162,16 @@ class CfgTest(object):
         self.auto_delete = False
         self.message_dir = "message_dir"
         self.log_dir = "logs"
-        self.log_file = "rmq_2_isse.log"
+        self.log_file = "rmq_metadata.log"
         self.archive_dir = "/dir/archive_path"
         self.queue_list = [
-            {"queue": "rmq_2_isse_unit_test",
+            {"queue": "rmq_metadata_unit_test",
              "routing_key": "MY_ROUTING_KEY",
              "directory": "/dir/path",
              "prename": "Pre-filename",
              "postname": "Post-filename",
              "mode": "w",
              "ext": "pdf",
-             "dtg": False,
-             "date": False,
              "stype": "encoded",
              "archive": False}]
 
@@ -211,17 +209,15 @@ class UnitTest(unittest.TestCase):
         self.cfg = CfgTest()
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
-        self.queue = {"queue": "rmq_2_isse_unit_test2",
+        self.queue = {"queue": "rmq_metadata_unit_test2",
                       "routing_key": "MY_ROUTING_KEY2",
                       "directory": "/dir/path2", "prename": "Pre-filename",
                       "postname": "Post-filename", "mode": "w", "ext": "pdf",
-                      "dtg": False, "date": False,
                       "stype": "encoded", "archive": False}
-        self.queue2 = {"queue": "rmq_2_isse_unit_test3",
+        self.queue2 = {"queue": "rmq_metadata_unit_test3",
                        "routing_key": "MY_ROUTING_KEY3",
                        "directory": "/dir/path3", "prename": "Pre-filename",
                        "postname": "Post-filename", "mode": "w", "ext": "pdf",
-                       "dtg": False, "date": False,
                        "stype": "encoded", "archive": True}
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
