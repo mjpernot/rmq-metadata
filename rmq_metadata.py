@@ -730,7 +730,7 @@ def create_metadata(metadata, data, **kwargs):
     return metadata
 
 
-def extract_pdf(f_name, char_encoding=None, **kwargs):
+def extract_pdf(f_name, log, char_encoding=None, **kwargs):
 
     """Function:  extract_pdf
 
@@ -738,18 +738,48 @@ def extract_pdf(f_name, char_encoding=None, **kwargs):
 
     Arguments:
         (input) f_name -> PDF file name.
+        (input) log -> Log class instance.
         (input) char_encoding -> Character encoding code.
+        (output) status -> True|False - successfully extraction of data.
         (output) text -> Raw text.
 
     """
 
+    status = True
+    text = ""
+
     if char_encoding:
-        text = textract.process(f_name, encoding=char_encoding)
+
+        try:
+            log.log_info("extract_pdf:  Extracting data -> set encoding.")
+            text = textract.process(f_name, encoding=char_encoding)
+
+        except textract.exceptions.ShellError as msg:
+            status = False
+
+            if str(msg).find("Incorrect password") >= 0:
+                log.log_err("extract_pdf:  PDF is password protected.")
+
+            else:
+                log.log_err("extract_pdf:  Error detected.")
+                log.log_err("Error Message:  %s" % msg)
 
     else:
-        text = textract.process(f_name)
+        try:
+            log.log_info("extract_pdf:  Extracting data -> default encoding.")
+            text = textract.process(f_name)
 
-    return text
+        except textract.exceptions.ShellError as msg:
+            status = False
+
+            if str(msg).find("Incorrect password") >= 0:
+                log.log_err("extract_pdf:  PDF is password protected.")
+
+            else:
+                log.log_err("extract_pdf:  Error detected.")
+                log.log_err("Error Message:  %s" % msg)
+
+    return status, text
 
 
 def get_textract_data(f_name, cfg, log, **kwargs):
