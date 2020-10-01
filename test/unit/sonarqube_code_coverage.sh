@@ -22,6 +22,7 @@ coverage run -a --source=rmq_metadata test/unit/rmq_metadata/main.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/merge_data.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/monitor_queue.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/non_proc_msg.py
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/pdf_to_string.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/process_msg.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/read_pdf.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/run_program.py
