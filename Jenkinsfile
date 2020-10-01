@@ -51,6 +51,7 @@ pipeline {
                 ./test/unit/rmq_metadata/merge_data.py
                 ./test/unit/rmq_metadata/monitor_queue.py
                 ./test/unit/rmq_metadata/non_proc_msg.py
+                ./test/unit/rmq_metadata/pdf_to_string.py
                 ./test/unit/rmq_metadata/process_msg.py
                 ./test/unit/rmq_metadata/read_pdf.py
                 ./test/unit/rmq_metadata/run_program.py
