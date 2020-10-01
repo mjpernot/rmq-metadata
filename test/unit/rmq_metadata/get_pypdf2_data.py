@@ -43,6 +43,7 @@ class Logger(object):
     Methods:
         __init__ -> Initialize configuration environment.
         log_info -> log_info method.
+        log_warn -> log_warn method.
 
     """
 
@@ -73,6 +74,19 @@ class Logger(object):
         """Method:  log_info
 
         Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_warn(self, data):
+
+        """Method:  log_warn
+
+        Description:  log_warn method.
 
         Arguments:
             (input) data -> Log entry.
@@ -140,6 +154,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_extract_failed -> Test with categorized data returned.
+        test_extract_success -> Test with extraction successful.
+        test_no_categorized_data -> Test with no categorized data returned.
         test_categorized_data -> Test with categorized data returned.
 
     """
@@ -170,6 +187,53 @@ class UnitTest(unittest.TestCase):
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
 
+    @mock.patch("rmq_metadata.summarize_data")
+    @mock.patch("rmq_metadata.find_tokens")
+    @mock.patch("rmq_metadata.word_tokenize")
+    @mock.patch("rmq_metadata.read_pdf")
+    def test_extract_failed(self, mock_read, mock_token, mock_find, mock_summ):
+
+        """Function:  test_extract_failed
+
+        Description:  Test with categorized data returned.
+
+        Arguments:
+
+        """
+
+        mock_read.return_value = (False, "")
+        mock_token.return_value = self.tokens
+        mock_find.return_value = self.categorized_text
+        mock_summ.return_value = self.final_data
+
+        self.assertEqual(
+            rmq_metadata.get_pypdf2_data(self.f_name, self.cfg, self.logger),
+            (False, []))
+
+    @mock.patch("rmq_metadata.summarize_data")
+    @mock.patch("rmq_metadata.find_tokens")
+    @mock.patch("rmq_metadata.word_tokenize")
+    @mock.patch("rmq_metadata.read_pdf")
+    def test_extract_success(self, mock_read, mock_token, mock_find,
+                             mock_summ):
+
+        """Function:  test_extract_success
+
+        Description:  Test with extraction successful.
+
+        Arguments:
+
+        """
+
+        mock_read.return_value = (True, self.rawtext)
+        mock_token.return_value = self.tokens
+        mock_find.return_value = self.categorized_text
+        mock_summ.return_value = self.final_data
+
+        self.assertEqual(
+            rmq_metadata.get_pypdf2_data(self.f_name, self.cfg, self.logger),
+            (True, self.final_data))
+
     @mock.patch("rmq_metadata.find_tokens")
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.read_pdf")
@@ -183,13 +247,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_read.return_value = self.rawtext
+        mock_read.return_value = (True, self.rawtext)
         mock_token.return_value = self.tokens
         mock_find.return_value = []
 
         self.assertEqual(
             rmq_metadata.get_pypdf2_data(self.f_name, self.cfg, self.logger),
-            [])
+            (True, []))
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -206,14 +270,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_read.return_value = self.rawtext
+        mock_read.return_value = (True, self.rawtext)
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text
         mock_summ.return_value = self.final_data
 
         self.assertEqual(
             rmq_metadata.get_pypdf2_data(self.f_name, self.cfg, self.logger),
-            self.final_data)
+            (True, self.final_data))
 
 
 if __name__ == "__main__":
