@@ -30,6 +30,7 @@ pipeline {
                 pip2 install PyPDF2==1.26.0 --user
                 pip2 install mock==2.0.0 --user
                 pip2 install nltk==3.4.0 --user
+                pip2 install pdfminer==20191010 --user
                 pip2 install pika==0.11.0 --user
                 pip2 install psutil==5.4.3 --user
                 pip2 install pymongo==3.2.0 --user
