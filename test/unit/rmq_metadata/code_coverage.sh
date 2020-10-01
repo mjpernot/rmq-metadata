@@ -15,6 +15,7 @@ coverage run -a --source=rmq_metadata test/unit/rmq_metadata/_validate_files.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/create_metadata.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/extract_pdf.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/find_tokens.py
+coverage run -a --source=rmq_metadata test/unit/rmq_metadata/get_pdfminer_data.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/get_pypdf2_data.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/get_textract_data.py
 coverage run -a --source=rmq_metadata test/unit/rmq_metadata/help_message.py 
