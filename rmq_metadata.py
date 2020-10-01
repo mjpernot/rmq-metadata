@@ -675,23 +675,29 @@ def get_pypdf2_data(f_name, cfg, log, **kwargs):
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
         (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
         (output) final_data -> List of categorized tokens from PDF file.
 
     """
 
     log.log_info("get_pypdf2_data:  Extracting data using PyPDF2.")
     final_data = []
-    rawtext = read_pdf(f_name, log)
-    log.log_info("get_pypdf2_data:  Running word_tokenizer...")
-    tokens = word_tokenize(rawtext)
-    log.log_info("get_pypdf2_data:  Finding tokens.")
-    categorized_text = find_tokens(tokens, cfg)
+    status, rawtext = read_pdf(f_name, log)
 
-    if categorized_text:
-        log.log_info("get_pypdf2_data:  Summarizing data")
-        final_data = summarize_data(categorized_text, cfg.token_types)
+    if status:
+        log.log_info("get_pypdf2_data:  Running word_tokenizer...")
+        tokens = word_tokenize(rawtext)
+        log.log_info("get_pypdf2_data:  Finding tokens.")
+        categorized_text = find_tokens(tokens, cfg)
 
-    return final_data
+        if categorized_text:
+            log.log_info("get_pypdf2_data:  Summarizing data")
+            final_data = summarize_data(categorized_text, cfg.token_types)
+
+    else:
+        log.log_warn("get_pypdf2_data:  Extraction failed.")
+
+    return status, final_data
 
 
 def create_metadata(metadata, data, **kwargs):

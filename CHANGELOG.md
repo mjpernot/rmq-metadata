@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
 ### Changed
+- get_pypdf2_data:  Check status of extraction and return status to calling function.
 - read_pdf:  Added check to see if PDF is encrypted and return status of extraction.
 
 
