@@ -173,6 +173,7 @@ import os
 import socket
 import getpass
 import datetime
+from io import BytesIO
 
 # Third-party
 import ast
@@ -183,6 +184,13 @@ import PyPDF2
 import textract
 from nltk.tokenize import word_tokenize
 from nltk.tag import StanfordNERTagger
+import pdfminer
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
 
 # Local
 import lib.arg_parser as arg_parser
@@ -503,6 +511,7 @@ def read_pdf(filename, **kwargs):
 
     Arguments:
         (input) filename -> PDF file name.
+        (output) text -> Raw text.
 
     """
 
@@ -731,7 +740,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
 
     """Function:  get_textract_data
 
-    Description:  .
+    Description:  Process data using the textract module.
 
     Arguments:
         (input) f_name -> PDF file name.
@@ -786,6 +795,45 @@ def get_textract_data(f_name, cfg, log, **kwargs):
             final_data = summarize_data(categorized_text, cfg.token_types)
 
     return final_data
+
+
+def pdf_to_string(f_name, log):
+
+    """Function:  pdf_to_string
+
+    Description:  Extract text from PDF using pdfminer module.
+
+    Arguments:
+        (input) f_name -> PDF file name.
+        (input) log -> Log class instance.
+        (output) text -> Raw text.
+
+    """
+
+    status = True
+    out_string = BytesIO()
+
+    with open(f_name, 'rb') as f_hdlr:
+        parser = PDFParser(f_hdlr)
+
+        try:
+            doc = PDFDocument(parser)
+            rsrcmgr = PDFResourceManager()
+            device = TextConverter(rsrcmgr, out_string, laparams=LAParams())
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+
+            for page in PDFPage.create_pages(doc):
+                interpreter.process_page(page)
+
+        except pdfminer.pdfdocument.PDFPasswordIncorrect:
+            log.log_err("pdf_to_string:  PDF is password protected.")
+            status = False
+            text = ""
+
+    data = (out_string.getvalue())
+    text = data.replace('.','')
+
+    return status, text
 
 
 def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):

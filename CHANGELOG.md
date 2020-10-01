@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.0.3] - 2020-10-01
+### Added
+- pdf_to_string:  Extract text from PDF using pdfminer module.
+
+
 ## [0.0.2] - 2020-09-29
 ### Added
 - \_validate_files:  Validates the file entries in the configuration file.
