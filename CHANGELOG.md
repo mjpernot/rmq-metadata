@@ -9,6 +9,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - get_pdfminer_data:  Process data using the pdfminer module.
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
+### Changed
+- read_pdf:  Added check to see if PDF is encrypted and return status of extraction.
+
 
 ## [0.0.2] - 2020-09-29
 ### Added

@@ -503,7 +503,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
     _process_queue(queue, body, r_key, cfg, f_name, log)
 
 
-def read_pdf(filename, **kwargs):
+def read_pdf(filename, log, **kwargs):
 
     """Function:  read_pdf
 
@@ -511,22 +511,32 @@ def read_pdf(filename, **kwargs):
 
     Arguments:
         (input) filename -> PDF file name.
+        (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
         (output) text -> Raw text.
 
     """
 
+    text = ""
+    status = True
     pdf = open(filename, "rb")
     pdfreader = PyPDF2.PdfFileReader(pdf)
-    num_pages = pdfreader.numPages
-    count = 0
-    text = ""
 
-    while count < num_pages:
-        page = pdfreader.getPage(count)
-        count += 1
-        text += page.extractText()
+    if pdfreader.isEncrypted:
+        log.log_err("read_pdf:  PDF is encrypted.")
+        status = False
 
-    return text
+    else:
+        log.log_info("read_pdf:  Extracting data...")
+        count = 0
+        num_pages = pdfreader.numPages
+
+        while count < num_pages:
+            page = pdfreader.getPage(count)
+            count += 1
+            text += page.extractText()
+
+    return status, text
 
 
 def find_tokens(tokenized_text, cfg, **kwargs):
@@ -671,7 +681,7 @@ def get_pypdf2_data(f_name, cfg, log, **kwargs):
 
     log.log_info("get_pypdf2_data:  Extracting data using PyPDF2.")
     final_data = []
-    rawtext = read_pdf(f_name)
+    rawtext = read_pdf(f_name, log)
     log.log_info("get_pypdf2_data:  Running word_tokenizer...")
     tokens = word_tokenize(rawtext)
     log.log_info("get_pypdf2_data:  Finding tokens.")
@@ -792,13 +802,13 @@ def get_textract_data(f_name, cfg, log, **kwargs):
         categorized_text = find_tokens(tokens, cfg)
 
         if categorized_text:
-            log.log_info("get_textract_data:  Summarizing data")
+            log.log_info("get_textract_data:  Summarizing data.")
             final_data = summarize_data(categorized_text, cfg.token_types)
 
     return final_data
 
 
-def pdf_to_string(f_name, log):
+def pdf_to_string(f_name, log, **kwargs):
 
     """Function:  pdf_to_string
 
@@ -824,6 +834,7 @@ def pdf_to_string(f_name, log):
             device = TextConverter(rsrcmgr, out_string, laparams=LAParams())
             interpreter = PDFPageInterpreter(rsrcmgr, device)
 
+            log.log_info("pdf_to_string:  Extracting data...")
             for page in PDFPage.create_pages(doc):
                 interpreter.process_page(page)
 
@@ -838,7 +849,7 @@ def pdf_to_string(f_name, log):
     return status, text
 
 
-def get_pdfminer_data(f_name, cfg, log):
+def get_pdfminer_data(f_name, cfg, log, **kwargs):
 
     """Function:  get_pdfminer_data
 
