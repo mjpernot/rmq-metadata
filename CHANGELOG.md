@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [0.0.3] - 2020-10-01
 ### Added
+- get_pdfminer_data:  Process data using the pdfminer module.
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
 
