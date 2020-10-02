@@ -509,7 +509,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_err("All extractions failed on: %s" % (f_filename))
         log.log_info("Body of message being saved to a file - see below")
         non_proc_msg(rmq, log, cfg, body, "All extractions failed", r_key)
-        os.remove(os.path.join(cfg.tmp_dir, f_filename))
+        os.remove(f_name)
         log.log_info("Cleanup of temporary files completed.")
         log.log_info("Finished processing of: %s" % (f_filename))
 
