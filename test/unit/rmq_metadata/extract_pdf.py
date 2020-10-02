@@ -34,6 +34,68 @@ import version
 __version__ = version.__version__
 
 
+class Logger(object):
+
+    """Class:  Logger
+
+    Description:  Class which is a representation of gen_class.Logger class.
+
+    Methods:
+        __init__ -> Initialize configuration environment.
+        log_info -> log_info method.
+        log_err -> log_err method.
+
+    """
+
+    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the class.
+
+        Arguments:
+            (input) job_name -> Instance name.
+            (input) job_log -> Log name.
+            (input) log_type -> Log type.
+            (input) log_format -> Log format.
+            (input) log_time -> Time format.
+
+        """
+
+        self.job_name = job_name
+        self.job_log = job_log
+        self.log_type = log_type
+        self.log_format = log_format
+        self.log_time = log_time
+        self.data = None
+
+    def log_info(self, data):
+
+        """Method:  log_info
+
+        Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_err(self, data):
+
+        """Method:  log_err
+
+        Description:  log_err method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -57,6 +119,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
+                             "%m-%d-%YT%H:%M:%SZ|")
         self.f_name = "Filename.pdf"
         self.encoding = "ascii"
         self.text = "ASCII Text"
@@ -78,7 +142,8 @@ class UnitTest(unittest.TestCase):
         mock_tract.return_value = self.text
 
         self.assertEqual(rmq_metadata.extract_pdf(
-            self.f_name, char_encoding=self.encoding), self.results)
+            self.f_name, self.logger, char_encoding=self.encoding),
+                         (True, self.results))
 
     @mock.patch("rmq_metadata.textract.process")
     def test_extract_pdf(self, mock_tract):
@@ -93,8 +158,8 @@ class UnitTest(unittest.TestCase):
 
         mock_tract.return_value = self.text2
 
-        self.assertEqual(rmq_metadata.extract_pdf(self.f_name),
-                         self.results2)
+        self.assertEqual(rmq_metadata.extract_pdf(self.f_name, self.logger),
+                         (True, self.results2))
 
 
 if __name__ == "__main__":

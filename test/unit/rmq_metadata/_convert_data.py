@@ -68,6 +68,7 @@ class Logger(object):
     Methods:
         __init__ -> Initialize configuration environment.
         log_info -> log_info method.
+        log_err -> log_err method.
 
     """
 
@@ -98,6 +99,19 @@ class Logger(object):
         """Method:  log_info
 
         Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_err(self, data):
+
+        """Method:  log_err
+
+        Description:  log_err method.
 
         Arguments:
             (input) data -> Log entry.
@@ -184,6 +198,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_extract_fails -> Test with extraction fails.
         test_prename_postname_ext -> Test with prename, postname, and ext.
         test_prename_postname -> Test with change to prename and postname.
         test_no_prename -> Test with no prename set.
@@ -223,6 +238,29 @@ class UnitTest(unittest.TestCase):
         self.cfg = CfgTest()
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
+
+    @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=False))
+    @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.gen_libs.write_file",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.os.path")
+    def test_extract_fails(self, mock_path):
+
+        """Function:  test_extract_fails
+
+        Description:  Test with extraction fails.
+
+        Arguments:
+
+        """
+
+        mock_path.join.side_effect = [self.t_file, self.f_name]
+
+        self.assertFalse(rmq_metadata._convert_data(
+            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+            self.body, self.method.routing_key))
 
     @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))

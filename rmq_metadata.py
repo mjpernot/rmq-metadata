@@ -173,6 +173,7 @@ import os
 import socket
 import getpass
 import datetime
+from io import BytesIO
 
 # Third-party
 import ast
@@ -183,6 +184,13 @@ import PyPDF2
 import textract
 from nltk.tokenize import word_tokenize
 from nltk.tag import StanfordNERTagger
+import pdfminer
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
 
 # Local
 import lib.arg_parser as arg_parser
@@ -492,10 +500,21 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    _process_queue(queue, body, r_key, cfg, f_name, log)
+    status = _process_queue(queue, body, r_key, cfg, f_name, log)
+
+    if status:
+        log.log_info("Finished processing of: %s" % (f_filename))
+
+    else:
+        log.log_err("All extractions failed on: %s" % (f_filename))
+        log.log_info("Body of message being saved to a file - see below")
+        non_proc_msg(rmq, log, cfg, body, "All extractions failed", r_key)
+        os.remove(f_name)
+        log.log_info("Cleanup of temporary files completed.")
+        log.log_info("Finished processing of: %s" % (f_filename))
 
 
-def read_pdf(filename, **kwargs):
+def read_pdf(filename, log, **kwargs):
 
     """Function:  read_pdf
 
@@ -503,21 +522,32 @@ def read_pdf(filename, **kwargs):
 
     Arguments:
         (input) filename -> PDF file name.
+        (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
+        (output) text -> Raw text.
 
     """
 
+    text = ""
+    status = True
     pdf = open(filename, "rb")
     pdfreader = PyPDF2.PdfFileReader(pdf)
-    num_pages = pdfreader.numPages
-    count = 0
-    text = ""
 
-    while count < num_pages:
-        page = pdfreader.getPage(count)
-        count += 1
-        text += page.extractText()
+    if pdfreader.isEncrypted:
+        log.log_err("read_pdf:  PDF is encrypted.")
+        status = False
 
-    return text
+    else:
+        log.log_info("read_pdf:  Extracting data...")
+        count = 0
+        num_pages = pdfreader.numPages
+
+        while count < num_pages:
+            page = pdfreader.getPage(count)
+            count += 1
+            text += page.extractText()
+
+    return status, text
 
 
 def find_tokens(tokenized_text, cfg, **kwargs):
@@ -656,23 +686,29 @@ def get_pypdf2_data(f_name, cfg, log, **kwargs):
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
         (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
         (output) final_data -> List of categorized tokens from PDF file.
 
     """
 
     log.log_info("get_pypdf2_data:  Extracting data using PyPDF2.")
     final_data = []
-    rawtext = read_pdf(f_name)
-    log.log_info("get_pypdf2_data:  Running word_tokenizer...")
-    tokens = word_tokenize(rawtext)
-    log.log_info("get_pypdf2_data:  Finding tokens.")
-    categorized_text = find_tokens(tokens, cfg)
+    status, rawtext = read_pdf(f_name, log)
 
-    if categorized_text:
-        log.log_info("get_pypdf2_data:  Summarizing data")
-        final_data = summarize_data(categorized_text, cfg.token_types)
+    if status:
+        log.log_info("get_pypdf2_data:  Running word_tokenizer.")
+        tokens = word_tokenize(rawtext)
+        log.log_info("get_pypdf2_data:  Finding tokens.")
+        categorized_text = find_tokens(tokens, cfg)
 
-    return final_data
+        if categorized_text:
+            log.log_info("get_pypdf2_data:  Summarizing data")
+            final_data = summarize_data(categorized_text, cfg.token_types)
+
+    else:
+        log.log_warn("get_pypdf2_data:  Extraction failed.")
+
+    return status, final_data
 
 
 def create_metadata(metadata, data, **kwargs):
@@ -705,7 +741,7 @@ def create_metadata(metadata, data, **kwargs):
     return metadata
 
 
-def extract_pdf(f_name, char_encoding=None, **kwargs):
+def extract_pdf(f_name, log, char_encoding=None, **kwargs):
 
     """Function:  extract_pdf
 
@@ -713,79 +749,195 @@ def extract_pdf(f_name, char_encoding=None, **kwargs):
 
     Arguments:
         (input) f_name -> PDF file name.
+        (input) log -> Log class instance.
         (input) char_encoding -> Character encoding code.
+        (output) status -> True|False - successfully extraction of data.
         (output) text -> Raw text.
 
     """
 
+    status = True
+    text = ""
+
     if char_encoding:
-        text = textract.process(f_name, encoding=char_encoding)
+
+        try:
+            log.log_info("extract_pdf:  Extracting data -> set encoding.")
+            text = textract.process(f_name, encoding=char_encoding)
+
+        except textract.exceptions.ShellError as msg:
+            status = False
+
+            if str(msg).find("Incorrect password") >= 0:
+                log.log_err("extract_pdf:  PDF is password protected.")
+
+            else:
+                log.log_err("extract_pdf:  Error detected.")
+                log.log_err("Error Message:  %s" % msg)
 
     else:
-        text = textract.process(f_name)
+        try:
+            log.log_info("extract_pdf:  Extracting data -> default encoding.")
+            text = textract.process(f_name)
 
-    return text
+        except textract.exceptions.ShellError as msg:
+            status = False
+
+            if str(msg).find("Incorrect password") >= 0:
+                log.log_err("extract_pdf:  PDF is password protected.")
+
+            else:
+                log.log_err("extract_pdf:  Error detected.")
+                log.log_err("Error Message:  %s" % msg)
+
+    return status, text
 
 
 def get_textract_data(f_name, cfg, log, **kwargs):
 
     """Function:  get_textract_data
 
-    Description:  .
+    Description:  Process data using the textract module.
 
     Arguments:
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
         (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
         (output) final_data -> List of categorized tokens from PDF file.
 
     """
 
     log.log_info("get_textract_data:  Extracting data using textract.")
-    suberrstr = "codec can't decode byte"
-    char_encoding = None
-    status = True
     final_data = []
 
     # Get character encoding.
     log.log_info("get_textract_data:  Detecting encode in PDF file.")
-    tmptext = extract_pdf(f_name)
-    data = chardet.detect(tmptext)
-
-    if data["confidence"] == 1.0:
-        char_encoding = data["encoding"]
-        log.log_info("get_textract_data:  Detected character encode: %s" %
-                     (char_encoding))
-
-    rawtext = extract_pdf(f_name, char_encoding)
-    log.log_info("get_textract_data:  Running word_tokenizer...")
-
-    try:
-        tokens = word_tokenize(rawtext)
-
-    except UnicodeDecodeError as msg:
-        log.log_warn("get_textract_data:  UnicodeDecodeError detected.")
-
-        if str(msg).find(suberrstr) >= 0 and msg.args[0] in cfg.textract_codes:
-            char_encoding = msg.args[0]
-            log.log_info("get_textract_data:  New encoding code detected: %s" %
-                         (char_encoding))
-            rawtext = extract_pdf(f_name, char_encoding)
-            tokens = word_tokenize(rawtext)
-
-        else:
-            log.log_warn("get_textract_data:  No encoding code detected.")
-            status = False
+    status, tmptext = extract_pdf(f_name, log)
 
     if status:
-        log.log_info("get_textract_data:  Finding tokens.")
+        suberrstr = "codec can't decode byte"
+        char_encoding = None
+        status_flag = True
+        categorized_text = []
+        data = chardet.detect(tmptext)
+
+        if data["confidence"] == 1.0:
+            char_encoding = data["encoding"]
+            log.log_info("get_textract_data:  Detected character encode: %s" %
+                         (char_encoding))
+
+        _, rawtext = extract_pdf(f_name, log, char_encoding)
+        log.log_info("get_textract_data:  Running word_tokenizer.")
+
+        try:
+            tokens = word_tokenize(rawtext)
+
+        except UnicodeDecodeError as msg:
+            log.log_warn("get_textract_data:  UnicodeDecodeError detected.")
+
+            if str(msg).find(suberrstr) >= 0 \
+               and msg.args[0] in cfg.textract_codes:
+                char_encoding = msg.args[0]
+                log.log_info(
+                    "get_textract_data:  New encoding code detected: %s" %
+                    (char_encoding))
+                _, rawtext = extract_pdf(f_name, log, char_encoding)
+                log.log_info("get_textract_data:  Re-running word_tokenizer.")
+                tokens = word_tokenize(rawtext)
+
+            else:
+                log.log_warn("get_textract_data:  No encoding code detected.")
+                status_flag = False
+
+        if status_flag:
+            log.log_info("get_textract_data:  Finding tokens.")
+            categorized_text = find_tokens(tokens, cfg)
+
+        if categorized_text:
+            log.log_info("get_textract_data:  Summarizing data.")
+            final_data = summarize_data(categorized_text, cfg.token_types)
+
+    else:
+        log.log_err("get_textract_data:  Extraction failed.")
+
+    return status, final_data
+
+
+def pdf_to_string(f_name, log, **kwargs):
+
+    """Function:  pdf_to_string
+
+    Description:  Extract text from PDF using pdfminer module.
+
+    Arguments:
+        (input) f_name -> PDF file name.
+        (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
+        (output) text -> Raw text.
+
+    """
+
+    status = True
+    out_string = BytesIO()
+
+    with open(f_name, 'rb') as f_hdlr:
+        parser = PDFParser(f_hdlr)
+
+        try:
+            doc = PDFDocument(parser)
+            rsrcmgr = PDFResourceManager()
+            device = TextConverter(rsrcmgr, out_string, laparams=LAParams())
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+
+            log.log_info("pdf_to_string:  Extracting data...")
+            for page in PDFPage.create_pages(doc):
+                interpreter.process_page(page)
+
+        except pdfminer.pdfdocument.PDFPasswordIncorrect:
+            log.log_err("pdf_to_string:  PDF is password protected.")
+            status = False
+            text = ""
+
+    data = (out_string.getvalue())
+    text = data.replace('.','')
+
+    return status, text
+
+
+def get_pdfminer_data(f_name, cfg, log, **kwargs):
+
+    """Function:  get_pdfminer_data
+
+    Description:  Process data using the pdfminer module.
+
+    Arguments:
+        (input) f_name -> PDF file name.
+        (input) cfg -> Configuration settings module for the program.
+        (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
+        (output) final_data -> List of categorized tokens from PDF file.
+
+    """
+
+    final_data = []
+    log.log_info("get_pdfminer_data:  Extracting data using pdfminer.")
+    status, rawtext = pdf_to_string(f_name, log)
+
+    if status:
+        log.log_info("get_pdfminer_data:  Running word_tokenizer.")
+        tokens = word_tokenize(rawtext)
+        log.log_info("get_pdfminer_data:  Finding tokens.")
         categorized_text = find_tokens(tokens, cfg)
 
         if categorized_text:
-            log.log_info("get_textract_data:  Summarizing data")
+            log.log_info("get_pdfminer_data:  Summarizing data")
             final_data = summarize_data(categorized_text, cfg.token_types)
 
-    return final_data
+    else:
+        log.log_err("get_pdfminer_data:  Extraction failed.")
+
+    return status, final_data
 
 
 def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
@@ -801,11 +953,13 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
         (input) cfg -> Configuration settings module for the program.
         (input) f_name -> PDF file name.
         (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
 
     """
 
     global DTG_FORMAT
 
+    status = True
     log.log_info("_process_queue:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
     metadata = {"FileName": os.path.basename(f_name),
@@ -813,18 +967,38 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
                 "DateTime": dtg}
 
     # Use the PyPDF2 module to extract data.
-    final_data = get_pypdf2_data(f_name, cfg, log)
-    metadata = create_metadata(metadata, final_data)
+    status_pypdf2, final_data = get_pypdf2_data(f_name, cfg, log)
+
+    if status_pypdf2:
+        log.log_info("_process_queue:  Adding metadata from pypdf2.")
+        metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
-    final_data = get_textract_data(f_name, cfg, log)
-    metadata = create_metadata(metadata, final_data)
+    status_textract, final_data = get_textract_data(f_name, cfg, log)
 
-    log.log_info("_process_queue:  Insert metadata into MongoDB.")
-    mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
-    log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
-    gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
-    log.log_info("Finished processing of: %s" % (f_name))
+    if status_textract:
+        log.log_info("_process_queue:  Adding metadata from textract.")
+        metadata = create_metadata(metadata, final_data)
+
+    # Use the pdfminer module to extract data.
+    status_pdfminer, final_data = get_pdfminer_data(f_name, cfg, log)
+
+    if status_pdfminer:
+        log.log_info("_process_queue:  Adding metadata from pdfminer.")
+        metadata = create_metadata(metadata, final_data)
+    
+
+    if status_pypdf2 or status_textract or status_pdfminer:
+        log.log_info("_process_queue:  Insert metadata into MongoDB.")
+        mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
+        log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
+        gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
+
+    else:
+        log.log_err("_process_queue:  All extractions methods failed.")
+        status = False
+
+    return status
 
 
 def monitor_queue(cfg, log, **kwargs):

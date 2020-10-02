@@ -84,6 +84,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_stanford_jar_path_false2 -> Test stanford_jar path check is False.
         test_stanford_jar_path_false -> Test stanford_jar path check is False.
         test_stanford_jar_path_true -> Test if stanford_jar path check is True.
         test_stanford_jar_false -> Test if stanford_jar check returns False.
@@ -114,6 +115,29 @@ class UnitTest(unittest.TestCase):
         base_name, ext_name = os.path.splitext(self.cfg.log_file)
         self.log_name = \
             base_name + "_" + self.cfg.exchange_name + "_" + ext_name
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_stanford_jar_path_false2(self, mock_lib):
+
+        """Function:  test_stanford_jar_path_false2
+
+        Description:  Test stanford_jar path check is False.
+
+        Arguments:
+
+        """
+
+        self.cfg.stanford_jar = "./path/Stanford.jar"
+        msg = "stanford_jar not set to absolute path: %s" % \
+              (self.cfg.stanford_jar)
+
+        mock_lib.chk_crt_file.side_effect = [(True, None),
+                                             (False, self.err_msg6)]
+
+        status_flag, err_msg = rmq_metadata._validate_files(
+            self.cfg, self.status, self.msg)
+
+        self.assertEqual((status_flag, err_msg), (False, msg))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_stanford_jar_path_false(self, mock_lib):
@@ -191,6 +215,29 @@ class UnitTest(unittest.TestCase):
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_lang_module_path_false2(self, mock_lib):
+
+        """Function:  test_lang_module_path_false2
+
+        Description:  Test if lang_module path check is False.
+
+        Arguments:
+
+        """
+
+        self.cfg.lang_module = "./path/Stanford_lang_module"
+        msg = "lang_module not set to absolute path: %s" % \
+              (self.cfg.lang_module) + self.err_msg5
+
+        mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
+                                             (True, None)]
+
+        status_flag, err_msg = rmq_metadata._validate_files(
+            self.cfg, self.status, self.msg)
+
+        self.assertEqual((status_flag, err_msg), (False, msg))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_lang_module_path_false(self, mock_lib):
