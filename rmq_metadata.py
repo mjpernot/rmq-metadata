@@ -922,7 +922,7 @@ def get_pdfminer_data(f_name, cfg, log, **kwargs):
             final_data = summarize_data(categorized_text, cfg.token_types)
 
     else:
-        final_data = []
+        log.log_err("get_pdfminer_data:  Extraction failed.")
 
     return status, final_data
 
@@ -945,6 +945,7 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
 
     global DTG_FORMAT
 
+    status = True
     log.log_info("_process_queue:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
     metadata = {"FileName": os.path.basename(f_name),
@@ -952,18 +953,39 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
                 "DateTime": dtg}
 
     # Use the PyPDF2 module to extract data.
-    final_data = get_pypdf2_data(f_name, cfg, log)
-    metadata = create_metadata(metadata, final_data)
+    status_pypdf2, final_data = get_pypdf2_data(f_name, cfg, log)
+
+    if status_pypdf2:
+        log.log_info("_process_queue:  Adding metadata from pypdf2.")
+        metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
-    final_data = get_textract_data(f_name, cfg, log)
-    metadata = create_metadata(metadata, final_data)
+    status_textract, final_data = get_textract_data(f_name, cfg, log)
 
-    log.log_info("_process_queue:  Insert metadata into MongoDB.")
-    mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
-    log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
-    gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
-    log.log_info("Finished processing of: %s" % (f_name))
+    if status_textract:
+        log.log_info("_process_queue:  Adding metadata from textract.")
+        metadata = create_metadata(metadata, final_data)
+
+    # Use the pdfminer module to extract data.
+    status_pdfminer, final_data = get_pdfminer_data(f_name, cfg, log)
+
+    if status_pdfminer:
+        log.log_info("_process_queue:  Adding metadata from pdfminer.")
+        metadata = create_metadata(metadata, final_data)
+    
+
+    if status_pypdf2 or status_textract or status_pdfminer:
+        log.log_info("_process_queue:  Insert metadata into MongoDB.")
+        mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
+        log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
+        gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
+        log.log_info("Finished processing of: %s" % (f_name))
+
+    else:
+        log.log_err("_process_queue:  All extractions methods failed.")
+        status = False
+
+    return status
 
 
 def monitor_queue(cfg, log, **kwargs):
