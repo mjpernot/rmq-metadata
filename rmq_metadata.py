@@ -500,7 +500,15 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    _process_queue(queue, body, r_key, cfg, f_name, log)
+    status = _process_queue(queue, body, r_key, cfg, f_name, log)
+
+    if status:
+        log.log_info("Finished processing of: %s" % (f_name))
+
+    else:
+        log.log_err("All extractions failed on: %s" % (f_name))
+        log.log_info("Body of message being saved to a file - see below")
+        non_proc_msg(rmq, log, cfg, body, "All extractions failed", r_key)
 
 
 def read_pdf(filename, log, **kwargs):
@@ -792,6 +800,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
         (input) f_name -> PDF file name.
         (input) cfg -> Configuration settings module for the program.
         (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
         (output) final_data -> List of categorized tokens from PDF file.
 
     """
@@ -940,6 +949,7 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
         (input) cfg -> Configuration settings module for the program.
         (input) f_name -> PDF file name.
         (input) log -> Log class instance.
+        (output) status -> True|False - successfully extraction of data.
 
     """
 
@@ -979,7 +989,6 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
         mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
         log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
         gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
-        log.log_info("Finished processing of: %s" % (f_name))
 
     else:
         log.log_err("_process_queue:  All extractions methods failed.")

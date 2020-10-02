@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
 ### Changed
+- \_convert_data:  Check and process status return from \_process_queue function.
 - \_process_queue:  Check status of extractions and return status to calling function.
 - get_textract_data:  Check status of extraction and return status to calling function.
 - extract_pdf:  Added check to see if PDF is encrypted and return status of extraction.
