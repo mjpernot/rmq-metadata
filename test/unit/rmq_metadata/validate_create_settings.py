@@ -95,8 +95,10 @@ class UnitTest(unittest.TestCase):
         test_lang_module_false -> Test if lang_module check returns False.
         test_lang_module_true -> Test if lang_module check returns True.
         test_tmp_dir_false -> Test if tmp_dir check returns False.
+        test_tmp_dir_not_abs -> Test when tmp_dir is not abs.
         test_tmp_dir_true -> Test if tmp_dir check returns True.
         test_archive_dir_false -> Test if archive_dir check returns False.
+        test_archive_not_abs -> Test when archive_dir is not abs.
         test_archive_dir_true -> Test if archive_dir check returns True.
         test_multi_queues_two_fail -> Test with multi queues and two failure.
         test_multi_queues_one_fail -> Test with multi queues and one failure.
@@ -318,12 +320,34 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (True, None), (False, self.err_msg1), (True, None),
+            (True, None), (True, None), (True, None), (False, self.err_msg1), 
             (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
 
         self.assertEqual((status_flag, err_msg), (False, self.err_msg1))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_tmp_dir_not_abs(self, mock_lib):
+
+        """Function:  test_tmp_dir_not_abs
+
+        Description:  Test when tmp_dir is not abs.
+
+        Arguments:
+
+        """
+
+        self.cfg.tmp_dir = "./dir/tmp_path"
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_tmp_dir_true(self, mock_lib):
@@ -364,6 +388,28 @@ class UnitTest(unittest.TestCase):
             rmq_metadata.validate_create_settings(self.cfg)
 
         self.assertEqual((status_flag, err_msg), (False, self.err_msg1))
+
+    @mock.patch("rmq_metadata.gen_libs")
+    def test_archive_not_abs(self, mock_lib):
+
+        """Function:  test_archive_not_abs
+
+        Description:  Test when archive_dir is not abs.
+
+        Arguments:
+
+        """
+
+        self.cfg.archive_dir = "./dir/path"
+
+        mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
+        mock_lib.chk_crt_dir.side_effect = [
+            (True, None), (True, None), (True, None), (True, None),
+            (True, None)]
+        _, status_flag, err_msg = \
+            rmq_metadata.validate_create_settings(self.cfg)
+
+        self.assertEqual((status_flag, err_msg), (True, ""))
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_archive_dir_true(self, mock_lib):

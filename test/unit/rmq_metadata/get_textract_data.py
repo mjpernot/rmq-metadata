@@ -44,6 +44,7 @@ class Logger(object):
         __init__ -> Initialize configuration environment.
         log_info -> log_info method.
         log_warn -> log_warn method.
+        log_err -> log_err method.
 
     """
 
@@ -87,6 +88,19 @@ class Logger(object):
         """Method:  log_warn
 
         Description:  log_warn method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_err(self, data):
+
+        """Method:  log_err
+
+        Description:  log_err method.
 
         Arguments:
             (input) data -> Log entry.
@@ -155,6 +169,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_extract_failure -> Test with failed extraction of data.
+        test_extract_successful -> Test with successful extraction of data.
         test_categorized_text2 -> Test with no categorized text.
         test_categorized_text -> Test with categorized text.
         test_confidence2 -> Test with confidence not equal to 1.
@@ -186,6 +202,49 @@ class UnitTest(unittest.TestCase):
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
 
+    @mock.patch("rmq_metadata.extract_pdf")
+    def test_extract_failure(self, mock_extract):
+
+        """Function:  test_extract_failure
+
+        Description:  Test with failed extraction of data.
+
+        Arguments:
+
+        """
+
+        mock_extract.return_value = (False, "")
+
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            (False, []))
+
+    @mock.patch("rmq_metadata.summarize_data")
+    @mock.patch("rmq_metadata.find_tokens")
+    @mock.patch("rmq_metadata.word_tokenize")
+    @mock.patch("rmq_metadata.chardet.detect")
+    @mock.patch("rmq_metadata.extract_pdf")
+    def test_extract_successful(self, mock_extract, mock_chardet, mock_token,
+                                mock_find, mock_sum):
+
+        """Function:  test_extract_successful
+
+        Description:  Test with successful extraction of data.
+
+        Arguments:
+
+        """
+
+        mock_extract.return_value = (True, self.text)
+        mock_chardet.return_value = self.data
+        mock_token.return_value = self.tokens
+        mock_find.return_value = self.categorized_text
+        mock_sum.return_value = self.final_data
+
+        self.assertEqual(
+            rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
+            (True, self.results))
+
     @mock.patch("rmq_metadata.find_tokens")
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.chardet.detect")
@@ -201,14 +260,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_extract.return_value = self.text
+        mock_extract.return_value = (True, self.text)
         mock_chardet.return_value = self.data
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text2
 
         self.assertEqual(
             rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
-            [])
+            (True, []))
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -226,7 +285,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_extract.return_value = self.text
+        mock_extract.return_value = (True, self.text)
         mock_chardet.return_value = self.data
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text
@@ -234,7 +293,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
-            self.results)
+            (True, self.results))
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -252,7 +311,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_extract.return_value = self.text
+        mock_extract.return_value = (True, self.text)
         mock_chardet.return_value = self.data2
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text
@@ -260,7 +319,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
-            self.results)
+            (True, self.results))
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -278,7 +337,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_extract.return_value = self.text
+        mock_extract.return_value = (True, self.text)
         mock_chardet.return_value = self.data
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text
@@ -286,7 +345,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
-            self.results)
+            (True, self.results))
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")
@@ -304,7 +363,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_extract.return_value = self.text
+        mock_extract.return_value = (True, self.text)
         mock_chardet.return_value = self.data
         mock_token.return_value = self.tokens
         mock_find.return_value = self.categorized_text
@@ -312,7 +371,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             rmq_metadata.get_textract_data(self.f_name, self.cfg, self.logger),
-            self.results)
+            (True, self.results))
 
 
 if __name__ == "__main__":

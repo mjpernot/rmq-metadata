@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.0.3] - 2020-10-01
+### Added
+- get_pdfminer_data:  Process data using the pdfminer module.
+- pdf_to_string:  Extract text from PDF using pdfminer module.
+
+### Changed
+- \_convert_data:  Check and process status return from \_process_queue function.
+- \_process_queue:  Check status of extractions and return status to calling function.
+- get_textract_data:  Check status of extraction and return status to calling function.
+- extract_pdf:  Added check to see if PDF is encrypted and return status of extraction.
+- get_pypdf2_data:  Check status of extraction and return status to calling function.
+- read_pdf:  Added check to see if PDF is encrypted and return status of extraction.
+
+
 ## [0.0.2] - 2020-09-29
 ### Added
 - \_validate_files:  Validates the file entries in the configuration file.

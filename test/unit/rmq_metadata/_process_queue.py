@@ -43,6 +43,7 @@ class Logger(object):
     Methods:
         __init__ -> Initialize configuration environment.
         log_info -> log_info method.
+        log_err -> log_err method.
 
     """
 
@@ -73,6 +74,19 @@ class Logger(object):
         """Method:  log_info
 
         Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_err(self, data):
+
+        """Method:  log_err
+
+        Description:  log_err method.
 
         Arguments:
             (input) data -> Log entry.
@@ -175,7 +189,14 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_process_queue -> Test the _test_process_queue function.
+        test_all_extract_fails -> Test with all extracts fails.
+        test_two_extract_fails3 -> Test with two extracts fails.
+        test_two_extract_fails2 -> Test with two extracts fails.
+        test_two_extract_fails -> Test with two extracts fails.
+        test_pdfminer_extract_fails -> Test with pdfminer extract fails.
+        test_textract_extract_fails -> Test with textract extract fails.
+        test_pypdf2_extract_fails -> Test with pypdf2 extract fails.
+        test_all_successful_extracts -> Test with all successful extracts.
 
     """
 
@@ -196,25 +217,209 @@ class UnitTest(unittest.TestCase):
         self.r_key = "ROUTING_KEY"
         self.body = "ThekljdsfkjsfdJVBERi0xLjQKJeLjz9MKMTAgMCBvYmoKPDwKL0EgP"
         self.f_name = "/working/path/Filename.pdf"
+        self.final_data = ["List", "of", "a", "data"]
 
-    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata.get_textract_data",
-                mock.Mock(return_value="data"))
-    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
-    @mock.patch("rmq_metadata.get_pypdf2_data", mock.Mock(return_value="data"))
-    def test_process_queue(self):
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_all_extract_fails(self, mock_pypdf2, mock_textract,
+                               mock_pdfminer):
 
-        """Function:  test_process_queue
+        """Function:  test_all_extract_fails
 
-        Description:  Test the _test_process_queue function.
+        Description:  Test with all extracts fails.
 
         Arguments:
 
         """
 
+        mock_pypdf2.return_value = (False, [])
+        mock_textract.return_value = (False, [])
+        mock_pdfminer.return_value = (False, [])
+
         self.assertFalse(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_two_extract_fails3(self, mock_pypdf2, mock_textract,
+                                mock_pdfminer):
+
+        """Function:  test_two_extract_fails3
+
+        Description:  Test with two extracts fails.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (False, [])
+        mock_textract.return_value = (False, [])
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_two_extract_fails2(self, mock_pypdf2, mock_textract,
+                                mock_pdfminer):
+
+        """Function:  test_two_extract_fails2
+
+        Description:  Test with two extracts fails.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (False, [])
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (False, [])
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_two_extract_fails(self, mock_pypdf2, mock_textract,
+                               mock_pdfminer):
+
+        """Function:  test_two_extract_fails
+
+        Description:  Test with two extracts fails.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (False, [])
+        mock_pdfminer.return_value = (False, [])
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_pdfminer_extract_fails(self, mock_pypdf2, mock_textract,
+                                    mock_pdfminer):
+
+        """Function:  test_pdfminer_extract_fails
+
+        Description:  Test with pdfminer extract fails.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (False, [])
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_textract_extract_fails(self, mock_pypdf2, mock_textract,
+                                    mock_pdfminer):
+
+        """Function:  test_textract_extract_fails
+
+        Description:  Test with textract extract fails.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (False, [])
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_pypdf2_extract_fails(self, mock_pypdf2, mock_textract,
+                                  mock_pdfminer):
+
+        """Function:  test_pypdf2_extract_fails
+
+        Description:  Test with pypdf2 extract fails.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (False, [])
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
+            self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_all_successful_extracts(self, mock_pypdf2, mock_textract,
+                                     mock_pdfminer):
+
+        """Function:  test_all_successful_extracts
+
+        Description:  Test with all successful extracts.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertTrue(rmq_metadata._process_queue(
             self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
             self.f_name, self.logger))
 

@@ -30,6 +30,7 @@ pipeline {
                 pip2 install PyPDF2==1.26.0 --user
                 pip2 install mock==2.0.0 --user
                 pip2 install nltk==3.4.0 --user
+                pip2 install pdfminer==20191010 --user
                 pip2 install pika==0.11.0 --user
                 pip2 install psutil==5.4.3 --user
                 pip2 install pymongo==3.2.0 --user
@@ -43,6 +44,7 @@ pipeline {
                 ./test/unit/rmq_metadata/create_metadata.py
                 ./test/unit/rmq_metadata/extract_pdf.py
                 ./test/unit/rmq_metadata/find_tokens.py
+                ./test/unit/rmq_metadata/get_pdfminer_data.py
                 ./test/unit/rmq_metadata/get_pypdf2_data.py
                 ./test/unit/rmq_metadata/get_textract_data.py
                 ./test/unit/rmq_metadata/help_message.py
@@ -50,6 +52,7 @@ pipeline {
                 ./test/unit/rmq_metadata/merge_data.py
                 ./test/unit/rmq_metadata/monitor_queue.py
                 ./test/unit/rmq_metadata/non_proc_msg.py
+                ./test/unit/rmq_metadata/pdf_to_string.py
                 ./test/unit/rmq_metadata/process_msg.py
                 ./test/unit/rmq_metadata/read_pdf.py
                 ./test/unit/rmq_metadata/run_program.py
