@@ -819,6 +819,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
         suberrstr = "codec can't decode byte"
         char_encoding = None
         status_flag = True
+        categorized_text = []
         data = chardet.detect(tmptext)
 
         if data["confidence"] == 1.0:
@@ -853,9 +854,9 @@ def get_textract_data(f_name, cfg, log, **kwargs):
             log.log_info("get_textract_data:  Finding tokens.")
             categorized_text = find_tokens(tokens, cfg)
 
-            if categorized_text:
-                log.log_info("get_textract_data:  Summarizing data.")
-                final_data = summarize_data(categorized_text, cfg.token_types)
+        if categorized_text:
+            log.log_info("get_textract_data:  Summarizing data.")
+            final_data = summarize_data(categorized_text, cfg.token_types)
 
     else:
         log.log_err("get_textract_data:  Extraction failed.")
@@ -924,7 +925,7 @@ def get_pdfminer_data(f_name, cfg, log, **kwargs):
     status, rawtext = pdf_to_string(f_name, log)
 
     if status:
-        log.log_info("get_pdfminer_data:  Running word_tokenizer...")
+        log.log_info("get_pdfminer_data:  Running word_tokenizer.")
         tokens = word_tokenize(rawtext)
         log.log_info("get_pdfminer_data:  Finding tokens.")
         categorized_text = find_tokens(tokens, cfg)
