@@ -503,12 +503,15 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
     status = _process_queue(queue, body, r_key, cfg, f_name, log)
 
     if status:
-        log.log_info("Finished processing of: %s" % (f_name))
+        log.log_info("Finished processing of: %s" % (f_filename))
 
     else:
-        log.log_err("All extractions failed on: %s" % (f_name))
+        log.log_err("All extractions failed on: %s" % (f_filename))
         log.log_info("Body of message being saved to a file - see below")
         non_proc_msg(rmq, log, cfg, body, "All extractions failed", r_key)
+        os.remove(os.path.join(cfg.tmp_dir, f_filename))
+        log.log_info("Cleanup of temporary files completed.")
+        log.log_info("Finished processing of: %s" % (f_filename))
 
 
 def read_pdf(filename, log, **kwargs):
@@ -810,7 +813,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
 
     # Get character encoding.
     log.log_info("get_textract_data:  Detecting encode in PDF file.")
-    status, tmptext = extract_pdf(f_name)
+    status, tmptext = extract_pdf(f_name, log)
 
     if status:
         suberrstr = "codec can't decode byte"
@@ -823,7 +826,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
             log.log_info("get_textract_data:  Detected character encode: %s" %
                          (char_encoding))
 
-        _, rawtext = extract_pdf(f_name, char_encoding)
+        _, rawtext = extract_pdf(f_name, log, char_encoding)
         log.log_info("get_textract_data:  Running word_tokenizer.")
 
         try:
@@ -838,7 +841,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
                 log.log_info(
                     "get_textract_data:  New encoding code detected: %s" %
                     (char_encoding))
-                _, rawtext = extract_pdf(f_name, char_encoding)
+                _, rawtext = extract_pdf(f_name, log, char_encoding)
                 log.log_info("get_textract_data:  Re-running word_tokenizer.")
                 tokens = word_tokenize(rawtext)
 
