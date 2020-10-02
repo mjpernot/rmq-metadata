@@ -43,6 +43,7 @@ class Logger(object):
     Methods:
         __init__ -> Initialize configuration environment.
         log_info -> log_info method.
+        log_err -> log_err method.
 
     """
 
@@ -73,6 +74,19 @@ class Logger(object):
         """Method:  log_info
 
         Description:  log_info method.
+
+        Arguments:
+            (input) data -> Log entry.
+
+        """
+
+        self.data = data
+
+    def log_err(self, data):
+
+        """Method:  log_err
+
+        Description:  log_err method.
 
         Arguments:
             (input) data -> Log entry.
