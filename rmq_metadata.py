@@ -280,7 +280,7 @@ def validate_create_settings(cfg, **kwargs):
 
     # Check on temporary message processing directory.
     if not os.path.isabs(cfg.tmp_dir):
-        cfg.message_dir = os.path.join(base_dir, cfg.tmp_dir)
+        cfg.tmp_dir = os.path.join(base_dir, cfg.tmp_dir)
 
     status, msg = gen_libs.chk_crt_dir(cfg.tmp_dir, write=True, read=True,
                                        no_print=True)

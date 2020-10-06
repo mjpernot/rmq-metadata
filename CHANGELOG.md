@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.0] - 2020-10-05
+### Fixed
+- validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
+
 ### Changed
 - \_process_queue:  Removed body and r_key arguments - no longer required.
 
