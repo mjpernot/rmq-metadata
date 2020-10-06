@@ -320,7 +320,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (True, None), (True, None), (False, self.err_msg1), 
+            (True, None), (True, None), (True, None), (False, self.err_msg1),
             (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
