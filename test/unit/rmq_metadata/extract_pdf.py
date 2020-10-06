@@ -143,7 +143,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(rmq_metadata.extract_pdf(
             self.f_name, self.logger, char_encoding=self.encoding),
-                         (True, self.results))
+            (True, self.results))
 
     @mock.patch("rmq_metadata.textract.process")
     def test_extract_pdf(self, mock_tract):
