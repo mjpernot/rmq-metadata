@@ -189,7 +189,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.pdf_to_string")
     def test_extract_failure(self, mock_extract, mock_token, mock_find,
-                              mock_sum):
+                             mock_sum):
 
         """Function:  test_extract_failure
 
@@ -261,7 +261,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.pdf_to_string")
     def test_categorized_text(self, mock_extract, mock_token, mock_find,
-                               mock_sum):
+                              mock_sum):
 
         """Function:  test_categorized_text
 
