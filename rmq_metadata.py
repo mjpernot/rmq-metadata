@@ -500,7 +500,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    status = _process_queue(queue, body, r_key, cfg, f_name, log)
+    status = _process_queue(queue, cfg, f_name, log)
 
     if status:
         log.log_info("Finished processing of: %s" % (f_filename))
@@ -940,7 +940,7 @@ def get_pdfminer_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
+def _process_queue(queue, cfg, f_name, log, **kwargs):
 
     """Function:  _process_queue
 
@@ -948,8 +948,6 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
 
     Arguments:
         (input) queue -> RabbitMQ queue.
-        (input) body -> Message body.
-        (input) r_key -> Routing key.
         (input) cfg -> Configuration settings module for the program.
         (input) f_name -> PDF file name.
         (input) log -> Log class instance.
