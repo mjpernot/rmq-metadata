@@ -214,8 +214,6 @@ class UnitTest(unittest.TestCase):
         self.cfg.mongo = CfgTest2()
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
-        self.r_key = "ROUTING_KEY"
-        self.body = "ThekljdsfkjsfdJVBERi0xLjQKJeLjz9MKMTAgMCBvYmoKPDwKL0EgP"
         self.f_name = "/working/path/Filename.pdf"
         self.final_data = ["List", "of", "a", "data"]
 
@@ -238,8 +236,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (False, [])
 
         self.assertFalse(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -264,8 +261,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (True, self.final_data)
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -290,8 +286,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (False, [])
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -316,8 +311,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (False, [])
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -342,8 +336,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (False, [])
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -368,8 +361,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (True, self.final_data)
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -394,8 +386,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (True, self.final_data)
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
@@ -420,8 +411,7 @@ class UnitTest(unittest.TestCase):
         mock_pdfminer.return_value = (True, self.final_data)
 
         self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
 
 if __name__ == "__main__":
