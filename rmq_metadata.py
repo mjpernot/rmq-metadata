@@ -900,7 +900,7 @@ def pdf_to_string(f_name, log, **kwargs):
             text = ""
 
     data = (out_string.getvalue())
-    text = data.replace('.','')
+    text = data.replace('.', '')
 
     return status, text
 
@@ -986,12 +986,12 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
     if status_pdfminer:
         log.log_info("_process_queue:  Adding metadata from pdfminer.")
         metadata = create_metadata(metadata, final_data)
-    
 
     if status_pypdf2 or status_textract or status_pdfminer:
         log.log_info("_process_queue:  Insert metadata into MongoDB.")
         mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
-        log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
+        log.log_info("_process_queue:  Moving PDF to: %s" %
+                     (queue["directory"]))
         gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
 
     else:
