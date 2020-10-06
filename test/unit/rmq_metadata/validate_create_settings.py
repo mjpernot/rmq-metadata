@@ -136,6 +136,8 @@ class UnitTest(unittest.TestCase):
         base_name, ext_name = os.path.splitext(self.cfg.log_file)
         self.log_name = \
             base_name + "_" + self.cfg.exchange_name + "_" + ext_name
+        self.log_name = \
+            base_name + "_" + self.cfg.exchange_name + ext_name
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_stanford_jar_path_false(self, mock_lib):
