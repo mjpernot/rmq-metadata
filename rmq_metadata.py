@@ -493,7 +493,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
     if queue["stype"] == "encoded":
         log.log_info("_convert_data:  Decoding data in message body.")
-        base64.decode(open(t_file, 'rb'), open(f_name, 'wb'))
+        base64.decode(open(t_file, "rb"), open(f_name, "wb"))
         os.remove(t_file)
 
     else:
@@ -881,7 +881,7 @@ def pdf_to_string(f_name, log, **kwargs):
     status = True
     out_string = BytesIO()
 
-    with open(f_name, 'rb') as f_hdlr:
+    with open(f_name, "rb") as f_hdlr:
         parser = PDFParser(f_hdlr)
 
         try:
@@ -900,7 +900,7 @@ def pdf_to_string(f_name, log, **kwargs):
             text = ""
 
     data = (out_string.getvalue())
-    text = data.replace('.', '')
+    text = data.replace(".", "")
 
     return status, text
 
