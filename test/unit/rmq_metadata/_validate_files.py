@@ -89,6 +89,7 @@ class UnitTest(unittest.TestCase):
         test_stanford_jar_path_true -> Test if stanford_jar path check is True.
         test_stanford_jar_false -> Test if stanford_jar check returns False.
         test_stanford_jar_true -> Test if stanford_jar check returns True.
+        test_lang_module_path_false2 -> Test lang_module path check is False.
         test_lang_module_path_false -> Test if lang_module path check is False.
         test_lang_module_path_true -> Test if lang_module path check is True.
         test_lang_module_false -> Test if lang_module check returns False.
