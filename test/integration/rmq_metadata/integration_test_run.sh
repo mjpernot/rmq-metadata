@@ -8,7 +8,7 @@ echo ""
 echo "Integration test:  rmq_metadata.py"
 #test/integration/rmq_metadata/_convert_data.py
 #test/integration/rmq_metadata/_process_queue.py
-#test/integration/rmq_metadata/_sort_data.py
+test/integration/rmq_metadata/_sort_data.py
 test/integration/rmq_metadata/_validate_files.py
 #test/integration/rmq_metadata/create_metadata.py
 #test/integration/rmq_metadata/extract_pdf.py
