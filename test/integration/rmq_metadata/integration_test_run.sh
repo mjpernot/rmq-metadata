@@ -18,7 +18,7 @@ test/integration/rmq_metadata/get_textract_data.py
 #test/integration/rmq_metadata/main.py
 #test/integration/rmq_metadata/monitor_queue.py
 #test/integration/rmq_metadata/non_proc_msg.py
-#test/integration/rmq_metadata/pdf_to_string.py
+test/integration/rmq_metadata/pdf_to_string.py
 #test/integration/rmq_metadata/process_msg.py
 test/integration/rmq_metadata/read_pdf.py
 #test/integration/rmq_metadata/run_program.py
