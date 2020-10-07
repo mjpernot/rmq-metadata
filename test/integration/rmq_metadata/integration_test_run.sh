@@ -23,6 +23,6 @@ test/integration/rmq_metadata/find_tokens.py
 #test/integration/rmq_metadata/process_msg.py
 test/integration/rmq_metadata/read_pdf.py
 #test/integration/rmq_metadata/run_program.py
-#test/integration/rmq_metadata/summarize_data.py
+test/integration/rmq_metadata/summarize_data.py
 test/integration/rmq_metadata/validate_create_settings.py
 
