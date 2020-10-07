@@ -19,7 +19,6 @@ coverage run -a --source=rmq_metadata test/integration/rmq_metadata/find_tokens.
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/get_pypdf2_data.py
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/get_textract_data.py
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/main.py 
-#coverage run -a --source=rmq_metadata test/integration/rmq_metadata/merge_data.py
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/monitor_queue.py 
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/non_proc_msg.py 
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/pdf_to_string.py
