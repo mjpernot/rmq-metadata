@@ -12,7 +12,7 @@ echo "Integration test:  rmq_metadata.py"
 test/integration/rmq_metadata/_validate_files.py
 #test/integration/rmq_metadata/create_metadata.py
 #test/integration/rmq_metadata/extract_pdf.py
-#test/integration/rmq_metadata/find_tokens.py
+test/integration/rmq_metadata/find_tokens.py
 #test/integration/rmq_metadata/get_pdfminer_data.py
 #test/integration/rmq_metadata/get_pypdf2_data.py
 #test/integration/rmq_metadata/get_textract_data.py
