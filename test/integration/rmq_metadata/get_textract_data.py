@@ -74,8 +74,7 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
-        self.final_data = [(u'Bailey', u'PERSON')]
-        self.final_data2 = [
+        self.final_data = [
             (u'London', u'LOCATION'), (u'Riccardo Tisci', u'PERSON'),
             (u'Givenchy', u'ORGANIZATION'), (u'Christopher Bailey', u'PERSON')]
 
@@ -122,7 +121,7 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(
             rmq_metadata.get_textract_data(
                 self.filename1, self.cfg, self.logger),
-            (True, self.final_data2))
+            (True, self.final_data))
 
     def tearDown(self):
 
