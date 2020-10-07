@@ -25,7 +25,7 @@ coverage run -a --source=rmq_metadata test/integration/rmq_metadata/find_tokens.
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/process_msg.py 
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/read_pdf.py
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/run_program.py
-#coverage run -a --source=rmq_metadata test/integration/rmq_metadata/summarize_data.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/summarize_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/validate_create_settings.py
 
 echo ""
