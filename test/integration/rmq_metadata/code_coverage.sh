@@ -13,7 +13,7 @@ echo "Running unit test modules in conjunction with coverage"
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_sort_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_validate_files.py
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/create_metadata.py
-#coverage run -a --source=rmq_metadata test/integration/rmq_metadata/extract_pdf.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/extract_pdf.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/find_tokens.py
 #coverage run -a --source=rmq_metadata test/integration/rmq_metadata/get_pdfminer_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/get_pypdf2_data.py
