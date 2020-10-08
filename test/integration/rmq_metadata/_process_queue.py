@@ -45,6 +45,7 @@ class UnitTest(unittest.TestCase):
     Methods:
         setUp -> Initialize testing environment.
         test_all_extract_fails -> Test with all extracts fails.
+        test_all_successful_extracts2 -> Test with all successful extracts.
         test_all_successful_extracts -> Test with all successful extracts.
         tearDown -> Cleanup of testing environment.
 
@@ -80,6 +81,57 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
+        self.mongo = mongo_class.Coll(
+            self.cfg.mongo.name, self.cfg.mongo.user, self.cfg.mongo.japd,
+            self.cfg.mongo.host, self.cfg.mongo.port, db=self.cfg.mongo.dbs,
+            coll=self.cfg.mongo.tbl, auth=self.cfg.mongo.auth, use_arg=True,
+            auth_db="admin")
+
+        if not self.mongo.connect()[0]:
+            print("Error:  Unable to connect to Mongo database.")
+            self.skipTest("No condition to Mongo database.")
+
+    def test_no_data_extracted2(self):
+
+        """Function:  test_no_data_extracted2
+
+        Description:  Test with no data extracted.
+
+        Arguments:
+
+        """
+
+        data = {}
+        gen_libs.cp_file(self.f_name3, self.pdf_dir, self.tmp_dir)
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.cfg, self.filename3, self.logger))
+
+    def test_no_data_extracted(self):
+
+        """Function:  test_no_data_extracted
+
+        Description:  Test with no data extracted.
+
+        Arguments:
+
+        """
+
+        data = {}
+        gen_libs.cp_file(self.f_name3, self.pdf_dir, self.tmp_dir)
+
+        rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.cfg, self.filename3, self.logger)
+
+        if self.mongo.coll_cnt() == 1:
+            data = self.mongo.coll_find1()
+
+        self.assertTrue(data["FileName"] == self.f_name3
+                        and data["Directory"] == self.final_dir
+                        and ("LOCATION" not in data.keys()
+                             and "ORGANIZATION" not in data.keys()
+                             and "PERSON" not in data.keys()))
+
     def test_all_extract_fails(self):
 
         """Function:  test_all_extract_fails
@@ -90,12 +142,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        gen_libs.cp_file(self.f_name2, self.pdf_dir, self.tmp_dir)
+
         self.assertFalse(rmq_metadata._process_queue(
             self.cfg.queue_list[0], self.cfg, self.filename2, self.logger))
 
-    def test_all_successful_extracts(self):
+    def test_all_successful_extracts2(self):
 
-        """Function:  test_all_successful_extracts
+        """Function:  test_all_successful_extracts2
 
         Description:  Test with all successful extracts.
 
@@ -108,18 +162,27 @@ class UnitTest(unittest.TestCase):
         self.assertTrue(rmq_metadata._process_queue(
             self.cfg.queue_list[0], self.cfg, self.filename1, self.logger))
 
-        mongo = mongo_class.Coll(
-            self.cfg.mongo.name, self.cfg.mongo.user, self.cfg.mongo.japd,
-            self.cfg.mongo.host, self.cfg.mongo.port, db=self.cfg.mongo.dbs,
-            coll=self.cfg.mongo.tbl, auth=self.cfg.mongo.auth, use_arg=True,
-            auth_db="admin")
-        mongo.connect()
-        if mongo.coll_cnt() == 1:
-            data = mongo.coll_find1()
+    def test_all_successful_extracts(self):
 
-        STOPPED HERE - check data for correctness.
+        """Function:  test_all_successful_extracts
 
-        mongo.coll.delete_many({})
+        Description:  Test with all successful extracts.
+
+        Arguments:
+
+        """
+
+        data = {}
+        gen_libs.cp_file(self.f_name1, self.pdf_dir, self.tmp_dir)
+
+        rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.cfg, self.filename1, self.logger)
+
+        if self.mongo.coll_cnt() == 1:
+            data = self.mongo.coll_find1()
+
+        self.assertTrue(data["FileName"] == self.f_name1
+                        and data["Directory"] == self.final_dir)
 
     def tearDown(self):
 
@@ -131,6 +194,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.mongo.coll.delete_many({})
+
         del sys.modules["rabbitmq"]
         del sys.modules["mongo"]
 
@@ -139,6 +204,12 @@ class UnitTest(unittest.TestCase):
 
         if os.path.isfile(os.path.join(self.final_dir, self.f_name1)):
             os.remove(os.path.join(self.final_dir, self.f_name1))
+
+        if os.path.isfile(os.path.join(self.tmp_dir, self.f_name2)):
+            os.remove(os.path.join(self.tmp_dir, self.f_name2))
+
+        if os.path.isfile(os.path.join(self.final_dir, self.f_name3)):
+            os.remove(os.path.join(self.final_dir, self.f_name3))
 
 
 if __name__ == "__main__":
