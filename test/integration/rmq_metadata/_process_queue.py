@@ -89,7 +89,7 @@ class UnitTest(unittest.TestCase):
 
         if not self.mongo.connect()[0]:
             print("Error:  Unable to connect to Mongo database.")
-            self.skipTest("No condition to Mongo database.")
+            self.skipTest("No connection to Mongo database.")
 
     def test_no_data_extracted2(self):
 
