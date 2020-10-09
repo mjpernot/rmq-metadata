@@ -101,7 +101,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        data = {}
         gen_libs.cp_file(self.f_name3, self.pdf_dir, self.tmp_dir)
 
         self.assertTrue(rmq_metadata._process_queue(
