@@ -18,7 +18,6 @@
 # Standard
 import os
 import sys
-import datetime
 
 # Third-party
 import base64
