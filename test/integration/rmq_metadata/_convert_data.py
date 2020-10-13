@@ -198,6 +198,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_no_metadata -> Test with no metadata detected.
         test_extract_fails -> Test with extraction fails.
         test_prename_postname_ext -> Test with prename, postname, and ext.
         test_prename_postname -> Test with change to prename and postname.
@@ -238,12 +239,13 @@ class UnitTest(unittest.TestCase):
         log_dir = os.path.join(base_path, "logs")
         self.pdf_dir = os.path.join(base_path, "testfiles")
         self.f_name1 = "TestPDF.pdf"
-#        self.f_name2 = "TestPDFe.pdf"
-#        self.f_name3 = "TestPDFa.pdf"
+        self.f_name2 = "TestPDFe.pdf"
+        self.f_name3 = "TestPDFa.pdf"
         self.filename1 = os.path.join(self.pdf_dir, self.f_name1)
-#        self.filename2 = os.path.join(self.tmp_dir, "TestPDFe.pdf")
-#        self.filename3 = os.path.join(self.tmp_dir, "TestPDFa.pdf")
+        self.filename2 = os.path.join(self.pdf_dir, "TestPDFe.pdf")
+        self.filename3 = os.path.join(self.pdf_dir, "TestPDFa.pdf")
         self.log_file = os.path.join(log_dir, "rmq_metadata.log")
+        self.msg_dir = os.path.join(base_path, "message_dir")
         self.logger = gen_class.Logger(
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
@@ -274,7 +276,50 @@ class UnitTest(unittest.TestCase):
             print("Error:  Unable to connect to Mongo database.")
             self.skipTest("No connection to Mongo database.")
 
-    @unittest.skip("STOPPED WORK HERE")
+    def test_no_metadata(self):
+
+        """Function:  test_no_metadata
+
+        Description:  Test with no metadata detected.
+
+        Arguments:
+
+        """
+
+        def callback(channel, method, properties, body):
+
+            """Function:  callback
+
+            Description:  Process message from RabbitMQ.
+
+            Arguments:
+                (input) channel -> Channel properties.
+                (input) method -> Delivery properties.
+                (input) properties -> Properties of the message.
+                (input) body -> Message body.
+
+            """
+
+            process_msg(self.rmq, self.logger, self.cfg, method, body)
+            self.rmq.ack(method.delivery_tag)
+
+        run_program(self.filename3)
+        data = {}
+        self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+
+        while self.rmq.channel._consumer_infos:
+            self.rmq.channel.connection.process_data_events(time_limit=1)
+            break
+
+        self.rmq.drop_connection()
+
+        if self.mongo.coll_cnt() == 1:
+            data = self.mongo.coll_find1()
+            self.filename = os.path.join(data["Directory"], data["FileName"])
+
+        self.assertTrue("FileName" in data.keys()
+                        and "Directory" in data.keys())
+
     def test_extract_fails(self):
 
         """Function:  test_extract_fails
@@ -302,8 +347,9 @@ class UnitTest(unittest.TestCase):
             process_msg(self.rmq, self.logger, self.cfg, method, body)
             self.rmq.ack(method.delivery_tag)
 
-        run_program(self.filename1)
+        run_program(self.filename2)
         data = {}
+        self.filename = ""
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
 
         while self.rmq.channel._consumer_infos:
@@ -312,12 +358,14 @@ class UnitTest(unittest.TestCase):
 
         self.rmq.drop_connection()
 
-        if self.mongo.coll_cnt() == 1:
-            data = self.mongo.coll_find1()
-            self.filename = os.path.join(data["Directory"], data["FileName"])
+        f_name = self.cfg.exchange_name + "_" \
+                 + self.cfg.queue_list[0]["routing_key"] + "_*"
+        f_list = gen_libs.list_filter_files(self.msg_dir, f_name)
 
-        self.assertTrue("FileName" in data.keys()
-                        and "Directory" in data.keys())
+        self.assertTrue(f_list and len(f_list) == 1)
+
+        if f_list and len(f_list) == 1:
+            os.remove(f_list[0])
 
     @unittest.skip("Does not work with a new extension - need further testing")
     def test_prename_postname_ext(self):
