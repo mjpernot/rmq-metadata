@@ -8,7 +8,7 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
-#coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_convert_data.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_convert_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_process_queue.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_sort_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_validate_files.py
