@@ -187,7 +187,6 @@ def process_msg(rmq, log, cfg, method, body):
     r_key = method.routing_key
     queue = cfg.queue_list[0]
     rmq_metadata._convert_data(rmq, log, cfg, queue, body, r_key)
-    
 
 
 class UnitTest(unittest.TestCase):
@@ -218,7 +217,6 @@ class UnitTest(unittest.TestCase):
 
     """
 
-
     def setUp(self):
 
         """Function:  setUp
@@ -232,8 +230,6 @@ class UnitTest(unittest.TestCase):
         integration_dir = "test/integration/rmq_metadata"
         base_path = os.path.join(os.getcwd(), integration_dir)
         config_dir = os.path.join(base_path, "config")
-#        self.final_dir = os.path.join(base_path, "final_data")
-#        self.tmp_dir = os.path.join(base_path, "tmp")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
         self.cfg.mongo = gen_libs.load_module(self.cfg.mongo_cfg, config_dir)
         log_dir = os.path.join(base_path, "logs")
