@@ -80,7 +80,6 @@ def publish_msg(rmq, fname):
     if not rmq.publish_msg(body):
         err_msg = "\tError:  Failed to publish message to RabbitMQ."
         status = False
-        archive_email(rmq, body)
 
     return status, err_msg
 
@@ -109,11 +108,10 @@ def create_rq_pub(cfg):
     if connect_status and rmq.channel.is_open:
         return rmq
 
-    else:
-        print("Error:  Failed to connect to RabbitMQ as Publisher.")
-        print("Error Message: %s" % (err_msg))
+    print("Error:  Failed to connect to RabbitMQ as Publisher.")
+    print("Error Message: %s" % (err_msg))
 
-        return None
+    return None
 
 
 def run_program(fname):
@@ -240,6 +238,7 @@ class UnitTest(unittest.TestCase):
         self.filename1 = os.path.join(self.pdf_dir, self.f_name1)
         self.filename2 = os.path.join(self.pdf_dir, "TestPDFe.pdf")
         self.filename3 = os.path.join(self.pdf_dir, "TestPDFa.pdf")
+        self.filename = ""
         self.log_file = os.path.join(log_dir, "rmq_metadata.log")
         self.msg_dir = os.path.join(base_path, "message_dir")
         self.logger = gen_class.Logger(
