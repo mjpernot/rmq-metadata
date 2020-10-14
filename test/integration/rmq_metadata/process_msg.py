@@ -215,7 +215,7 @@ class UnitTest(unittest.TestCase):
         self.msg_dir = os.path.join(base_path, "message_dir")
         self.archive = os.path.join(base_path, "archive")
         self.filter_name = self.cfg.exchange_name + "_" \
-                           + self.cfg.queue_list[0]["routing_key"] + "_*"
+            + self.cfg.queue_list[0]["routing_key"] + "_*"
         self.logger = gen_class.Logger(
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
@@ -341,8 +341,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys()
-                        and "Directory" in data.keys())
+        self.assertTrue("FileName" in data.keys() and
+                        "Directory" in data.keys())
 
     def test_archive_false(self):
 
@@ -479,8 +479,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys()
-                        and "Directory" in data.keys())
+        self.assertTrue("FileName" in data.keys() and
+                        "Directory" in data.keys())
 
     def test_queue_not_found(self):
 
