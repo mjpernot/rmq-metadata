@@ -70,7 +70,6 @@ def publish_msg(rmq, fname):
     if not rmq.publish_msg(body):
         err_msg = "\tError:  Failed to publish message to RabbitMQ."
         status = False
-        archive_email(rmq, body)
 
     return status, err_msg
 
@@ -99,11 +98,10 @@ def create_rq_pub(cfg):
     if connect_status and rmq.channel.is_open:
         return rmq
 
-    else:
-        print("Error:  Failed to connect to RabbitMQ as Publisher.")
-        print("Error Message: %s" % (err_msg))
+    print("Error:  Failed to connect to RabbitMQ as Publisher.")
+    print("Error Message: %s" % (err_msg))
 
-        return None
+    return None
 
 
 def run_program(fname):
