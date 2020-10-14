@@ -95,8 +95,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(rmq_metadata.extract_pdf(
-            self.filename2, self.logger, char_encoding=self.encoding),
+        self.assertEqual(
+            rmq_metadata.extract_pdf(
+                self.filename2, self.logger, char_encoding=self.encoding),
             (False, ""))
 
     def test_encrypted(self):
@@ -122,8 +123,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(rmq_metadata.extract_pdf(
-            self.filename1, self.logger, char_encoding=self.encoding),
+        self.assertEqual(
+            rmq_metadata.extract_pdf(
+                self.filename1, self.logger, char_encoding=self.encoding),
             (True, self.text2))
 
     def test_extract_pdf(self):
