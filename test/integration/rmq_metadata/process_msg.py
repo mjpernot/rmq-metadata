@@ -326,7 +326,6 @@ class UnitTest(unittest.TestCase):
             self.rmq.ack(method.delivery_tag)
 
         run_program(self.filename2)
-        data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
 
         while self.rmq.channel._consumer_infos:
@@ -603,7 +602,6 @@ class UnitTest(unittest.TestCase):
             self.rmq.ack(method.delivery_tag)
 
         run_program(self.filename1)
-        data = {}
         self.filename = ""
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
 
@@ -650,7 +648,6 @@ class UnitTest(unittest.TestCase):
             self.rmq.ack(method.delivery_tag)
 
         run_program(self.filename1)
-        data = {}
         self.filename = ""
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
 
