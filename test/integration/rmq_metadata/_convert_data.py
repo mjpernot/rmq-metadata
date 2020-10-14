@@ -343,7 +343,6 @@ class UnitTest(unittest.TestCase):
             self.rmq.ack(method.delivery_tag)
 
         run_program(self.filename2)
-        data = {}
         self.filename = ""
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
 
