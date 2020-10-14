@@ -29,6 +29,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import rmq_metadata
+import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -66,17 +67,14 @@ class UnitTest(unittest.TestCase):
         """
 
         main = "main.py"
-        integration_dir = "test/integration/rmq_metadata"
-        base_path = os.path.join(os.getcwd(), integration_dir)
-        config_dir = os.path.join(base_path, "config")
+        self.integration_dir = "test/integration/rmq_metadata"
+        base_path = os.path.join(os.getcwd(), self.integration_dir)
+        self.config_dir = os.path.join(base_path, "config")
         base_program = os.path.join(base_path, main)
+        self.cmdline = gen_libs.get_inst(sys)
 
-        self.argv_list = [base_program, "-c", "rabbitmq", "-d", config_dir,
-                          "-M"]
-        STOPPED HERE
-
-        #self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
-        #self.func_dict = {"-M": rmq_metadata.monitor_queue}
+        self.argv_list = [base_program, "-c", "rabbitmq", "-d",
+                          self.config_dir, "-M"]
 
     def test_help_true(self):
 
@@ -88,11 +86,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(rmq_metadata.main())
+        self.argv_list.append("-h")
+        self.cmdline.argv = self.argv_list
 
-    @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_help_false(self, mock_arg, mock_help):
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_metadata.main())
+
+    def test_help_false(self):
 
         """Function:  test_status_false
 
@@ -102,15 +102,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
+        self.argv_list.remove("-c")
+        self.argv_list.remove("rabbitmq")
+        self.cmdline.argv = self.argv_list
 
-        self.assertFalse(rmq_metadata.main())
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_metadata.main())
 
-    @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_true_chk_true(self, mock_arg, mock_help):
+    def test_require_true_chk_true(self):
 
         """Function:  test_require_true_chk_true
 
@@ -121,16 +120,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = True
+        self.argv_list.remove("-c")
+        self.argv_list.remove("rabbitmq")
+        self.cmdline.argv = self.argv_list
 
-        self.assertFalse(rmq_metadata.main())
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_metadata.main())
 
-    @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_false_chk_true(self, mock_arg, mock_help):
+    def test_require_false_chk_true(self):
 
         """Function:  test_require_false_chk_true
 
@@ -141,16 +138,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = True
+        self.argv_list.remove("-d")
+        self.argv_list.remove(self.config_dir)
+        self.argv_list.append("-d")
+        self.argv_list.append("/" + self.integration_dir)
+        self.cmdline.argv = self.argv_list
 
-        self.assertFalse(rmq_metadata.main())
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_metadata.main())
 
-    @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_true_chk_false(self, mock_arg, mock_help):
+    def test_require_true_chk_false(self):
 
         """Function:  test_require_true_chk_false
 
@@ -161,17 +158,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
+        self.argv_list.remove("-d")
+        self.argv_list.remove(self.config_dir)
+        self.argv_list.append("-d")
+        self.argv_list.append("/" + self.integration_dir)
+        self.cmdline.argv = self.argv_list
 
-        self.assertFalse(rmq_metadata.main())
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_metadata.main())
 
-    @mock.patch("rmq_metadata.run_program")
-    @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_false_chk_false(self, mock_arg, mock_help, mock_run):
+    @mock.patch("rmq_metadata.run_program", mock.Mock(return_value=True))
+    def test_require_false_chk_false(self):
 
         """Function:  test_require_false_chk_false
 
@@ -182,11 +179,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_run.return_value = True
+        self.cmdline.argv = self.argv_list
 
         self.assertFalse(rmq_metadata.main())
 
