@@ -80,7 +80,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, text = rmq_metadata.read_pdf(self.filename2, self.logger)
+        status, _ = rmq_metadata.read_pdf(self.filename2, self.logger)
 
         self.assertFalse(status)
 
@@ -94,7 +94,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, text = rmq_metadata.read_pdf(self.filename1, self.logger)
+        status, _ = rmq_metadata.read_pdf(self.filename1, self.logger)
 
         self.assertTrue(status)
 
@@ -108,7 +108,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, text = rmq_metadata.read_pdf(self.filename1, self.logger)
+        status, _ = rmq_metadata.read_pdf(self.filename1, self.logger)
 
         self.assertTrue(status)
 
