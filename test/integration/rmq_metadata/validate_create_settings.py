@@ -460,7 +460,6 @@ class UnitTest(unittest.TestCase):
         """
 
         sub_tmp_dir = "test/integration/rmq_metadata/tmp"
-        tmp_dir = os.path.join(os.getcwd(), sub_tmp_dir)
         self.cfg.tmp_dir = sub_tmp_dir
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
@@ -479,7 +478,7 @@ class UnitTest(unittest.TestCase):
 
         tmp_dir = self.cfg.tmp_dir
 
-        cfg, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
+        cfg, _, _ = rmq_metadata.validate_create_settings(self.cfg)
 
         self.assertEqual(cfg.tmp_dir, tmp_dir)
 
@@ -542,7 +541,6 @@ class UnitTest(unittest.TestCase):
         """
 
         sub_archive_dir = "test/integration/rmq_metadata/archive"
-        archive_dir = os.path.join(os.getcwd(), sub_archive_dir)
         self.cfg.archive_dir = sub_archive_dir
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
