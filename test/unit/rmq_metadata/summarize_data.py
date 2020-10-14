@@ -66,7 +66,7 @@ class UnitTest(unittest.TestCase):
         self.loop2 = ("LOCATION", [], [(u'London', u'LOCATION')])
         self.loop3 = ("O", [(u'London', u'LOCATION')], [])
         self.loop4 = ("O", [(u'London', u'LOCATION')], [])
-        self.loop4A = ("O", [(u'London', u'LOCATION')],
+        self.loop4a = ("O", [(u'London', u'LOCATION')],
                        [(u'SW1W9AX', u'LOCATION')])
         self.data_list = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
         self.results = [(u'London', u'LOCATION')]
@@ -85,7 +85,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_sort.side_effect = [self.loop1, self.loop2, self.loop3,
-                                 self.loop4A]
+                                 self.loop4a]
         mock_merge.return_value = self.data_list
 
         self.assertEqual(rmq_metadata.summarize_data(
