@@ -14,7 +14,7 @@
  * Program Help Function
  * Testing
    - Unit
-   - Integration (Not yet implementedi - ignore this section)
+   - Integration
    - Blackbox (Not yet implemented - ignore this section)
 
 
@@ -52,7 +52,6 @@ umask 022
 cd {Python_Project}
 git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
 cd rmq-metadata
-chmod 777 logs message_dir tmp
 ```
 
 Install/upgrade system modules.
@@ -86,10 +85,28 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Name of the exchange that will be monitored.
     - to_line = "EMAIL_ADDRESS"|None
       -> Is the email address/email alias to the RabbitMQ administrator(s) or None if no emails required.
+    - port = 5672
+      -> RabbitMQ listening port.
+      -> Do not change these unless you are familar with RabbitMQ.
+    - exchange_type = "direct"
+      -> Type of exchange:  direct, topic, fanout, headers
+      -> Do not change these unless you are familar with RabbitMQ.
+    - x_durable = True
+      -> Is exchange durable: True|False
+      -> Do not change these unless you are familar with RabbitMQ.
+    - q_durable = True
+      -> Are queues durable: True|False
+      -> Do not change these unless you are familar with RabbitMQ.
+    - auto_delete = False
+      -> Queues automatically delete message after processing: True|False
+      -> Do not change these unless you are familar with RabbitMQ.
     - message_dir = "DIRECTORY_PATH/message_dir"
       -> Is where failed reports/messages are written to.
     - log_dir = "DIRECTORY_PATH/logs"
       -> Is where failed log files are written to.
+    - log_file = "rmq_metadata.log"
+      -> File name to program log.
+      -> Name will be changed to include the exchange name being processed.
     - archive_dir = "DIRECTORY_PATH/archive"|None
       -> Directory name for archived messages.  
       -> If set to None, then no archiving will take place.
@@ -105,19 +122,13 @@ Make the appropriate changes to the RabbitMQ environment.
     - encoding = "utf-8"
       -> Encoding set used in the Stanford NLP processing.
       -> Default setting is the utf-8 encoding code.
-      -> The utf-8 code will work in most cases, do not recommend changing.
+      -> The utf-8 code will work in most cases, do not recommend changing this value.
     - token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
       -> Categories for the tokens for Stanford NLP and textract.
       -> Do not change unless you understand Stanford NLP and textract modules.
     - textract_codes = ["utf-8", "ascii", "iso-8859-1"]
       -> Encoding values for the textract module.
       -> Do not change unless you understand textract module.
-  * Do not change these unless you are familar with RabbitMQ.
-    - port = 5672
-    - exchange_type = "direct"
-    - x_durable = True
-    - q_durable = True
-    - auto_delete = False
   * The next entry is the queue_list.  This is a list of dictionaries.  Each dictionary within the list is the unique combination of queue name and routing key.  Therefore, each queue name and routing key will have its own dictionary entry within the list.  Make a copy of the dictionary for each combination and modify it for that queue/routing key setup.  Below is a break out of the dictionary.
   *  Recommend the mode, ext, stype settings ARE NOT changed, unless you have a good understanding of the system.
     - "queue": "QUEUE_NAME"
@@ -158,6 +169,9 @@ Make the appropriate changes to the RabbitMQ environment.
     - mongo_cfg = "mongo"
       -> Do not change the default unless changing the mongo configuration file name in the next section.
       -> Only requires the base name of the file name.
+    - mongo = None
+      -> Mongo configuration instance.
+      -> For internal use.  Do not change.
 
 ```
 cd config
@@ -173,17 +187,27 @@ Make the appropriate change to the environment.
     - user = "USER"
     - japd = "PASSWORD"
     - host = "HOST_IP"
+      -> Server's IP address.
+      -> Do not use the loopback IP.
     - name = "HOSTNAME"
+      -> Server hostname.
 
   * Change these entries only if required:
     - port = 27017
+      -> Mongo database port.
     - conf_file = None
+      -> Mongo configuration settings.
     - auth = True
+      -> Authentication required:  True|False
 
   * If connecting to a Mongo replica set:
+  * Set all entries to None if not connecting to a replica set.
     - repset = "REPLICA_SET_NAME"
+      -> Replica set name.
     - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
+      -> Replica host listing.
     - db_auth = "AUTHENTICATION_DATABASE"
+      -> Database to authentication to.
 
 ```
 cp mongo.py.TEMPLATE mongo.py
@@ -207,6 +231,7 @@ vim rmq_metadata_svc.sh
 ```
 
 Enable program as a service.
+
 ```
 sudo ln -s PYTHON_PROJECT/rmq-metadata/rmq_metadata_svc.sh /etc/init.d/rmq_metadata
 sudo chkconfig --add rmq_metadata
@@ -251,6 +276,7 @@ service rmq_metadata stop
 ```
 
   * Stopping the program.
+
 ```
 <Ctrl-C>
 ```
@@ -281,7 +307,6 @@ umask 022
 cd {Python_Project}
 git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
 cd rmq-metadata
-chmod 777 logs message_dir tmp
 ```
 
 Install/upgrade system modules.
@@ -312,13 +337,16 @@ test/unit/daemon_rmq_metadata/unit_test_run.sh
 ```
 
 ### Code coverage:
+
 ```
 cd {Python_Project}/rmq-metadata
 test/unit/rmq_metadata/code_coverage.sh
 test/unit/daemon_rmq_metadata/code_coverage.sh
 ```
 
+
 # Integration Testing:
+  * Note:  This test will require the use of a running RabbitMQ instance and a Mongo database or replica set.
 
 ### Installation:
 
@@ -331,7 +359,6 @@ umask 022
 cd {Python_Project}
 git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
 cd rmq-metadata
-chmod 777 logs message_dir tmp
 ```
 
 Install/upgrade system modules.
@@ -359,27 +386,61 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 Create RabbitMQ configuration file.
 
 Make the appropriate changes to the RabbitMQ environment.
-  * Change these entries in the rabbitmq.py file.  The "user", "japd", and "host" variables are the connection information to a RabbitMQ node, the other variables use the "Change to" settings.
+  * Change these entries in the rabbitmq.py file.  The "user", "japd", and "host" variables are the connection information to a RabbitMQ node, the other variables use the "Change to" setting values.  If the entry is not listed below then leave with the default value in the file.
     - user = "USER"
     - japd = "PASSWORD"
     - host = "HOSTNAME"
-    - exchange_name = "EXCHANGE_NAME"            -> Change to:  exchange_name = "intr-test"
-    - to_line = "EMAIL_ADDRESS"                  -> Change to:  to_line = None
-    - message_dir = "DIRECTORY_PATH/message_dir" -> Change to:  message_dir = "message_dir"
-    - log_dir = "DIRECTORY_PATH/logs"            -> Change to:  log_dir = "logs"
+    - exchange_name = "EXCHANGE_NAME"
+      -> Change to:  exchange_name = "mail2rmq"
+    - to_line = "EMAIL_ADDRESS"
+      -> Change to:  to_line = None
+    - message_dir = "DIRECTORY_PATH/message_dir"
+      -> Change to:  message_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/message_dir"
+    - log_dir = "DIRECTORY_PATH/logs"
+      -> Change to:  log_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/logs"
+    - archive_dir = None
+      -> Change to:  archive_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/archive"
+    - tmp_dir = "DIRECTORY_PATH/tmp"
+      -> Change to:  tmp_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/archive"
+    - lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
+      -> Change DIRECTORY_PATH to the location of the NLTP installation.
+    - stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
+      -> Change DIRECTORY_PATH to the location of the NLTP installation.
   * Have one entry in the queue_list list:
-    - "queue_name":                              -> Change value to:  "intr-test"
-    - "routing_key":                             -> Change value to:  "intr-test"
-    - "directory":                               -> Change value to:  "sysmon"
-    - "postname":                                -> Change value to:  "\_pkgs"
+    - "queue": "QUEUE_NAME",
+      -> Change to "queue": "mail2rmq_file",
+    - "routing_key": "ROUTING_KEY",
+      -> Change to "routing_key": "mail2rmq_file",
+    - "directory": "DIR_PATH",
+      -> Change to "directory": "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/final_data",
 
 ```
 cd test/integration/rmq_metadata
-chmod 777 logs message_dir sysmon
 cd config
 cp ../../../../config/rabbitmq.py.TEMPLATE rabbitmq.py
 vim rabbitmq.py
 chmod 600 rabbitmq.py
+```
+
+Create Mongo configuration file.
+
+Make the appropriate changes to the Mongo environment.
+  * Change these entries in the mongo.py file.  The "user", "japd", "host", and "name" variables are the connection information to a Mongo database, the other variables use the "Change to" settings.
+
+    - user = "USER"
+    - japd = "PASSWORD"
+    - host = "HOST_IP"
+    - name = "HOSTNAME"
+
+  * If connecting to a Mongo replica set:
+    - repset = "REPLICA_SET_NAME"
+    - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
+    - db_auth = "AUTHENTICATION_DATABASE"
+
+```
+cp ../../../../config/mongo.py.TEMPLATE mongo.py
+vim mongo.py
+chmod 600 mongo.py
 ```
 
 ### Testing:
@@ -391,9 +452,10 @@ test/integration/rmq_metadata/integration_test_run.sh
 ```
 
 ### Code coverage:
+
 ```
 cd {Python_Project}/rmq-metadata
-test/integration/daemon_rmq_metadata/code_coverage.sh
+test/integration/rmq_metadata/code_coverage.sh
 ```
 
 
@@ -410,7 +472,6 @@ umask 022
 cd {Python_Project}
 git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
 cd rmq-metadata
-chmod 777 logs message_dir tmp
 ```
 
 Install/upgrade system modules.
@@ -453,7 +514,6 @@ Make the appropriate changes to the RabbitMQ environment.
 
 ```
 cd test/blackbox/rmq_metadata
-chmod 777 logs message_dir sysmon
 cd config
 cp ../../../../config/rabbitmq.py.TEMPLATE rabbitmq.py
 vim rabbitmq.py
