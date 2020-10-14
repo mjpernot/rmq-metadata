@@ -125,11 +125,11 @@ class UnitTest(unittest.TestCase):
         if self.mongo.coll_cnt() == 1:
             data = self.mongo.coll_find1()
 
-        self.assertTrue(data["FileName"] == self.f_name3
-                        and data["Directory"] == self.final_dir
-                        and ("LOCATION" not in data.keys()
-                             and "ORGANIZATION" not in data.keys()
-                             and "PERSON" not in data.keys()))
+        self.assertTrue(data["FileName"] == self.f_name3 and
+                        data["Directory"] == self.final_dir and
+                        ("LOCATION" not in data.keys() and
+                         "ORGANIZATION" not in data.keys() and
+                         "PERSON" not in data.keys()))
 
     def test_all_extract_fails(self):
 
@@ -180,8 +180,8 @@ class UnitTest(unittest.TestCase):
         if self.mongo.coll_cnt() == 1:
             data = self.mongo.coll_find1()
 
-        self.assertTrue(data["FileName"] == self.f_name1
-                        and data["Directory"] == self.final_dir)
+        self.assertTrue(data["FileName"] == self.f_name1 and
+                        data["Directory"] == self.final_dir)
 
     def tearDown(self):
 
