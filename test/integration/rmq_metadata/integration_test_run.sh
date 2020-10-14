@@ -15,7 +15,7 @@ test/integration/rmq_metadata/find_tokens.py
 test/integration/rmq_metadata/get_pdfminer_data.py
 test/integration/rmq_metadata/get_pypdf2_data.py
 test/integration/rmq_metadata/get_textract_data.py
-#test/integration/rmq_metadata/main.py
+test/integration/rmq_metadata/main.py
 test/integration/rmq_metadata/non_proc_msg.py
 test/integration/rmq_metadata/pdf_to_string.py
 test/integration/rmq_metadata/process_msg.py
