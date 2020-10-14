@@ -70,7 +70,7 @@ class UnitTest(unittest.TestCase):
         self.log_file = os.path.join(log_dir, "rmq_metadata.log")
         self.msg_dir = os.path.join(base_path, "message_dir")
         self.filter_name = self.cfg.exchange_name + "_" \
-                           + self.cfg.queue_list[0]["routing_key"] + "_*"
+            + self.cfg.queue_list[0]["routing_key"] + "_*"
         self.logger = gen_class.Logger(
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
@@ -102,8 +102,8 @@ class UnitTest(unittest.TestCase):
                                   self.subj, self.r_key)
         f_list = gen_libs.list_filter_files(self.msg_dir, self.filter_name)
 
-        self.assertTrue(f_list and len(f_list) == 1
-                        and os.path.isfile(f_list[0]))
+        self.assertTrue(f_list and len(f_list) == 1 and
+                        os.path.isfile(f_list[0]))
 
     def test_empty_to_line(self):
 
@@ -119,8 +119,8 @@ class UnitTest(unittest.TestCase):
                                   self.subj, self.r_key)
         f_list = gen_libs.list_filter_files(self.msg_dir, self.filter_name)
 
-        self.assertTrue(f_list and len(f_list) == 1
-                        and os.path.isfile(f_list[0]))
+        self.assertTrue(f_list and len(f_list) == 1 and
+                        os.path.isfile(f_list[0]))
 
     @mock.patch("rmq_metadata.gen_class.Mail")
     def test_to_line(self, mock_mail):
@@ -141,8 +141,8 @@ class UnitTest(unittest.TestCase):
                                   self.subj, self.r_key)
         f_list = gen_libs.list_filter_files(self.msg_dir, self.filter_name)
 
-        self.assertTrue(f_list and len(f_list) == 1
-                        and os.path.isfile(f_list[0]))
+        self.assertTrue(f_list and len(f_list) == 1 and
+                        os.path.isfile(f_list[0]))
 
     def tearDown(self):
 
@@ -161,6 +161,7 @@ class UnitTest(unittest.TestCase):
 
         for item in gen_libs.list_filter_files(self.msg_dir, self.filter_name):
             os.remove(item)
+
 
 if __name__ == "__main__":
     unittest.main()
