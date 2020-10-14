@@ -61,13 +61,6 @@ class UnitTest(unittest.TestCase):
                                  (u',', u'O'), (u'SW1W9AX', u'O')]
         self.categorized_text2 = [(u',', u'O'), (u'London', u'LOCATION'),
                                   (u',', u'O'), (u'SW1W9AX', u'LOCATION')]
-        self.loop1 = ("O", [], [])
-        self.loop2 = ("LOCATION", [], [(u'London', u'LOCATION')])
-        self.loop3 = ("O", [(u'London', u'LOCATION')], [])
-        self.loop4 = ("O", [(u'London', u'LOCATION')], [])
-        self.loop4A = ("O", [(u'London', u'LOCATION')],
-                       [(u'SW1W9AX', u'LOCATION')])
-        self.data_list = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
         self.results = [(u'London', u'LOCATION')]
         self.results2 = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
 
