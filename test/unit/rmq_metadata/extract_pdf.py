@@ -141,8 +141,9 @@ class UnitTest(unittest.TestCase):
 
         mock_tract.return_value = self.text
 
-        self.assertEqual(rmq_metadata.extract_pdf(
-            self.f_name, self.logger, char_encoding=self.encoding),
+        self.assertEqual(
+            rmq_metadata.extract_pdf(
+                self.f_name, self.logger, char_encoding=self.encoding),
             (True, self.results))
 
     @mock.patch("rmq_metadata.textract.process")
