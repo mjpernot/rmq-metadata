@@ -51,7 +51,7 @@ class UnitTest(unittest.TestCase):
         test_single_queue -> Test with single queue.
         test_multiple_false2 -> Test if multiple checks return False.
         test_stanford_jar_path_false -> Test stanford_jar path check is False.
-        test_stanford_jar_path_true2 -> Test if stanford_jar path check is True.
+        test_stanford_jar_path_true2 -> Test if stanford_jar path chk is True.
         test_stanford_jar_path_true -> Test if stanford_jar path check is True.
         test_stanford_jar_false -> Test if stanford_jar check returns False.
         test_stanford_jar_true2 -> Test if stanford_jar check returns True.
@@ -98,10 +98,10 @@ class UnitTest(unittest.TestCase):
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
         self.err_msg = \
-                     "Error: Directory: /tmp/fake_message_dir does not exist."
+            "Error: Directory: /tmp/fake_message_dir does not exist."
         self.err_msg2 = "Error: Directory: /tmp/fake_log_dir does not exist."
         self.err_msg3 = \
-                      "Error: Directory: /tmp/fake_archive_dir does not exist."
+            "Error: Directory: /tmp/fake_archive_dir does not exist."
         self.err_msg4 = "Error: Directory: /tmp/fake_tmp_dir does not exist."
         self.err_msg5 = "Error: File /tmp/fake_lang_module is not readable."
         self.err_msg6 = "lang_module not set to absolute path: ./%s" % \
@@ -349,7 +349,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        lang_mod = self.cfg.lang_module 
+        lang_mod = self.cfg.lang_module
 
         cfg, _, _ = rmq_metadata.validate_create_settings(self.cfg)
 
