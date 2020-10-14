@@ -11,6 +11,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Changed
 - \_process_queue:  Removed body and r_key arguments - no longer required.
 
+### Removed
+- Removed non-used module libraries.
+
 
 ## [0.0.3] - 2020-10-01
 ### Added

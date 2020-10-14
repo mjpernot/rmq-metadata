@@ -176,8 +176,6 @@ import datetime
 from io import BytesIO
 
 # Third-party
-import ast
-import json
 import base64
 import chardet
 import PyPDF2
