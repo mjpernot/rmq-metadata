@@ -10,7 +10,8 @@
         file.
 
     Usage:
-        rmq_metadata.py -c config_file -d dir_path {-M}
+        rmq_metadata.py -c config_file -d dir_path
+            {-M}
             [-v | -h]
 
     Arguments:
@@ -18,7 +19,9 @@
             Required argument.
         -d dir_path => Directory path for option '-c'.
             Required argument.
+
         -M => Monitor and process messages from a RabbitMQ queue.
+
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -129,7 +132,7 @@
             user = "USER"
             japd = "PSWORD"
             # Mongo DB host information
-            host = "IP_ADDRESS"
+            host = "HOST_IP"
             name = "HOSTNAME"
             # Mongo database port (default is 27017)
             port = 27017

@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Changed
 - Removed an unnecessary \*\*kwargs from function paramters list.
 - \_process_queue:  Removed body and r_key arguments - no longer required.
+- Documentation updates.
 
 ### Removed
 - Removed non-used module libraries.
