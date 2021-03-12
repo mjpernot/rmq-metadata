@@ -980,9 +980,14 @@ class UnitTest(unittest.TestCase):
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
 
+        cnt = 0
+
         while self.rmq.channel._consumer_infos:
             self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            cnt += 1
+
+            if cnt > 0:
+                break
 
         self.rmq.drop_connection()
 
