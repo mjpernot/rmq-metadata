@@ -8,6 +8,7 @@
 ###  This README file is broken down into the following sections:
  * Features
  * Prerequisites
+   - FIPS Environment
  * Installation
  * Configuration
  * Running
@@ -15,7 +16,6 @@
  * Testing
    - Unit
    - Integration
-   - Blackbox (Not yet implemented - ignore this section)
 
 
 # Features:
@@ -79,35 +79,30 @@ Create RabbitMQ configuration file.
 Make the appropriate changes to the RabbitMQ environment.
   * The "user", "japd" and "host" is connection and host information to a RabbitMQ node.
     - user = "USER"
-    - japd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "HOSTNAME"
     - exchange_name = "EXCHANGE_NAME"
       -> Name of the exchange that will be monitored.
-    - to_line = "EMAIL_ADDRESS"|None
+    - to_line = "EMAIL_ADDRESS@EMAIL_DOMAIN"
       -> Is the email address/email alias to the RabbitMQ administrator(s) or None if no emails required.
     - port = 5672
       -> RabbitMQ listening port.
-      -> Do not change these unless you are familar with RabbitMQ.
     - exchange_type = "direct"
       -> Type of exchange:  direct, topic, fanout, headers
-      -> Do not change these unless you are familar with RabbitMQ.
     - x_durable = True
       -> Is exchange durable: True|False
-      -> Do not change these unless you are familar with RabbitMQ.
     - q_durable = True
       -> Are queues durable: True|False
-      -> Do not change these unless you are familar with RabbitMQ.
     - auto_delete = False
       -> Queues automatically delete message after processing: True|False
-      -> Do not change these unless you are familar with RabbitMQ.
     - message_dir = "DIRECTORY_PATH/message_dir"
       -> Is where failed reports/messages are written to.
     - log_dir = "DIRECTORY_PATH/logs"
       -> Is where failed log files are written to.
     - log_file = "rmq_metadata.log"
       -> File name to program log.
-      -> Name will be changed to include the exchange name being processed.
-    - archive_dir = "DIRECTORY_PATH/archive"|None
+      -> Name should be changed to include the exchange name being processed.
+    - archive_dir = None
       -> Directory name for archived messages.  
       -> If set to None, then no archiving will take place.
     - tmp_dir = "DIRECTORY_PATH/tmp"
@@ -185,29 +180,22 @@ Create Mongo configuration file.
 Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
     - user = "USER"
-    - japd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "HOST_IP"
-      -> Server's IP address.
-      -> Do not use the loopback IP.
     - name = "HOSTNAME"
-      -> Server hostname.
-
-  * Change these entries only if required:
     - port = 27017
-      -> Mongo database port.
     - conf_file = None
-      -> Mongo configuration settings.
     - auth = True
-      -> Authentication required:  True|False
+    - auth_db = "admin"
+    - auth_mech = "SCRAM-SHA-1"
+    - use_arg = True
+    - use_uri = False
 
   * If connecting to a Mongo replica set:
   * Set all entries to None if not connecting to a replica set.
     - repset = "REPLICA_SET_NAME"
-      -> Replica set name.
     - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
-      -> Replica host listing.
     - db_auth = "AUTHENTICATION_DATABASE"
-      -> Database to authentication to.
 
 ```
 cp mongo.py.TEMPLATE mongo.py
@@ -388,7 +376,7 @@ Create RabbitMQ configuration file.
 Make the appropriate changes to the RabbitMQ environment.
   * Change these entries in the rabbitmq.py file.  The "user", "japd", and "host" variables are the connection information to a RabbitMQ node, the other variables use the "Change to" setting values.  If the entry is not listed below then leave with the default value in the file.
     - user = "USER"
-    - japd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "HOSTNAME"
     - exchange_name = "EXCHANGE_NAME"
       -> Change to:  exchange_name = "mail2rmq"
@@ -428,9 +416,16 @@ Make the appropriate changes to the Mongo environment.
   * Change these entries in the mongo.py file.  The "user", "japd", "host", and "name" variables are the connection information to a Mongo database, the other variables use the "Change to" settings.
 
     - user = "USER"
-    - japd = "PASSWORD"
+    - japd = "PSWORD"
     - host = "HOST_IP"
     - name = "HOSTNAME"
+    - port = 27017
+    - conf_file = None
+    - auth = True
+    - auth_db = "admin"
+    - auth_mech = "SCRAM-SHA-1"
+    - use_arg = True
+    - use_uri = False
 
   * If connecting to a Mongo replica set:
     - repset = "REPLICA_SET_NAME"
@@ -456,75 +451,5 @@ test/integration/rmq_metadata/integration_test_run.sh
 ```
 cd {Python_Project}/rmq-metadata
 test/integration/rmq_metadata/code_coverage.sh
-```
-
-
-# Blackbox Testing:
-
-### Installation:
-
-Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
-cd rmq-metadata
-```
-
-Install/upgrade system modules.
-
-```
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
-
-# Configuration:
-
-Create RabbitMQ configuration file.
-
-Make the appropriate changes to the RabbitMQ environment.
-  * Replace **{PYTHON_PROJECT}** with the baseline path of the python program.
-  * Change these entries in the rabbitmq.py file.  The "user", "japd", and "host" variables are the connection information to a RabbitMQ node, the other variables use the "Change to" settings.
-    - user = "USER"
-    - japd = "PASSWORD"
-    - host = "HOSTNAME"
-    - exchange_name = "EXCHANGE_NAME"            -> Change to:  exchange_name = "blackbox-test"
-    - to_line = "EMAIL_ADDRESS@DOMAIN_NAME"      -> Change to:  to_line = None
-    - message_dir = "DIRECTORY_PATH/message_dir" -> Change to:  message_dir = "{PYTHON_PROJECT}/test/blackbox/rmq_metadata/message_dir"
-    - log_dir = "DIRECTORY_PATH/logs"            -> Change to:  log_dir = "{PYTHON_PROJECT}/test/blackbox/rmq_metadata/logs"
-  * Have one entry in the queue_list list:
-    - "queue_name":                              -> Change value to:  "blackbox-test"
-    - "routing_key":                             -> Change value to:  "blackbox-test"
-    - "directory":                               -> Change value to:  "{PYTHON_PROJECT}/test/blackbox/rmq_metadata/sysmon"
-    - "postname":                                -> Change value to:  "\_pkgs"
-
-```
-cd test/blackbox/rmq_metadata
-cd config
-cp ../../../../config/rabbitmq.py.TEMPLATE rabbitmq.py
-vim rabbitmq.py
-chmod 600 rabbitmq.py
-```
-
-### Testing:
-  * Replace **{Python_Project}** with the baseline path of the python program.
-
-```
-cd {Python_Project}/rmq-metadata
-test/blackbox/rmq_metadata/blackbox_test.sh
 ```
 
