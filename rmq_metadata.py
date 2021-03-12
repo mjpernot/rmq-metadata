@@ -147,13 +147,13 @@
             # Replica Set Mongo configuration settings.
             # None means the Mongo database is not part of a replica set.
             # Replica set name.
-            #    Format:  repset = "REPLICA_SET_NAME"
+            # Format:  repset = "REPLICA_SET_NAME"
             repset = None
             # Replica host listing.
-            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+            # Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             repset_hosts = None
             # Database to authentication to.
-            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
+            # Format:  db_auth = "AUTHENTICATION_DATABASE"
             db_auth = None
 
     Example:
