@@ -113,6 +113,9 @@ class UnitTest(unittest.TestCase):
         self.queue = dict(self.cfg.queue_list[0])
         self.queue["queue"] = "mail2rmq_file2"
         self.queue["routing_key"] = "mail2rmq_file2"
+        self.fake = "/tmp/fake_final"
+        self.fake_dir = "/tmp/fake_message_dir"
+        self.fake_log = "/tmp/fake_log_dir"
 
     def test_multi_queues_two_fail(self):
 
@@ -125,8 +128,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.queue_list.append(self.queue)
-        self.cfg.queue_list[0]["directory"] = "/tmp/fake_final"
-        self.cfg.queue_list[1]["directory"] = "/tmp/fake_final"
+        self.cfg.queue_list[0]["directory"] = self.fake
+        self.cfg.queue_list[1]["directory"] = self.fake
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -144,7 +147,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.queue_list.append(self.queue)
-        self.cfg.queue_list[0]["directory"] = "/tmp/fake_final"
+        self.cfg.queue_list[0]["directory"] = self.fake
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -176,7 +179,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.queue_list[0]["directory"] = "/tmp/fake_final"
+        self.cfg.queue_list[0]["directory"] = self.fake
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -222,8 +225,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.message_dir = "/tmp/fake_message_dir"
-        self.cfg.log_dir = "/tmp/fake_log_dir"
+        self.cfg.message_dir = self.fake_dir
+        self.cfg.log_dir = self.fake_log
         self.cfg.stanford_jar = "./" + self.cfg.stanford_jar
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
@@ -586,8 +589,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.message_dir = "/tmp/fake_message_dir"
-        self.cfg.log_dir = "/tmp/fake_log_dir"
+        self.cfg.message_dir = self.fake_dir
+        self.cfg.log_dir = self.fake_log
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -604,7 +607,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.log_dir = "/tmp/fake_log_dir"
+        self.cfg.log_dir = self.fake_log
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -652,7 +655,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.message_dir = "/tmp/fake_message_dir"
+        self.cfg.message_dir = self.fake_dir
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
