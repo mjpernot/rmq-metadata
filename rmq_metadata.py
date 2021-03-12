@@ -204,7 +204,7 @@ __version__ = version.__version__
 DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
 
 
-def help_message(**kwargs):
+def help_message():
 
     """Function:  help_message
 
@@ -218,7 +218,7 @@ def help_message(**kwargs):
     print(__doc__)
 
 
-def validate_create_settings(cfg, **kwargs):
+def validate_create_settings(cfg):
 
     """Function:  validate_create_settings
 
@@ -302,7 +302,7 @@ def validate_create_settings(cfg, **kwargs):
     return cfg, status_flag, err_msg
 
 
-def _validate_files(cfg, status_flag, err_msg, **kwargs):
+def _validate_files(cfg, status_flag, err_msg):
 
     """Function:  _validate_files
 
@@ -349,7 +349,7 @@ def _validate_files(cfg, status_flag, err_msg, **kwargs):
     return status_flag, err_msg
 
 
-def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
+def non_proc_msg(rmq, log, cfg, data, subj, r_key):
 
     """Function:  non_proc_msg
 
@@ -400,7 +400,7 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
     gen_libs.write_file(f_path, data=data, mode="w")
 
 
-def process_msg(rmq, log, cfg, method, body, **kwargs):
+def process_msg(rmq, log, cfg, method, body):
 
     """Function:  process_msg
 
@@ -448,7 +448,7 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
         non_proc_msg(rmq, log, cfg, body, "No queue detected", r_key)
 
 
-def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
+def _convert_data(rmq, log, cfg, queue, body, r_key):
 
     """Function:  _convert_data
 
@@ -512,7 +512,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
         log.log_info("Finished processing of: %s" % (f_filename))
 
 
-def read_pdf(filename, log, **kwargs):
+def read_pdf(filename, log):
 
     """Function:  read_pdf
 
@@ -548,7 +548,7 @@ def read_pdf(filename, log, **kwargs):
     return status, text
 
 
-def find_tokens(tokenized_text, cfg, **kwargs):
+def find_tokens(tokenized_text, cfg):
 
     """Function:  find_tokens
 
@@ -569,7 +569,7 @@ def find_tokens(tokenized_text, cfg, **kwargs):
     return categorized_text
 
 
-def summarize_data(categorized_text, token_types, **kwargs):
+def summarize_data(categorized_text, token_types):
 
     """Function:  summarize_data
 
@@ -600,7 +600,7 @@ def summarize_data(categorized_text, token_types, **kwargs):
     return data_list
 
 
-def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
+def _sort_data(item, current_type, data_list, tmp_data, token_types):
 
     """Function:  _sort_data
 
@@ -645,7 +645,7 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
     return current_type, data_list, tmp_data
 
 
-def merge_data(data_list, tmp_data, **kwargs):
+def merge_data(data_list, tmp_data):
 
     """Function:  merge_data
 
@@ -673,7 +673,7 @@ def merge_data(data_list, tmp_data, **kwargs):
     return data_list
 
 
-def get_pypdf2_data(f_name, cfg, log, **kwargs):
+def get_pypdf2_data(f_name, cfg, log):
 
     """Function:  get_pypdf2_data
 
@@ -709,7 +709,7 @@ def get_pypdf2_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def create_metadata(metadata, data, **kwargs):
+def create_metadata(metadata, data):
 
     """Function:  create_metadata2
 
@@ -739,7 +739,7 @@ def create_metadata(metadata, data, **kwargs):
     return metadata
 
 
-def extract_pdf(f_name, log, char_encoding=None, **kwargs):
+def extract_pdf(f_name, log, char_encoding=None):
 
     """Function:  extract_pdf
 
@@ -791,7 +791,7 @@ def extract_pdf(f_name, log, char_encoding=None, **kwargs):
     return status, text
 
 
-def get_textract_data(f_name, cfg, log, **kwargs):
+def get_textract_data(f_name, cfg, log):
 
     """Function:  get_textract_data
 
@@ -862,7 +862,7 @@ def get_textract_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def pdf_to_string(f_name, log, **kwargs):
+def pdf_to_string(f_name, log):
 
     """Function:  pdf_to_string
 
@@ -903,7 +903,7 @@ def pdf_to_string(f_name, log, **kwargs):
     return status, text
 
 
-def get_pdfminer_data(f_name, cfg, log, **kwargs):
+def get_pdfminer_data(f_name, cfg, log):
 
     """Function:  get_pdfminer_data
 
@@ -938,7 +938,7 @@ def get_pdfminer_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def _process_queue(queue, cfg, f_name, log, **kwargs):
+def _process_queue(queue, cfg, f_name, log):
 
     """Function:  _process_queue
 
@@ -997,7 +997,7 @@ def _process_queue(queue, cfg, f_name, log, **kwargs):
     return status
 
 
-def monitor_queue(cfg, log, **kwargs):
+def monitor_queue(cfg, log):
 
     """Function:  monitor_queue
 

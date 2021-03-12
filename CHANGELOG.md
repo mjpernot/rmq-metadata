@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- Removed an unnecessary \*\*kwargs from function paramters list.
 - \_process_queue:  Removed body and r_key arguments - no longer required.
 
 ### Removed
@@ -22,10 +23,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - \_convert_data:  Check and process status return from \_process_queue function.
-- \_process_queue:  Check status of extractions and return status to calling function.
-- get_textract_data:  Check status of extraction and return status to calling function.
+- get_textract_data, get_pypdf2_data, \_process_queue:  Check status of extractions and return status to calling function.
 - extract_pdf:  Added check to see if PDF is encrypted and return status of extraction.
-- get_pypdf2_data:  Check status of extraction and return status to calling function.
 - read_pdf:  Added check to see if PDF is encrypted and return status of extraction.
 
 
