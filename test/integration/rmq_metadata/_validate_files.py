@@ -70,10 +70,10 @@ class UnitTest(unittest.TestCase):
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
         self.status = True
         self.msg = ""
-        self.err_msg = "Error: File /tmp/fake_lang_module is not readable."
+        self.err_msg = "Error: File /mytmp/fake_lang_module is not readable."
         self.err_msg2 = "lang_module not set to absolute path: ./%s" % \
                         self.cfg.lang_module
-        self.err_msg3 = "Error: File /tmp/fake_jar is not readable."
+        self.err_msg3 = "Error: File /mytmp/fake_jar is not readable."
         self.err_msg4 = "stanford_jar not set to absolute path: ./%s" % \
                         self.cfg.stanford_jar
 
@@ -119,7 +119,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.stanford_jar = "/tmp/fake_jar"
+        self.cfg.stanford_jar = "/mytmp/fake_jar"
 
         status, err_msg = rmq_metadata._validate_files(self.cfg, self.status,
                                                        self.msg)
@@ -183,7 +183,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.lang_module = "/tmp/fake_lang_module"
+        self.cfg.lang_module = "/mytmp/fake_lang_module"
 
         status, err_msg = rmq_metadata._validate_files(self.cfg, self.status,
                                                        self.msg)
