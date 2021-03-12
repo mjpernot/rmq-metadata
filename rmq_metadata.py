@@ -42,10 +42,12 @@
             exchange_name = "EXCHANGE_NAME"
             # Email address(es) to send non-processed messages to or None.
             # None state no emails are required to be sent.
-            to_line = "EMAIL_ADDRESS"|None
-            # RabbitMQ listening port, default is 5672.
+            to_line = "EMAIL_ADDRESS@EMAIL_DOMAIN"
+            # RabbitMQ listening port.
+            # Default is 5672.
             port = 5672
-            # Type of exchange:  direct, topic, fanout, headers
+            # Type of exchange.
+            # Names allowed:  direct, topic, fanout, headers
             exchange_type = "direct"
             # Is exchange durable: True|False
             x_durable = True
@@ -58,12 +60,14 @@
             # Directory name for log files.
             log_dir = "DIRECTORY_PATH/logs"
             # File name to program log.
-            # Note:  Name will be changed to include the exchange name being
+            # Note:  Name chould be changed to include the exchange name being
             #   processed.
             log_file = "rmq_metadata.log"
             # Directory name for archived messages.
             # Must be set if archive in any of the queues is set to True.
-            archive_dir = "DIRECTORY_PATH/archive"|None
+            # None states no archiving will take place.
+            # Syntax:  archive_dir = "DIRECTORY_PATH/archive"
+            archive_dir = None
             # Directory name for temporary message processing.
             tmp_dir = "DIRECTORY_PATH/tmp"
             # These entries for the Stanford NLP library module.
