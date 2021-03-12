@@ -98,24 +98,24 @@ class UnitTest(unittest.TestCase):
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
         self.err_msg = \
-            "Error: Directory: /tmp/fake_message_dir does not exist."
-        self.err_msg2 = "Error: Directory: /tmp/fake_log_dir does not exist."
+            "Error: Directory: /mytmp/fake_message_dir does not exist."
+        self.err_msg2 = "Error: Directory: /mytmp/fake_log_dir does not exist."
         self.err_msg3 = \
-            "Error: Directory: /tmp/fake_archive_dir does not exist."
-        self.err_msg4 = "Error: Directory: /tmp/fake_tmp_dir does not exist."
-        self.err_msg5 = "Error: File /tmp/fake_lang_module is not readable."
+            "Error: Directory: /mytmp/fake_archive_dir does not exist."
+        self.err_msg4 = "Error: Directory: /mytmp/fake_tmp_dir does not exist."
+        self.err_msg5 = "Error: File /mytmp/fake_lang_module is not readable."
         self.err_msg6 = "lang_module not set to absolute path: ./%s" % \
                         self.cfg.lang_module
-        self.err_msg7 = "Error: File /tmp/fake_jar is not readable."
+        self.err_msg7 = "Error: File /mytmp/fake_jar is not readable."
         self.err_msg8 = "stanford_jar not set to absolute path: ./%s" % \
                         self.cfg.stanford_jar
-        self.err_msg9 = "Error: Directory: /tmp/fake_final does not exist."
+        self.err_msg9 = "Error: Directory: /mytmp/fake_final does not exist."
         self.queue = dict(self.cfg.queue_list[0])
         self.queue["queue"] = "mail2rmq_file2"
         self.queue["routing_key"] = "mail2rmq_file2"
-        self.fake = "/tmp/fake_final"
-        self.fake_dir = "/tmp/fake_message_dir"
-        self.fake_log = "/tmp/fake_log_dir"
+        self.fake = "/mytmp/fake_final"
+        self.fake_dir = "/mytmp/fake_message_dir"
+        self.fake_log = "/mytmp/fake_log_dir"
 
     def test_multi_queues_two_fail(self):
 
@@ -290,7 +290,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.stanford_jar = "/tmp/fake_jar"
+        self.cfg.stanford_jar = "/mytmp/fake_jar"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -382,7 +382,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.lang_module = "/tmp/fake_lang_module"
+        self.cfg.lang_module = "/mytmp/fake_lang_module"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -428,7 +428,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.tmp_dir = "/tmp/fake_tmp_dir"
+        self.cfg.tmp_dir = "/mytmp/fake_tmp_dir"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -509,7 +509,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.archive_dir = "/tmp/fake_archive_dir"
+        self.cfg.archive_dir = "/mytmp/fake_archive_dir"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
