@@ -3,49 +3,68 @@
 # Unclassified until filled.
 
 user = "USER"
-japd = "PASSWORD"
+japd = "PSWORD"
 host = "HOSTNAME"
+
 # RabbitMQ Exchange name being monitored.
 exchange_name = "EXCHANGE_NAME"
+
 # Email address(es) to send non-processed messages to or None.
 # None state no emails are required to be sent.
-to_line = "EMAIL_ADDRESS"
-# RabbitMQ listening port, default is 5672.
+to_line = "EMAIL_ADDRESS@EMAIL_DOMAIN"
+
+# RabbitMQ listening port.
+# Default is 5672.
 port = 5672
-# Type of exchange:  direct, topic, fanout, headers
+
+# Type of exchange.
+# Names allowed:  direct, topic, fanout, headers
 exchange_type = "direct"
+
 # Is exchange durable: True|False
 x_durable = True
+
 # Are queues durable: True|False
 q_durable = True
+
 # Queues automatically delete message after processing: True|False
 auto_delete = False
+
 # Directory name for non-processed messages.
 message_dir = "DIRECTORY_PATH/message_dir"
+
 # Directory name for log files.
 log_dir = "DIRECTORY_PATH/logs"
+
 # File name to program log.
-# Note:  Name will be changed to include the exchange name being processed.
+# Note:  Name should be changed to include the exchange name being processed.
 log_file = "rmq_metadata.log"
+
 # Directory name for archived messages.
 # Must be set if archive in any of the queue entries is set to True.
 # None states no archiving will take place.
 # Syntax:  archive_dir = "DIRECTORY_PATH/archive"
 archive_dir = None
+
 # Directory name for temporary message processing.
 tmp_dir = "DIRECTORY_PATH/tmp"
+
 # These entries for the Stanford NLP library module.
 # Path to Stanford language module.
 # By default lang_module will point to the English language module.
 lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
+
 # Path to Stanford jar.
 stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
+
 # Encoding code for Stanford module.
 # Default setting is the utf-8 encoding code.
 encoding = "utf-8"
+
 # List of Token types.
 # Do not change unless you understand Stanford NLP and textract modules.
 token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
+
 # List of textract module decodes.
 # Do not change unless you understand textract module.
 textract_codes = ["utf-8", "ascii", "iso-8859-1"]
@@ -87,6 +106,7 @@ queue_list = [
 # Mongo configuration file
 # Default is the name used in the README setup.
 mongo_cfg = "mongo"
+
 # Mongo config setup.
 # For internal use.  Do not change.
 mongo = None
