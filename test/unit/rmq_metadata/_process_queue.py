@@ -189,6 +189,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_mongo_failed -> Test with failed Mongo insert.
+        test_mongo_successful -> Test with successful Mongo insert.
         test_all_extract_fails -> Test with all extracts fails.
         test_two_extract_fails3 -> Test with two extracts fails.
         test_two_extract_fails2 -> Test with two extracts fails.
@@ -217,6 +219,55 @@ class UnitTest(unittest.TestCase):
         self.f_name = "/working/path/Filename.pdf"
         self.final_data = ["List", "of", "a", "data"]
 
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=(False, "Connection Error")))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_mongo_failed(self, mock_pypdf2, mock_textract,
+                                     mock_pdfminer):
+
+        """Function:  test_mongo_failed
+
+        Description:  Test with failed Mongo insert.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertFalse(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=(True, None)))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_mongo_successful(self, mock_pypdf2, mock_textract,
+                                     mock_pdfminer):
+
+        """Function:  test_mongo_successful
+
+        Description:  Test with successful Mongo insert.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertTrue(rmq_metadata._process_queue(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
+
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -241,7 +292,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -266,7 +317,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -291,7 +342,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -316,7 +367,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -341,7 +392,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -366,7 +417,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -391,7 +442,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
