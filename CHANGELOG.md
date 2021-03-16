@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- run_program:  Determine whether to use exchange name or -y option for program lock flavor id.
 - main:  Add -y option for program lock option to have flavor id capability.
 - non_proc_msg:  Changed error message to point to log file entries.
 - \_convert_data:  Changed to handle extraction or insertion failure.
