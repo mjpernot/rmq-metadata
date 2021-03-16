@@ -386,8 +386,14 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Change to:  to_line = None
     - base_dir = "DIRECTORY_PATH"
       -> Change to: "{Python_Project}/rmq-metadata/test/integration/rmq_metadata"
+    - message_dir = "message_dir"
+      -> Change to:  "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/message_dir"
+    - log_dir = "logs"
+      -> Change to:  "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/logs"
     - archive_dir = None
       -> Change to:  archive_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/archive"
+    - tmp_dir = "tmp"
+      -> Change to:  archive_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/tmp"
     - lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
       -> Change DIRECTORY_PATH to the location of the NLTP installation.
     - stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
