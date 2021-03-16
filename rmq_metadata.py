@@ -12,6 +12,7 @@
     Usage:
         rmq_metadata.py -c config_file -d dir_path
             {-M}
+            [-y flavor_id]
             [-v | -h]
 
     Arguments:
@@ -22,6 +23,7 @@
 
         -M => Monitor and process messages from a RabbitMQ queue.
 
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -1181,7 +1183,7 @@ def main(**kwargs):
     dir_chk_list = ["-d"]
     func_dict = {"-M": monitor_queue}
     opt_req_list = ["-c", "-d"]
-    opt_val_list = ["-c", "-d"]
+    opt_val_list = ["-c", "-d", "-y"]
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
