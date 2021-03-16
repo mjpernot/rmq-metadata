@@ -992,10 +992,19 @@ def _process_queue(queue, cfg, f_name, log):
 
     if status_pypdf2 or status_textract or status_pdfminer:
         log.log_info("_process_queue:  Insert metadata into MongoDB.")
-        mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
-        log.log_info("_process_queue:  Moving PDF to: %s" %
-                     (queue["directory"]))
-        gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
+        mongo_stat = mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs,
+                                        cfg.mongo.tbl, metadata)
+
+        if not mongo_stat[0]:
+            log.log_err("_process_queue:  Insert of data into MongoDB failed.")
+            log.log_err("Mongo error message:  %s" % (mongo_stat[1]))
+            status = False
+
+        else:
+            log.log_info("_process_queue:  Moving PDF to: %s" %
+                         (queue["directory"]))
+            gen_libs.mv_file2(f_name, queue["directory"],
+                              os.path.basename(f_name))
 
     else:
         log.log_err("_process_queue:  All extractions methods failed.")

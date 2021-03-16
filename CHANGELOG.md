@@ -8,6 +8,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgrade Rabbitmq-lib module to v2.0.0.
 
 ### Fixed
+- \_process_queue:  Added status check on Mongo data insert command.
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
