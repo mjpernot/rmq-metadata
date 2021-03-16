@@ -57,10 +57,17 @@
             q_durable = True
             # Queues automatically delete message after processing: True|False
             auto_delete = False
+            # Directory name for archived messages.
+            # Must be set if archive in any of the queue entries is set to
+            #   True.
+            # Note: If absolute paths are used in the message_dir, log_dir,
+            #   archive_dir, or tmp_dir entries, then they will be used in
+            #   place of combining the base directory and directory name.
+            base_dir = "DIRECTORY_PATH"
             # Directory name for non-processed messages.
-            message_dir = "DIRECTORY_PATH/message_dir"
+            message_dir = "message_dir"
             # Directory name for log files.
-            log_dir = "DIRECTORY_PATH/logs"
+            log_dir = "logs"
             # File name to program log.
             # Note:  Name chould be changed to include the exchange name being
             #   processed.
@@ -68,10 +75,10 @@
             # Directory name for archived messages.
             # Must be set if archive in any of the queues is set to True.
             # None states no archiving will take place.
-            # Syntax:  archive_dir = "DIRECTORY_PATH/archive"
+            # Syntax:  archive_dir = "archive"
             archive_dir = None
             # Directory name for temporary message processing.
-            tmp_dir = "DIRECTORY_PATH/tmp"
+            tmp_dir = "tmp"
             # These entries for the Stanford NLP library module.
             # Path to Stanford language module.
             # By default lang_module will point to the English language module.
@@ -244,11 +251,11 @@ def validate_create_settings(cfg):
 
     err_msg = ""
     status_flag = True
-    base_dir = gen_libs.get_base_dir(__file__)
+    #base_dir = gen_libs.get_base_dir(__file__)
 
     # Check on non-processed messages directory.
     if not os.path.isabs(cfg.message_dir):
-        cfg.message_dir = os.path.join(base_dir, cfg.message_dir)
+        cfg.message_dir = os.path.join(cfg.base_dir, cfg.message_dir)
 
     status, msg = gen_libs.chk_crt_dir(cfg.message_dir, write=True, read=True,
                                        no_print=True)
@@ -259,7 +266,7 @@ def validate_create_settings(cfg):
 
     # Check on log files directory.
     if not os.path.isabs(cfg.log_dir):
-        cfg.log_dir = os.path.join(base_dir, cfg.log_dir)
+        cfg.log_dir = os.path.join(cfg.base_dir, cfg.log_dir)
 
     status, msg = gen_libs.chk_crt_dir(cfg.log_dir, write=True, read=True,
                                        no_print=True)
@@ -275,7 +282,7 @@ def validate_create_settings(cfg):
 
     # Check on archived messages directory.
     if cfg.archive_dir and not os.path.isabs(cfg.archive_dir):
-        cfg.archive_dir = os.path.join(base_dir, cfg.archive_dir)
+        cfg.archive_dir = os.path.join(cfg.base_dir, cfg.archive_dir)
 
     if cfg.archive_dir:
         status, msg = gen_libs.chk_crt_dir(cfg.archive_dir, write=True,
@@ -287,7 +294,7 @@ def validate_create_settings(cfg):
 
     # Check on temporary message processing directory.
     if not os.path.isabs(cfg.tmp_dir):
-        cfg.tmp_dir = os.path.join(base_dir, cfg.tmp_dir)
+        cfg.tmp_dir = os.path.join(cfg.base_dir, cfg.tmp_dir)
 
     status, msg = gen_libs.chk_crt_dir(cfg.tmp_dir, write=True, read=True,
                                        no_print=True)
