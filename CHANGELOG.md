@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.0] - 2020-10-05
+- Upgrade Rabbitmq-lib module to v2.0.0.
+
 ### Fixed
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
