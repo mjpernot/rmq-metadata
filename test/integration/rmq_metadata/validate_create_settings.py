@@ -93,29 +93,28 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.tmp = "Error: Directory: %s does not exist.\n"
+        self.tmp2 = "Error: Directory %s is not writeable.\n"
+        self.tmp3 = "Error: Directory %s is not readable."
+        self.tmp4 = "Error:  File %s does not exist.\n"
+        self.tmp5 = "Error: File %s is not writeable.\n"
+        self.tmp6 = "Error: File %s is not readable."
+        self.tmp7 = "stanford_jar not set to absolute path: %s"
+        self.tmp8 = "lang_module not set to absolute path: %s"
         integration_dir = "test/integration/rmq_metadata"
         base_path = os.path.join(os.getcwd(), integration_dir)
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
-        self.err_msg = \
-            "Error: Directory: /mytmp/fake_message_dir does not exist."
-        self.err_msg2 = "Error: Directory: /mytmp/fake_log_dir does not exist."
-        self.err_msg3 = \
-            "Error: Directory: /mytmp/fake_archive_dir does not exist."
-        self.err_msg4 = "Error: Directory: /mytmp/fake_tmp_dir does not exist."
-        self.err_msg5 = "Error: File /mytmp/fake_lang_module is not readable."
-        self.err_msg6 = "lang_module not set to absolute path: ./%s" % \
-                        self.cfg.lang_module
-        self.err_msg7 = "Error: File /mytmp/fake_jar is not readable."
-        self.err_msg8 = "stanford_jar not set to absolute path: ./%s" % \
-                        self.cfg.stanford_jar
-        self.err_msg9 = "Error: Directory: /mytmp/fake_final does not exist."
+        self.err_msg = "/mytmp/fake_message_dir"
+        self.err_msg2 = "/mytmp/fake_log_dir"
+        self.err_msg3 = "/mytmp/fake_archive_dir"
+        self.err_msg4 = "/mytmp/fake_tmp_dir"
+        self.err_msg5 = "/mytmp/fake_lang_module"
+        self.err_msg7 = "/mytmp/fake_jar"
+        self.err_msg9 = "/mytmp/fake_final"
         self.queue = dict(self.cfg.queue_list[0])
         self.queue["queue"] = "mail2rmq_file2"
         self.queue["routing_key"] = "mail2rmq_file2"
-        self.fake = "/mytmp/fake_final"
-        self.fake_dir = "/mytmp/fake_message_dir"
-        self.fake_log = "/mytmp/fake_log_dir"
 
     def test_multi_queues_two_fail(self):
 
@@ -128,13 +127,14 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.queue_list.append(self.queue)
-        self.cfg.queue_list[0]["directory"] = self.fake
-        self.cfg.queue_list[1]["directory"] = self.fake
+        self.cfg.queue_list[0]["directory"] = self.err_msg9
+        self.cfg.queue_list[1]["directory"] = self.err_msg9
+        full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
+                   + self.tmp3 % self.err_msg9
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg),
-                         (False, self.err_msg9 + self.err_msg9))
+        self.assertEqual((status, err_msg), (False, full_msg + full_msg))
 
     def test_multi_queues_one_fail(self):
 
@@ -147,11 +147,13 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.queue_list.append(self.queue)
-        self.cfg.queue_list[0]["directory"] = self.fake
+        self.cfg.queue_list[0]["directory"] = self.err_msg9
+        full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
+                   + self.tmp3 % self.err_msg9
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg9))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_multiple_queues(self):
 
@@ -179,11 +181,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.queue_list[0]["directory"] = self.fake
+        self.cfg.queue_list[0]["directory"] = self.err_msg9
+        full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
+                   + self.tmp3 % self.err_msg9
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg9))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_single_queue2(self):
 
@@ -225,14 +229,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.message_dir = self.fake_dir
-        self.cfg.log_dir = self.fake_log
+        self.cfg.message_dir = self.err_msg9
+        self.cfg.log_dir = self.err_msg9
         self.cfg.stanford_jar = "./" + self.cfg.stanford_jar
+        full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
+                   + self.tmp3 % self.err_msg9
+        full_msg2 = self.tmp7 % self.cfg.stanford_jar
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
         self.assertEqual((status, err_msg),
-                         (False, self.err_msg + self.err_msg2 + self.err_msg8))
+                         (False, full_msg + full_msg + full_msg2))
 
     def test_stanford_jar_path_false(self):
 
@@ -245,10 +252,11 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.stanford_jar = "./" + self.cfg.stanford_jar
+        full_msg = self.tmp7 % self.cfg.stanford_jar
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg8))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_stanford_jar_path_true2(self):
 
@@ -290,11 +298,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.stanford_jar = "/mytmp/fake_jar"
+        self.cfg.stanford_jar = self.err_msg7
+        full_msg = self.tmp4 % self.err_msg7 + self.tmp6 % self.err_msg7
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg7))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_stanford_jar_true2(self):
 
@@ -337,10 +346,11 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.lang_module = "./" + self.cfg.lang_module
+        full_msg = self.tmp8 % self.cfg.lang_module
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg6))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_lang_module_path_true2(self):
 
@@ -382,11 +392,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.lang_module = "/mytmp/fake_lang_module"
+        self.cfg.lang_module = self.err_msg5
+        full_msg = self.tmp4 % self.err_msg5 + self.tmp6 % self.err_msg5
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg5))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_lang_module_true2(self):
 
@@ -428,11 +439,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.tmp_dir = "/mytmp/fake_tmp_dir"
+        self.cfg.tmp_dir = self.err_msg4
+        full_msg = self.tmp % self.err_msg4 + self.tmp2 % self.err_msg4 \
+                   + self.tmp3 % self.err_msg4
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg4))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_tmp_dir_not_abs2(self):
 
@@ -509,11 +522,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.archive_dir = "/mytmp/fake_archive_dir"
+        self.cfg.archive_dir = self.err_msg3
+        full_msg = self.tmp % self.err_msg3 + self.tmp2 % self.err_msg3 \
+                   + self.tmp3 % self.err_msg3
+
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg3))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_archive_not_abs2(self):
 
@@ -589,13 +605,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.message_dir = self.fake_dir
-        self.cfg.log_dir = self.fake_log
+        self.cfg.message_dir = self.err_msg9
+        self.cfg.log_dir = self.err_msg2
+        full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
+                   + self.tmp3 % self.err_msg9
+        full_msg2 = self.tmp % self.err_msg2 + self.tmp2 % self.err_msg2 \
+                    + self.tmp3 % self.err_msg2
+
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg),
-                         (False, self.err_msg + self.err_msg2))
+        self.assertEqual((status, err_msg), (False, full_msg + full_msg2))
 
     def test_log_dir_false(self):
 
@@ -607,11 +627,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.log_dir = self.fake_log
+        self.cfg.log_dir = self.err_msg2
+        full_msg = self.tmp % self.err_msg2 + self.tmp2 % self.err_msg2 \
+                   + self.tmp3 % self.err_msg2
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg2))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_log_dir_true2(self):
 
@@ -655,11 +677,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.message_dir = self.fake_dir
+        self.cfg.message_dir = self.err_msg
+        full_msg = self.tmp % self.err_msg + self.tmp2 % self.err_msg \
+                   + self.tmp3 % self.err_msg
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_message_dir_true2(self):
 
