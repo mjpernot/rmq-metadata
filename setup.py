@@ -41,7 +41,7 @@ setuptools.setup(
         #  3 - Beta
         #  4 - Field
         #  5 - Production/Stable
-        "Development Status :: 2 - Alpha",
+        "Development Status :: 3 - Beta",
         "Operating System :: Linux",
         "Operating System :: Linux :: Centos",
         "Operating System :: Linux :: Ubuntu",
