@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- \_convert_data:  Changed to handle extraction or insertion failure.
 - config/mongo.py.TEMPLATE:  Reformatted the Mongo configuration file.
 - config/rabbitmq.py.TEMPLATE:  Reformatted the RabbitMQ configuration file.
 - Removed an unnecessary \*\*kwargs from function paramters list.
