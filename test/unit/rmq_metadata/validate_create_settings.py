@@ -55,8 +55,6 @@ class CfgTest(object):
 
         """
 
-        path = "/dir/path"
-
         self.host = "HOSTNAME"
         self.exchange_name = "rmq_metadata_unit_test"
         self.to_line = None
@@ -65,17 +63,18 @@ class CfgTest(object):
         self.x_durable = True
         self.q_durable = True
         self.auto_delete = False
+        self.base_dir = "/base/directory_path"
         self.message_dir = "message_dir"
         self.log_dir = "logs"
         self.log_file = "rmq_metadata.log"
-        self.archive_dir = path
+        self.archive_dir = "archive"
         self.tmp_dir = "/dir/tmp_path"
         self.lang_module = "/path/Stanford_lang_module"
         self.stanford_jar = "/path/Stanford.jar"
         self.queue_list = [
             {"queue": "rmq_metadata_unit_test",
              "routing_key": "MY_ROUTING_KEY",
-             "directory": path}]
+             "directory": "/dir/final_data"}]
 
 
 class UnitTest(unittest.TestCase):
