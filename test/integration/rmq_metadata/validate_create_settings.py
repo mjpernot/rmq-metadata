@@ -101,8 +101,8 @@ class UnitTest(unittest.TestCase):
         self.tmp6 = "Error: File %s is not readable."
         self.tmp7 = "stanford_jar not set to absolute path: %s"
         self.tmp8 = "lang_module not set to absolute path: %s"
-        integration_dir = "test/integration/rmq_metadata"
-        base_path = os.path.join(os.getcwd(), integration_dir)
+        self.integration_dir = "test/integration/rmq_metadata"
+        base_path = os.path.join(os.getcwd(), self.integration_dir)
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
         self.err_msg = "/mytmp/fake_message_dir"
@@ -457,9 +457,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        sub_tmp_dir = "test/integration/rmq_metadata/tmp"
-        tmp_dir = os.path.join(os.getcwd(), sub_tmp_dir)
-        self.cfg.tmp_dir = sub_tmp_dir
+        tmp_dir = os.path.join(gen_libs.get_base_dir(__file__), "tmp")
+        self.cfg.tmp_dir = "tmp"
 
         cfg, _, _ = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -475,8 +474,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        sub_tmp_dir = "test/integration/rmq_metadata/tmp"
-        self.cfg.tmp_dir = sub_tmp_dir
+        tmp_dir = os.path.join(gen_libs.get_base_dir(__file__), "tmp")
+        self.cfg.tmp_dir = "tmp"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -492,7 +491,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        tmp_dir = self.cfg.tmp_dir
+        tmp_dir = os.path.join(gen_libs.get_base_dir(__file__), "tmp")
 
         cfg, _, _ = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -541,9 +540,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        sub_archive_dir = "test/integration/rmq_metadata/archive"
-        archive_dir = os.path.join(os.getcwd(), sub_archive_dir)
-        self.cfg.archive_dir = sub_archive_dir
+        archive_dir = os.path.join(gen_libs.get_base_dir(__file__), "archive")
+        self.cfg.archive_dir = "archive"
 
         cfg, _, _ = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -559,8 +557,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        sub_archive_dir = "test/integration/rmq_metadata/archive"
-        self.cfg.archive_dir = sub_archive_dir
+        archive_dir = os.path.join(gen_libs.get_base_dir(__file__), "archive")
+        self.cfg.archive_dir = "archive"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
