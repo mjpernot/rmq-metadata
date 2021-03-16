@@ -18,7 +18,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - non_proc_msg:  Changed error message to point to log file entries.
 - \_convert_data:  Changed to handle extraction or insertion failure.
 - config/mongo.py.TEMPLATE:  Reformatted the Mongo configuration file.
-- config/rabbitmq.py.TEMPLATE:  Reformatted the RabbitMQ configuration file.
+- config/rabbitmq.py.TEMPLATE:  Reformatted the RabbitMQ configuration file and base_dir entry.
 - Removed an unnecessary \*\*kwargs from function paramters list.
 - \_process_queue:  Removed body and r_key arguments - no longer required.
 - Documentation updates.

@@ -30,11 +30,16 @@ q_durable = True
 # Queues automatically delete message after processing: True|False
 auto_delete = False
 
+# Base directory path for message_dir, log_dir, archive_dir, and tmp_dir settings.
+# Base directory will be combine with each setting to form a full path directory.
+# Note: If absolute paths are used in the message_dir, log_dir, archive_dir, or tmp_dir entries, then they will be used in place of combining the base directory and directory name.
+base_dir = "DIRECTORY_PATH"
+
 # Directory name for non-processed messages.
-message_dir = "DIRECTORY_PATH/message_dir"
+message_dir = "message_dir"
 
 # Directory name for log files.
-log_dir = "DIRECTORY_PATH/logs"
+log_dir = "logs"
 
 # File name to program log.
 # Note:  Name should be changed to include the exchange name being processed.
@@ -43,11 +48,11 @@ log_file = "rmq_metadata.log"
 # Directory name for archived messages.
 # Must be set if archive in any of the queue entries is set to True.
 # None states no archiving will take place.
-# Syntax:  archive_dir = "DIRECTORY_PATH/archive"
+# Syntax:  archive_dir = "archive"
 archive_dir = None
 
 # Directory name for temporary message processing.
-tmp_dir = "DIRECTORY_PATH/tmp"
+tmp_dir = "tmp"
 
 # These entries for the Stanford NLP library module.
 # Path to Stanford language module.
