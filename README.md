@@ -95,9 +95,11 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Are queues durable: True|False
     - auto_delete = False
       -> Queues automatically delete message after processing: True|False
-    - message_dir = "DIRECTORY_PATH/message_dir"
+    - base_dir = "DIRECTORY_PATH"
+      -> Base directory path for message_dir, log_dir, archive_dir, and tmp_dir settings.
+    - message_dir = "message_dir"
       -> Is where failed reports/messages are written to.
-    - log_dir = "DIRECTORY_PATH/logs"
+    - log_dir = "logs"
       -> Is where failed log files are written to.
     - log_file = "rmq_metadata.log"
       -> File name to program log.
@@ -105,7 +107,7 @@ Make the appropriate changes to the RabbitMQ environment.
     - archive_dir = None
       -> Directory name for archived messages.  
       -> If set to None, then no archiving will take place.
-    - tmp_dir = "DIRECTORY_PATH/tmp"
+    - tmp_dir = "tmp"
       -> Directory for temporary processing of messages.
     - lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
       -> Path and file name to the Stanford NLP language module.
@@ -382,14 +384,10 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Change to:  exchange_name = "mail2rmq"
     - to_line = "EMAIL_ADDRESS"
       -> Change to:  to_line = None
-    - message_dir = "DIRECTORY_PATH/message_dir"
-      -> Change to:  message_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/message_dir"
-    - log_dir = "DIRECTORY_PATH/logs"
-      -> Change to:  log_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/logs"
+    - base_dir = "DIRECTORY_PATH"
+      -> Change to: "{Python_Project}/rmq-metadata/test/integration/rmq_metadata"
     - archive_dir = None
       -> Change to:  archive_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/archive"
-    - tmp_dir = "DIRECTORY_PATH/tmp"
-      -> Change to:  tmp_dir = "{Python_Project}/rmq-metadata/test/integration/rmq_metadata/archive"
     - lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
       -> Change DIRECTORY_PATH to the location of the NLTP installation.
     - stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
