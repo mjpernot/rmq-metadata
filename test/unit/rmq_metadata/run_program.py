@@ -178,6 +178,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_flavor_id2 -> Test with passed flavor id argument.
+        test_flavor_id -> Test with default setting.
         test_status_false -> Test with status is False.
         test_status_true -> Test with status is True.
         test_func_call -> Test with call to function.
@@ -200,7 +202,55 @@ class UnitTest(unittest.TestCase):
         self.mongo_cfg = CfgTest2()
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
         self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
+        self.args2 = {"-c": "config_file", "-d": "config_dir", "-M": True,
+                      "-y": "flavorid"}
         self.func_dict = {"-M": monitor_queue}
+
+    @mock.patch("rmq_metadata.monitor_queue")
+    @mock.patch("rmq_metadata.validate_create_settings")
+    @mock.patch("rmq_metadata.gen_libs.load_module")
+    @mock.patch("rmq_metadata.gen_class")
+    def test_flavor_id2(self, mock_class, mock_load, mock_valid, mock_func):
+
+        """Function:  test_flavor_id2
+
+        Description:  Test with passed flavor id argument.
+
+        Arguments:
+
+        """
+
+        mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
+        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_valid.return_value = (self.cfg, True, "")
+        mock_class.Logger.log_close.return_value = True
+        mock_class.ProgramLock.return_value = self.proglock
+        mock_func.return_value = True
+
+        self.assertFalse(rmq_metadata.run_program(self.args2, self.func_dict))
+
+    @mock.patch("rmq_metadata.monitor_queue")
+    @mock.patch("rmq_metadata.validate_create_settings")
+    @mock.patch("rmq_metadata.gen_libs.load_module")
+    @mock.patch("rmq_metadata.gen_class")
+    def test_flavor_id(self, mock_class, mock_load, mock_valid, mock_func):
+
+        """Function:  test_flavor_id
+
+        Description:  Test with default setting.
+
+        Arguments:
+
+        """
+
+        mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
+        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_valid.return_value = (self.cfg, True, "")
+        mock_class.Logger.log_close.return_value = True
+        mock_class.ProgramLock.return_value = self.proglock
+        mock_func.return_value = True
+
+        self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
 
     @mock.patch("rmq_metadata.validate_create_settings")
     @mock.patch("rmq_metadata.gen_libs.load_module")
