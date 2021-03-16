@@ -251,7 +251,6 @@ def validate_create_settings(cfg):
 
     err_msg = ""
     status_flag = True
-    #base_dir = gen_libs.get_base_dir(__file__)
 
     # Check on non-processed messages directory.
     if not os.path.isabs(cfg.message_dir):
