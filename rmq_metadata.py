@@ -385,7 +385,8 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
     subj = "rmq_metadata: " + subj
     line1 = "RabbitMQ message was not processed due to: %s" % (subj)
     line2 = "Exchange: %s, Routing Key: %s" % (rmq.exchange, r_key)
-    line3 = "The body of the message is encoded data."
+    line3 = "Check log file: %s near timestamp: %s for more information." \
+            % (cfg.log_file, dtg)
     line4 = "Body of message saved to: %s" % (f_path)
 
     if cfg.to_line:
@@ -402,7 +403,6 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
 
     log.log_err(line1)
     log.log_err(line2)
-    log.log_err(line3)
     log.log_err(line4)
     gen_libs.write_file(f_path, data=data, mode="w")
 
