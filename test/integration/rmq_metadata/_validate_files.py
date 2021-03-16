@@ -64,16 +64,21 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.tmp4 = "Error:  File %s does not exist.\n"
+        self.tmp5 = "Error: File %s is not writeable.\n"
+        self.tmp6 = "Error: File %s is not readable."
+
+        self.err_msg = "Error: File /mytmp/fake_lang_module is not readable."
         integration_dir = "test/integration/rmq_metadata"
         base_path = os.path.join(os.getcwd(), integration_dir)
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
         self.status = True
         self.msg = ""
-        self.err_msg = "Error: File /mytmp/fake_lang_module is not readable."
+        self.err_msg = "/mytmp/fake_lang_module"
         self.err_msg2 = "lang_module not set to absolute path: ./%s" % \
                         self.cfg.lang_module
-        self.err_msg3 = "Error: File /mytmp/fake_jar is not readable."
+        self.err_msg3 = "/mytmp/fake_jar"
         self.err_msg4 = "stanford_jar not set to absolute path: ./%s" % \
                         self.cfg.stanford_jar
 
@@ -119,12 +124,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.stanford_jar = "/mytmp/fake_jar"
+        self.cfg.stanford_jar = self.err_msg3
+        full_msg = self.tmp4 % self.err_msg3 + self.tmp6 % self.err_msg3
 
         status, err_msg = rmq_metadata._validate_files(self.cfg, self.status,
                                                        self.msg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg3))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_stanford_jar_true(self):
 
@@ -183,12 +189,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg.lang_module = "/mytmp/fake_lang_module"
+        self.cfg.lang_module = self.err_msg
+        full_msg = self.tmp4 % self.err_msg + self.tmp6 % self.err_msg
 
         status, err_msg = rmq_metadata._validate_files(self.cfg, self.status,
                                                        self.msg)
 
-        self.assertEqual((status, err_msg), (False, self.err_msg))
+        self.assertEqual((status, err_msg), (False, full_msg))
 
     def test_lang_module_true(self):
 
