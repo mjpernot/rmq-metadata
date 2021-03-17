@@ -5,7 +5,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.0] - 2020-10-05
-- Beta release.
+- Alpha release.
 - Upgrade Rabbitmq-lib module to v2.0.0.
 
 ### Fixed
