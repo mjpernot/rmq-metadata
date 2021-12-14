@@ -33,19 +33,23 @@
     - git
     - python-pip
     - openjdk-8-jdk
+    - python-devel
 
   * Local class/library dependencies within the program structure.
-    - lib/gen_class
-    - lib/arg_parser
-    - lib/gen_libs
-    - rabbit_lib/rabbitmq_class
-    - mongo_lib/mongo_libs
+    - python-lib
+    - rabbitmq-lib
+    - mongo-lib
 
+  * FIPS Environment:  If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.  In addition, other modules may require to have the same modification as the auth.py module.  If a stacktrace occurs and it states "= hashlib.md5()" is the problem, then note the module name "= hashlib.md5()" is in and make the same change as in auth.py:  "usedforsecurity=False".
+    - Locate the auth.py file python installed packages on the system in the pymongo package directory.
+    - Edit the file and locate the \_password_digest function.
+    - In the \_password_digest function there is an line that should match: "md5hash = hashlib.md5()".  Change it to "md5hash = hashlib.md5(usedforsecurity=False)".
+    - Lastly, it will require the configuration file entry auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
 # Installation:
 
 Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
+  * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
 umask 022
@@ -73,8 +77,6 @@ pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --truste
 ```
 
 # Configuration:
-
-Create RabbitMQ configuration file.
 
 Make the appropriate changes to the RabbitMQ environment.
   * The "user", "japd" and "host" is connection and host information to a RabbitMQ node.
@@ -177,8 +179,6 @@ vim rabbitmq.py
 chmod 600 rabbitmq.py
 ```
 
-Create Mongo configuration file.
-
 Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
     - user = "USER"
@@ -275,7 +275,6 @@ service rmq_metadata stop
 # Program Help Function:
 
   All of the programs, except the command and class files, will have an -h (Help option) that will show display a help message for that particular program.  The help message will usually consist of a description, usage, arugments to the program, example, notes about the program, and any known bugs not yet fixed.  To run the help command:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 `{Python_Project}/rmq-metadata/rmq_metadata.py -h`
@@ -288,37 +287,9 @@ service rmq_metadata stop
 
 ### Installation:
 
-Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
-cd rmq-metadata
-```
-
-Install/upgrade system modules.
-
-```
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
+Install the project using the procedures in the Installation section.
 
 ### Testing:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/rmq-metadata
@@ -340,40 +311,10 @@ test/unit/daemon_rmq_metadata/code_coverage.sh
 
 ### Installation:
 
-Install the project using git.
-  * Replace **{Python_Project}** with the baseline path of the python program.
-  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
-
-```
-umask 022
-cd {Python_Project}
-git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
-cd rmq-metadata
-```
-
-Install/upgrade system modules.
-
-```
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
-```
-
-Install supporting classes and libraries.
-
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
-
+Install the project using the procedures in the Installation section.
 
 # Configuration:
   * Please note that the integration testing will require access to a rabbitmq system to run the tests.
-
-Create RabbitMQ configuration file.
 
 Make the appropriate changes to the RabbitMQ environment.
   * Change these entries in the rabbitmq.py file.  The "user", "japd", and "host" variables are the connection information to a RabbitMQ node, the other variables use the "Change to" setting values.  If the entry is not listed below then leave with the default value in the file.
@@ -414,8 +355,6 @@ vim rabbitmq.py
 chmod 600 rabbitmq.py
 ```
 
-Create Mongo configuration file.
-
 Make the appropriate changes to the Mongo environment.
   * Change these entries in the mongo.py file.  The "user", "japd", "host", and "name" variables are the connection information to a Mongo database, the other variables use the "Change to" settings.
 
@@ -443,7 +382,6 @@ chmod 600 mongo.py
 ```
 
 ### Testing:
-  * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/rmq-metadata
