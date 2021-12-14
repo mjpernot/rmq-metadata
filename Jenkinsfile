@@ -31,9 +31,9 @@ pipeline {
                 pip2 install mock==2.0.0 --user
                 pip2 install nltk==3.4.0 --user
                 pip2 install pdfminer==20191010 --user
-                pip2 install pika==0.11.0 --user
+                pip2 install pika==1.2.0 --user
                 pip2 install psutil==5.4.3 --user
-                pip2 install pymongo==3.2.0 --user
+                pip2 install pymongo==3.8.0 --user
                 pip2 install simplejson==2.0.9 --user
                 pip2 install soupsieve==1.9.6 --user
                 pip2 install textract==1.6.3 --user
@@ -115,6 +115,11 @@ pipeline {
                     server.upload(uploadSpec)
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs disableDeferredWipeout: true
         }
     }
 }
