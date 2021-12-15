@@ -41,8 +41,8 @@ class StanfordNERTagger(object):
     Description:  Class which is a representation of StanfordNERTagger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        tag -> tag method.
+        __init__
+        tag
 
     """
 
@@ -53,9 +53,6 @@ class StanfordNERTagger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) lang_module -> Language module.
-            (input) stanford_jar -> Standford jar file.
-            (input) encoding -> Encoding type.
 
         """
 
@@ -73,7 +70,6 @@ class StanfordNERTagger(object):
         Description:  tag method.
 
         Arguments:
-            (input) tokenized_text -> Tokenized text.
 
         """
 
@@ -89,7 +85,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -139,8 +135,8 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_categorized_data -> Test with categorized data returned.
+        setUp
+        test_categorized_data
 
     """
 
