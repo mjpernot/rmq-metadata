@@ -9,7 +9,7 @@
         test/integration/rmq_metadata/publish_to_rmq.py
 
     Arguments:
-        filename -> Path and file name to an email with a PDF file attached.
+        filename
 
 """
 
@@ -36,8 +36,6 @@ def parse_email_file(fname):
     Description:  Open and parse an email from a file.
 
     Arguments:
-        (input) fname -> Name of email file.
-        (outout) msg -> Email parser instance.
 
     """
 
@@ -54,10 +52,6 @@ def publish_msg(rmq, fname):
     Description:  Open an encoded PDF file and publish it to RabbitMQ.
 
     Arguments:
-        (input) rmq -> RabbitMQ instance.
-        (input) fname -> File name of encoded PDF file.
-        (output) status -> True|False - Status of publication to RabbitMQ.
-        (output) err_msg -> Any error messages encountered.
 
     """
 
@@ -81,8 +75,6 @@ def create_rq_pub(cfg):
     Description:  Create and return a RabbitMQ Publication instance.
 
     Arguments:
-        (input) cfg -> Configuration module name.
-        (output) rmq -> RabbitMQ class instance.
 
     """
 
@@ -114,7 +106,6 @@ def run_program(fname):
         queue.
 
     Arguments:
-        (input) fname -> Path and file name of email file with PDF attached.
 
     """
 
@@ -165,9 +156,6 @@ def main():
         line arguments and values.
 
     Arguments:
-        (input) sys.argv -> Arguments from the command line.
-        (input) **kwargs:
-            argv_list -> List of arguments from another program.
 
     """
 
