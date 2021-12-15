@@ -42,12 +42,12 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_extract_failed -> Test with categorized data returned.
-        test_extract_success -> Test with extraction successful.
-        test_no_categorized_data -> Test with no categorized data returned.
-        test_categorized_data -> Test with categorized data returned.
-        tearDown -> Cleanup of testing environment.
+        setUp
+        test_extract_failed
+        test_extract_success
+        test_no_categorized_data
+        test_categorized_data
+        tearDown
 
     """
 
