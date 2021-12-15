@@ -41,7 +41,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -83,17 +83,17 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_stanford_jar_path_false2 -> Test stanford_jar path check is False.
-        test_stanford_jar_path_false -> Test stanford_jar path check is False.
-        test_stanford_jar_path_true -> Test if stanford_jar path check is True.
-        test_stanford_jar_false -> Test if stanford_jar check returns False.
-        test_stanford_jar_true -> Test if stanford_jar check returns True.
-        test_lang_module_path_false2 -> Test lang_module path check is False.
-        test_lang_module_path_false -> Test if lang_module path check is False.
-        test_lang_module_path_true -> Test if lang_module path check is True.
-        test_lang_module_false -> Test if lang_module check returns False.
-        test_lang_module_true -> Test if lang_module check returns True.
+        setUp
+        test_stanford_jar_path_false2
+        test_stanford_jar_path_false
+        test_stanford_jar_path_true
+        test_stanford_jar_false
+        test_stanford_jar_true
+        test_lang_module_path_false2
+        test_lang_module_path_false
+        test_lang_module_path_true
+        test_lang_module_false
+        test_lang_module_true
 
     """
 
