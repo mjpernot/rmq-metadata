@@ -46,8 +46,6 @@ def parse_email_file(fname):
     Description:  Open and parse an email from a file.
 
     Arguments:
-        (input) fname -> Name of email file.
-        (outout) msg -> Email parser instance.
 
     """
 
@@ -64,10 +62,6 @@ def publish_msg(rmq, fname):
     Description:  Open an encoded PDF file and publish it to RabbitMQ.
 
     Arguments:
-        (input) rmq -> RabbitMQ instance.
-        (input) fname -> File name of encoded PDF file.
-        (output) status -> True|False - Status of publication to RabbitMQ.
-        (output) err_msg -> Any error messages encountered.
 
     """
 
@@ -91,8 +85,6 @@ def create_rq_pub(cfg):
     Description:  Create and return a RabbitMQ Publication instance.
 
     Arguments:
-        (input) cfg -> Configuration module name.
-        (output) rmq -> RabbitMQ class instance.
 
     """
 
@@ -124,7 +116,6 @@ def run_program(fname):
         queue.
 
     Arguments:
-        (input) fname -> Path and file name of email file with PDF attached.
 
     """
 
@@ -174,11 +165,6 @@ def process_msg(rmq, log, cfg, method, body):
     Description:  Process message from RabbitMQ queue.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) method -> Delivery properties.
-        (input) body -> Message body.
 
     """
 
@@ -194,24 +180,24 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_metadata -> Test with no metadata detected.
-        test_extract_fails -> Test with extraction fails.
-        test_prename_postname_ext -> Test with prename, postname, and ext.
-        test_prename_postname -> Test with change to prename and postname.
-        test_no_prename -> Test with no prename set.
-        test_prename_change -> Test with change to default prename.
-        test_prename_default -> Test with default prename.
-        test_no_postname -> Test with no postname set.
-        test_postname_change -> Test with change to default postname.
-        test_postname_default -> Test with default postname.
-        test_empty_ext -> Test with empty extension set.
-        test_no_ext -> Test with no extension set.
-        test_ext_change -> Test with change to default extension.
-        test_ext_default -> Test with default extension.
-        test_file_encoded -> Test with file encoded.
-        test_default_name -> Test for default file name.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_no_metadata
+        test_extract_fails
+        test_prename_postname_ext
+        test_prename_postname
+        test_no_prename
+        test_prename_change
+        test_prename_default
+        test_no_postname
+        test_postname_change
+        test_postname_default
+        test_empty_ext
+        test_no_ext
+        test_ext_change
+        test_ext_default
+        test_file_encoded
+        test_default_name
+        tearDown
 
     """
 
@@ -288,10 +274,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -332,10 +314,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -379,10 +357,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -426,10 +400,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -472,10 +442,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -517,10 +483,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -562,10 +524,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -606,10 +564,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -651,10 +605,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -696,10 +646,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -741,10 +687,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -787,10 +729,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -833,10 +771,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -878,10 +812,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -922,10 +852,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
@@ -966,10 +892,6 @@ class UnitTest(unittest.TestCase):
             Description:  Process message from RabbitMQ.
 
             Arguments:
-                (input) channel -> Channel properties.
-                (input) method -> Delivery properties.
-                (input) properties -> Properties of the message.
-                (input) body -> Message body.
 
             """
 
