@@ -44,11 +44,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_write_file -> Test with writing body to file.
-        test_to_empty_line -> Test for empty to line.
-        test_to_line -> Test for valid to line.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_write_file
+        test_to_empty_line
+        test_to_line
+        tearDown
 
     """
 
