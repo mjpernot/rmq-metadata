@@ -42,7 +42,7 @@ class RabbitMQCon(object):
         rabbitmq_class.RabbitMQCon class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -66,8 +66,8 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
+        __init__
+        log_info
 
     """
 
@@ -78,11 +78,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -100,7 +95,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -114,7 +108,7 @@ class MethodTest(object):
     Description:  Class which is a representation of a method module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -138,7 +132,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -183,13 +177,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_multiple_queue_archive -> Test archiving body in multiple queues.
-        test_multiple_queue_found -> Test with multiple queues in queue_list.
-        test_archive_body -> Test with archiving message body.
-        test_queue_found -> Test with queue found in queue_list.
-        test_queue_not_found -> Test with no queue found in queue_list.
-        test_no_queue_list -> Test with an empty queue list.
+        setUp
+        test_multiple_queue_archive
+        test_multiple_queue_found
+        test_archive_body
+        test_queue_found
+        test_queue_not_found
+        test_no_queue_list
 
     """
 
