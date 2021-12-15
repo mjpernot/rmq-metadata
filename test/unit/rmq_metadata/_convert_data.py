@@ -42,7 +42,7 @@ class RabbitMQCon(object):
         rabbitmq_class.RabbitMQCon class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -66,9 +66,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -79,11 +79,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -101,7 +96,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -114,7 +108,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -128,7 +121,7 @@ class MethodTest(object):
     Description:  Class which is a representation of a method module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -152,7 +145,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -197,24 +190,24 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_extract_fails -> Test with extraction fails.
-        test_prename_postname_ext -> Test with prename, postname, and ext.
-        test_prename_postname -> Test with change to prename and postname.
-        test_no_prename -> Test with no prename set.
-        test_prename_change -> Test with change to default prename.
-        test_prename_default -> Test with default prename.
-        test_no_postname -> Test with no postname set.
-        test_postname_change -> Test with change to default postname.
-        test_postname_default -> Test with default postname.
-        test_empty_ext -> Test with empty extension set.
-        test_no_ext -> Test with no extension set.
-        test_ext_change -> Test with change to default extension.
-        test_ext_default -> Test with default extension.
+        setUp
+        test_extract_fails
+        test_prename_postname_ext
+        test_prename_postname
+        test_no_prename
+        test_prename_change
+        test_prename_default
+        test_no_postname
+        test_postname_change
+        test_postname_default
+        test_empty_ext
+        test_no_ext
+        test_ext_change
+        test_ext_default
         test_file_not_encoded -> Test with file not encoded
-        test_file_encoded -> Test with file encoded.
-        test_default_name -> Test for default file name.
-        tearDown -> Clean up of testing environment.
+        test_file_encoded
+        test_default_name
+        tearDown
 
     """
 
