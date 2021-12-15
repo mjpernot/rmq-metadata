@@ -42,8 +42,6 @@ def monitor_queue(cfg, log):
     Description:  This is a function stub for rmq_metadata.monitor_queue
 
     Arguments:
-        cfg -> Stub argument holder.
-        log -> Stub argument holder.
 
     """
 
@@ -62,7 +60,7 @@ class CfgTest2(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -95,7 +93,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -150,7 +148,7 @@ class ProgramLock(object):
     Description:  Class stub holder for gen_class.ProgramLock class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -161,8 +159,8 @@ class ProgramLock(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) cmdline -> Argv command line.
-            (input) flavor -> Lock flavor ID.
+            (input) cmdline
+            (input) flavor
 
         """
 
@@ -177,14 +175,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_flavor_id2 -> Test with passed flavor id argument.
-        test_flavor_id -> Test with default setting.
-        test_status_false -> Test with status is False.
-        test_status_true -> Test with status is True.
-        test_func_call -> Test with call to function.
-        test_raise_exception -> Test with raising exception.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_flavor_id2
+        test_flavor_id
+        test_status_false
+        test_status_true
+        test_func_call
+        test_raise_exception
+        tearDown
 
     """
 
