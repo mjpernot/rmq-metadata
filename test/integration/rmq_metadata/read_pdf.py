@@ -41,11 +41,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_is_encrypted -> Test with PDF encrypted.
-        test_not_encrypted -> Test with PDF not encrypted.
-        test_read_pdf -> Test with extracting data.
-        tearDown -> Cleanup of testing environment.
+        setUp
+        test_is_encrypted
+        test_not_encrypted
+        test_read_pdf
+        tearDown
 
     """
 
