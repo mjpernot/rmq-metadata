@@ -130,7 +130,7 @@ class UnitTest(unittest.TestCase):
         self.cfg.queue_list[0]["directory"] = self.err_msg9
         self.cfg.queue_list[1]["directory"] = self.err_msg9
         full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
-                   + self.tmp3 % self.err_msg9
+            + self.tmp3 % self.err_msg9
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -149,7 +149,7 @@ class UnitTest(unittest.TestCase):
         self.cfg.queue_list.append(self.queue)
         self.cfg.queue_list[0]["directory"] = self.err_msg9
         full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
-                   + self.tmp3 % self.err_msg9
+            + self.tmp3 % self.err_msg9
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -183,7 +183,7 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list[0]["directory"] = self.err_msg9
         full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
-                   + self.tmp3 % self.err_msg9
+            + self.tmp3 % self.err_msg9
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -233,7 +233,7 @@ class UnitTest(unittest.TestCase):
         self.cfg.log_dir = self.err_msg9
         self.cfg.stanford_jar = "./" + self.cfg.stanford_jar
         full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
-                   + self.tmp3 % self.err_msg9
+            + self.tmp3 % self.err_msg9
         full_msg2 = self.tmp7 % self.cfg.stanford_jar
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
@@ -441,7 +441,7 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.tmp_dir = self.err_msg4
         full_msg = self.tmp % self.err_msg4 + self.tmp2 % self.err_msg4 \
-                   + self.tmp3 % self.err_msg4
+            + self.tmp3 % self.err_msg4
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -523,8 +523,7 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.archive_dir = self.err_msg3
         full_msg = self.tmp % self.err_msg3 + self.tmp2 % self.err_msg3 \
-                   + self.tmp3 % self.err_msg3
-
+            + self.tmp3 % self.err_msg3
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -606,10 +605,9 @@ class UnitTest(unittest.TestCase):
         self.cfg.message_dir = self.err_msg9
         self.cfg.log_dir = self.err_msg2
         full_msg = self.tmp % self.err_msg9 + self.tmp2 % self.err_msg9 \
-                   + self.tmp3 % self.err_msg9
+            + self.tmp3 % self.err_msg9
         full_msg2 = self.tmp % self.err_msg2 + self.tmp2 % self.err_msg2 \
-                    + self.tmp3 % self.err_msg2
-
+            + self.tmp3 % self.err_msg2
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -627,7 +625,7 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.log_dir = self.err_msg2
         full_msg = self.tmp % self.err_msg2 + self.tmp2 % self.err_msg2 \
-                   + self.tmp3 % self.err_msg2
+            + self.tmp3 % self.err_msg2
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
@@ -677,7 +675,7 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.message_dir = self.err_msg
         full_msg = self.tmp % self.err_msg + self.tmp2 % self.err_msg \
-                   + self.tmp3 % self.err_msg
+            + self.tmp3 % self.err_msg
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
 
