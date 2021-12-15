@@ -218,8 +218,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
-    def test_mongo_failed(self, mock_pypdf2, mock_textract,
-                                     mock_pdfminer):
+    def test_mongo_failed(self, mock_pypdf2, mock_textract, mock_pdfminer):
 
         """Function:  test_mongo_failed
 
@@ -243,8 +242,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
-    def test_mongo_successful(self, mock_pypdf2, mock_textract,
-                                     mock_pdfminer):
+    def test_mongo_successful(self, mock_pypdf2, mock_textract, mock_pdfminer):
 
         """Function:  test_mongo_successful
 
