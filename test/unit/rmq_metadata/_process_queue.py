@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,7 +96,7 @@ class CfgTest2(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -136,7 +129,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -188,17 +181,17 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_mongo_failed -> Test with failed Mongo insert.
-        test_mongo_successful -> Test with successful Mongo insert.
-        test_all_extract_fails -> Test with all extracts fails.
-        test_two_extract_fails3 -> Test with two extracts fails.
-        test_two_extract_fails2 -> Test with two extracts fails.
-        test_two_extract_fails -> Test with two extracts fails.
-        test_pdfminer_extract_fails -> Test with pdfminer extract fails.
-        test_textract_extract_fails -> Test with textract extract fails.
-        test_pypdf2_extract_fails -> Test with pypdf2 extract fails.
-        test_all_successful_extracts -> Test with all successful extracts.
+        setUp
+        test_mongo_failed
+        test_mongo_successful
+        test_all_extract_fails
+        test_two_extract_fails3
+        test_two_extract_fails2
+        test_two_extract_fails
+        test_pdfminer_extract_fails
+        test_textract_extract_fails
+        test_pypdf2_extract_fails
+        test_all_successful_extracts
 
     """
 
