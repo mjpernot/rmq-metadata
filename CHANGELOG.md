@@ -34,10 +34,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
 ### Changed
+- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry.
 - \_convert_data:  Check and process status return from \_process_queue function.
 - get_textract_data, get_pypdf2_data, \_process_queue:  Check status of extractions and return status to calling function.
 - extract_pdf:  Added check to see if PDF is encrypted and return status of extraction.
 - read_pdf:  Added check to see if PDF is encrypted and return status of extraction.
+- Documentation updates.
 
 
 ## [0.0.2] - 2020-09-29
