@@ -42,11 +42,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_ps_found -> Test with process and pid found.
-        test_no_ps -> Test with process name found, not pid.
-        test_no_proc_name -> Test with pid found, but not process name.
-        test_ps_not_found -> Test with pid not found
+        setUp
+        test_ps_found
+        test_no_ps
+        test_no_proc_name
+        test_ps_not_found
 
     """
 
