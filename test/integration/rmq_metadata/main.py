@@ -42,17 +42,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_help_true -> Test with Help_Func returns True.
-        test_help_false -> Test with Help_Func returns False.
-        test_require_true_chk_true -> Test with arg_require returns True and
-            arg_dir_chk_crt returns True.
-        test_require_false_chk_true -> Test with arg_require returns False and
-            arg_dir_chk_crt returns True.
-        test_require_true_chk_false -> Test with arg_require returns True and
-            arg_dir_chk_crt returns False.
-        test_require_false_chk_falsee -> Test with arg_require returns False
-            and arg_dir_chk_crt returns False.
+        setUp
+        test_help_true
+        test_help_false
+        test_require_true_chk_true
+        test_require_false_chk_true
+        test_require_true_chk_false
+        test_require_false_chk_falsee
 
     """
 
