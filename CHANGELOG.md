@@ -13,13 +13,13 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- config/rabbitmq.py.TEMPLATE: Added entry to connect to RabbitMQ cluster, base_dir entry and reformatted the file.
+- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry and reformatted the file.
 - validate_create_settings:  Moved base_dir to configuration file entry: cfg.base_dir.
 - run_program:  Determine whether to use exchange name or -y option for program lock flavor id.
 - main:  Add -y option for program lock option to have flavor id capability.
 - non_proc_msg:  Changed error message to point to log file entries.
 - \_convert_data:  Changed to handle extraction or insertion failure.
-- config/mongo.py.TEMPLATE:  Reformatted the Mongo configuration file.
-- config/rabbitmq.py.TEMPLATE:  Reformatted the RabbitMQ configuration file and added base_dir entry.
 - Removed an unnecessary \*\*kwargs from function paramters list.
 - \_process_queue:  Removed body and r_key arguments - no longer required.
 - Documentation updates.
@@ -34,13 +34,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
 ### Changed
-- config/rabbitmq.py.TEMPLATE: Added entry to connect to RabbitMQ cluster.
-- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry.
 - \_convert_data:  Check and process status return from \_process_queue function.
 - get_textract_data, get_pypdf2_data, \_process_queue:  Check status of extractions and return status to calling function.
 - extract_pdf:  Added check to see if PDF is encrypted and return status of extraction.
 - read_pdf:  Added check to see if PDF is encrypted and return status of extraction.
-- Documentation updates.
 
 
 ## [0.0.2] - 2020-09-29
