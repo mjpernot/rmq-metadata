@@ -138,36 +138,71 @@
             # For internal use.  Do not change.
             mongo = None
 
-        Mongo configuration file format (config/mongo.py.TEMPLATE).
+        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
+            configuration file format is for connecting to a Mongo database or
+            replica set for monitoring.  A second configuration file can also
+            be used to connect to a Mongo database or replica set to insert the
+            results of the performance monitoring into.
 
-            # Mongo DB Configuration file
-            # All Mongo configuration settings.
+            There are two ways to connect methods:  single Mongo database or a
+            Mongo replica set.
+
+            Single database connection:
+
+            # Single Configuration file for Mongo Database Server.
             user = "USER"
             japd = "PSWORD"
-            # Mongo DB host information
             host = "HOST_IP"
             name = "HOSTNAME"
-            # Mongo database port (default is 27017)
             port = 27017
-            # Mongo configuration settings
             conf_file = None
-            # Authentication required:  True|False
             auth = True
-            # Name of Mongo database.
+            auth_db = "admin"
+            auth_mech = "SCRAM-SHA-1"
+            use_arg = True
+            use_uri = False
+
+            Replica set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file.  By
+                default all these entries are set to None to represent not
+                connecting to a replica set.
+
+            repset = "REPLICA_SET_NAME"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
+            db_auth = "AUTHENTICATION_DATABASE"
+
+            Note:  If using SSL connections then set one or more of the
+                following entries.  This will automatically enable SSL
+                connections. Below are the configuration settings for SSL
+                connections.  See configuration file for details on each entry:
+
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+            ssl_client_phrase = None
+
+            Note:  FIPS Environment for Mongo.
+              If operating in a FIPS 104-2 environment, this package will
+              require at least a minimum of pymongo==3.8.0 or better.  It will
+              also require a manual change to the auth.py module in the pymongo
+              package.  See below for changes to auth.py.
+
+            - Locate the auth.py file python installed packages on the system
+                in the pymongo package directory.
+            - Edit the file and locate the "_password_digest" function.
+            - In the "_password_digest" function there is an line that should
+                match: "md5hash = hashlib.md5()".  Change it to
+                "md5hash = hashlib.md5(usedforsecurity=False)".
+            - Lastly, it will require the Mongo configuration file entry
+                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
+
+            # Name of Mongo database for data insertion
             db = "DATABASE"
             # Name of Mongo table/collection.
             tbl = "TABLE"
-            # Replica Set Mongo configuration settings.
-            # None means the Mongo database is not part of a replica set.
-            # Replica set name.
-            # Format:  repset = "REPLICA_SET_NAME"
-            repset = None
-            # Replica host listing.
-            # Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            repset_hosts = None
-            # Database to authentication to.
-            # Format:  db_auth = "AUTHENTICATION_DATABASE"
-            db_auth = None
+
+        Configuration modules -> Name is runtime dependent as it can be used to
+            connect to different databases with different names.
 
     Example:
         Command Line:
