@@ -42,8 +42,6 @@ def monitor_queue(cfg, log):
     Description:  This is a function stub for rmq_metadata.monitor_queue
 
     Arguments:
-        cfg -> Stub argument holder.
-        log -> Stub argument holder.
 
     """
 
@@ -62,11 +60,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_status_false -> Test with status is False.
-        test_status_true -> Test with status is True.
-        test_func_call -> Test with call to function.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_status_false
+        test_status_true
+        test_func_call
+        tearDown
 
     """
 
