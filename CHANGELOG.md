@@ -34,6 +34,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - pdf_to_string:  Extract text from PDF using pdfminer module.
 
 ### Changed
+- config/rabbitmq.py.TEMPLATE: Added entry to connect to RabbitMQ cluster.
 - config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry.
 - \_convert_data:  Check and process status return from \_process_queue function.
 - get_textract_data, get_pypdf2_data, \_process_queue:  Check status of extractions and return status to calling function.
