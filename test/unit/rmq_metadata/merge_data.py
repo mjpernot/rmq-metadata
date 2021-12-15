@@ -40,13 +40,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_pre_data_three_items -> Test w/ pre-data and three items in list.
-        test_pre_data_two_items -> Test with pre-data and two items in list.
-        test_pre_data_one_item -> Test with pre-data and one item in list.
-        test_three_items -> Test with three items in list.
-        test_two_items -> Test with empty categorized_text list.
-        test_single_item -> Test with one item in list.
+        setUp
+        test_pre_data_three_items
+        test_pre_data_two_items
+        test_pre_data_one_item
+        test_three_items
+        test_two_items
+        test_single_item
 
     """
 
