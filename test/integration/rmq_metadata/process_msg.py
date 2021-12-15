@@ -317,7 +317,6 @@ class UnitTest(unittest.TestCase):
 
         self.rmq.drop_connection()
 
-
         f_list = gen_libs.list_filter_files(self.msg_dir, self.filter_name)
 
         self.assertTrue(f_list and len(f_list) == 1)
