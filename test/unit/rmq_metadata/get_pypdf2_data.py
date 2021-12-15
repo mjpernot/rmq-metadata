@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_warn -> log_warn method.
+        __init__
+        log_info
+        log_warn
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_warn method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,7 +96,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -153,11 +146,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_extract_failed -> Test with categorized data returned.
-        test_extract_success -> Test with extraction successful.
-        test_no_categorized_data -> Test with no categorized data returned.
-        test_categorized_data -> Test with categorized data returned.
+        setUp
+        test_extract_failed
+        test_extract_success
+        test_no_categorized_data
+        test_categorized_data
 
     """
 
