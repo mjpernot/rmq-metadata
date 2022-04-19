@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _convert_data.py
+"""Program:  convert_data.py
 
-    Description:  Unit testing of _convert_data in rmq_metadata.py.
+    Description:  Unit testing of convert_data in rmq_metadata.py.
 
     Usage:
-        test/unit/rmq_metadata/_convert_data.py
+        test/unit/rmq_metadata/convert_data.py
 
     Arguments:
 
@@ -251,7 +251,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -277,7 +277,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -302,7 +302,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -326,7 +326,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -350,7 +350,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -372,7 +372,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -396,7 +396,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -420,7 +420,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -442,7 +442,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -466,7 +466,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -490,7 +490,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -514,7 +514,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -536,7 +536,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -560,7 +560,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -582,7 +582,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
@@ -604,7 +604,7 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata._convert_data(
+        self.assertFalse(rmq_metadata.convert_data(
             self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
             self.body, self.method.routing_key))
 
