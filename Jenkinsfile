@@ -35,7 +35,7 @@ pipeline {
                 pip2 install soupsieve==1.9.6 --user
                 pip2 install textract==1.6.3 --user
                 ./test/unit/rmq_metadata/convert_data.py
-                ./test/unit/rmq_metadata/_process_queue.py
+                ./test/unit/rmq_metadata/process_message.py
                 ./test/unit/rmq_metadata/_sort_data.py
                 ./test/unit/rmq_metadata/_validate_files.py
                 ./test/unit/rmq_metadata/create_metadata.py
