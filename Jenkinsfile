@@ -35,9 +35,6 @@ pipeline {
                 pip2 install soupsieve==1.9.6 --user
                 pip2 install textract==1.6.3 --user
                 ./test/unit/rmq_metadata/convert_data.py
-                ./test/unit/rmq_metadata/process_message.py
-                ./test/unit/rmq_metadata/sort_data.py
-                ./test/unit/rmq_metadata/_validate_files.py
                 ./test/unit/rmq_metadata/create_metadata.py
                 ./test/unit/rmq_metadata/extract_pdf.py
                 ./test/unit/rmq_metadata/find_tokens.py
@@ -50,11 +47,14 @@ pipeline {
                 ./test/unit/rmq_metadata/monitor_queue.py
                 ./test/unit/rmq_metadata/non_proc_msg.py
                 ./test/unit/rmq_metadata/pdf_to_string.py
+                ./test/unit/rmq_metadata/process_message.py
                 ./test/unit/rmq_metadata/process_msg.py
                 ./test/unit/rmq_metadata/read_pdf.py
                 ./test/unit/rmq_metadata/run_program.py
+                ./test/unit/rmq_metadata/sort_data.py
                 ./test/unit/rmq_metadata/summarize_data.py
                 ./test/unit/rmq_metadata/validate_create_settings.py
+                ./test/unit/rmq_metadata/validate_files.py
                 ./test/unit/daemon_rmq_metadata/is_active.py
                 ./test/unit/daemon_rmq_metadata/main.py
                 deactivate
