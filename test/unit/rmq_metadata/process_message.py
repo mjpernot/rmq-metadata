@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _process_queue.py
+"""Program:  process_message.py
 
-    Description:  Unit testing of _process_queue in rmq_metadata.py.
+    Description:  Unit testing of process_message in rmq_metadata.py.
 
     Usage:
-        test/unit/rmq_metadata/_process_queue.py
+        test/unit/rmq_metadata/process_message.py
 
     Arguments:
 
@@ -232,7 +232,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertFalse(rmq_metadata._process_queue(
+        self.assertFalse(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -256,7 +256,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.get_pdfminer_data")
@@ -277,7 +277,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (False, [])
 
-        self.assertFalse(rmq_metadata._process_queue(
+        self.assertFalse(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -302,7 +302,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -327,7 +327,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (False, [])
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -352,7 +352,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (False, [])
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -377,7 +377,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (False, [])
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -402,7 +402,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -427,7 +427,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
@@ -452,7 +452,7 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
 
