@@ -548,7 +548,7 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    status = _process_queue(queue, cfg, f_name, log)
+    status = process_message(queue, cfg, f_name, log)
 
     if status:
         log.log_info("Finished processing of: %s" % (f_filename))
@@ -989,11 +989,11 @@ def get_pdfminer_data(f_name, cfg, log):
     return status, final_data
 
 
-def _process_queue(queue, cfg, f_name, log):
+def process_message(queue, cfg, f_name, log):
 
-    """Function:  _process_queue
+    """Function:  process_message
 
-    Description:  Private function to process message queue.
+    Description:  Extract metadata from message.
 
     Arguments:
         (input) queue -> RabbitMQ queue.
@@ -1007,7 +1007,7 @@ def _process_queue(queue, cfg, f_name, log):
     global DTG_FORMAT
 
     status = True
-    log.log_info("_process_queue:  Extracting and processing metadata.")
+    log.log_info("process_message:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
     metadata = {"FileName": os.path.basename(f_name),
                 "Directory": queue["directory"],
@@ -1017,41 +1017,41 @@ def _process_queue(queue, cfg, f_name, log):
     status_pypdf2, final_data = get_pypdf2_data(f_name, cfg, log)
 
     if status_pypdf2:
-        log.log_info("_process_queue:  Adding metadata from pypdf2.")
+        log.log_info("process_message:  Adding metadata from pypdf2.")
         metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
     status_textract, final_data = get_textract_data(f_name, cfg, log)
 
     if status_textract:
-        log.log_info("_process_queue:  Adding metadata from textract.")
+        log.log_info("process_message:  Adding metadata from textract.")
         metadata = create_metadata(metadata, final_data)
 
     # Use the pdfminer module to extract data.
     status_pdfminer, final_data = get_pdfminer_data(f_name, cfg, log)
 
     if status_pdfminer:
-        log.log_info("_process_queue:  Adding metadata from pdfminer.")
+        log.log_info("process_message:  Adding metadata from pdfminer.")
         metadata = create_metadata(metadata, final_data)
 
     if status_pypdf2 or status_textract or status_pdfminer:
-        log.log_info("_process_queue:  Insert metadata into MongoDB.")
+        log.log_info("process_message:  Insert metadata into MongoDB.")
         mongo_stat = mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs,
                                         cfg.mongo.tbl, metadata)
 
         if not mongo_stat[0]:
-            log.log_err("_process_queue:  Insert of data into MongoDB failed.")
+            log.log_err("process_message: Insert of data into MongoDB failed.")
             log.log_err("Mongo error message:  %s" % (mongo_stat[1]))
             status = False
 
         else:
-            log.log_info("_process_queue:  Moving PDF to: %s" %
+            log.log_info("process_message:  Moving PDF to: %s" %
                          (queue["directory"]))
             gen_libs.mv_file2(f_name, queue["directory"],
                               os.path.basename(f_name))
 
     else:
-        log.log_err("_process_queue:  All extractions methods failed.")
+        log.log_err("process_message:  All extractions methods failed.")
         status = False
 
     return status
