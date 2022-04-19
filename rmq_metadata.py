@@ -492,17 +492,17 @@ def process_msg(rmq, log, cfg, method, body):
             break
 
     if queue:
-        _convert_data(rmq, log, cfg, queue, body, r_key)
+        convert_data(rmq, log, cfg, queue, body, r_key)
 
     else:
         non_proc_msg(rmq, log, cfg, body, "No queue detected", r_key)
 
 
-def _convert_data(rmq, log, cfg, queue, body, r_key):
+def convert_data(rmq, log, cfg, queue, body, r_key):
 
-    """Function:  _convert_data
+    """Function:  convert_data
 
-    Description:  Private function to process message queue.
+    Description:  Pre-processing of message and decode the message.
 
     Arguments:
         (input) rmq -> RabbitMQ class instance.
