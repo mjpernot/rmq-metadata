@@ -641,7 +641,7 @@ def summarize_data(categorized_text, token_types):
     current_type = ""
 
     for item in categorized_text:
-        current_type, data_list, tmp_data = _sort_data(
+        current_type, data_list, tmp_data = sort_data(
             item, current_type, data_list, tmp_data, token_types)
 
     else:
@@ -651,13 +651,12 @@ def summarize_data(categorized_text, token_types):
     return data_list
 
 
-def _sort_data(item, current_type, data_list, tmp_data, token_types):
+def sort_data(item, current_type, data_list, tmp_data, token_types):
 
-    """Function:  _sort_data
+    """Function:  sort_data
 
-    Description:  Private function for summarize_data.  Combines a series of
-        same token types into a data set and ignores the "O" (OTHER) token
-        type.
+    Description:  Combines a series of same token types into a data set and
+        ignores the "O" (OTHER) token type.
 
     Arguments:
         (input) item -> Single set token.
