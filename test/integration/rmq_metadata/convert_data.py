@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _convert_data.py
+"""Program:  convert_data.py
 
-    Description:  Integration testing of _convert_data in rmq_metadata.py.
+    Description:  Integration testing of convert_data in rmq_metadata.py.
 
     Usage:
-        test/integration/rmq_metadata/_convert_data.py
+        test/integration/rmq_metadata/convert_data.py
 
     Arguments:
 
@@ -170,7 +170,7 @@ def process_msg(rmq, log, cfg, method, body):
 
     r_key = method.routing_key
     queue = cfg.queue_list[0]
-    rmq_metadata._convert_data(rmq, log, cfg, queue, body, r_key)
+    rmq_metadata.convert_data(rmq, log, cfg, queue, body, r_key)
 
 
 class UnitTest(unittest.TestCase):

@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _process_queue.py
+"""Program:  process_message.py
 
-    Description:  Integration testing of _process_queue in rmq_metadata.py.
+    Description:  Integration testing of process_message in rmq_metadata.py.
 
     Usage:
-        test/integration/rmq_metadata/_process_queue.py
+        test/integration/rmq_metadata/process_message.py
 
     Arguments:
 
@@ -103,7 +103,7 @@ class UnitTest(unittest.TestCase):
 
         gen_libs.cp_file(self.f_name3, self.pdf_dir, self.tmp_dir)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.filename3, self.logger))
 
     def test_no_data_extracted(self):
@@ -119,7 +119,7 @@ class UnitTest(unittest.TestCase):
         data = {}
         gen_libs.cp_file(self.f_name3, self.pdf_dir, self.tmp_dir)
 
-        rmq_metadata._process_queue(
+        rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.filename3, self.logger)
 
         if self.mongo.coll_cnt() == 1:
@@ -143,7 +143,7 @@ class UnitTest(unittest.TestCase):
 
         gen_libs.cp_file(self.f_name2, self.pdf_dir, self.tmp_dir)
 
-        self.assertFalse(rmq_metadata._process_queue(
+        self.assertFalse(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.filename2, self.logger))
 
     def test_all_successful_extracts2(self):
@@ -158,7 +158,7 @@ class UnitTest(unittest.TestCase):
 
         gen_libs.cp_file(self.f_name1, self.pdf_dir, self.tmp_dir)
 
-        self.assertTrue(rmq_metadata._process_queue(
+        self.assertTrue(rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.filename1, self.logger))
 
     def test_all_successful_extracts(self):
@@ -174,7 +174,7 @@ class UnitTest(unittest.TestCase):
         data = {}
         gen_libs.cp_file(self.f_name1, self.pdf_dir, self.tmp_dir)
 
-        rmq_metadata._process_queue(
+        rmq_metadata.process_message(
             self.cfg.queue_list[0], self.cfg, self.filename1, self.logger)
 
         if self.mongo.coll_cnt() == 1:
