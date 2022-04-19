@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _sort_data.py
+"""Program:  sort_data.py
 
-    Description:  Unit testing of _sort_data in rmq_metadata.py.
+    Description:  Unit testing of sort_data in rmq_metadata.py.
 
     Usage:
-        test/unit/rmq_metadata/_sort_data.py
+        test/unit/rmq_metadata/sort_data.py
 
     Arguments:
 
@@ -96,7 +96,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item2, self.current_type, self.data_list,
                 self.tmp_data, self.token_types),
             (self.result_type2, self.result_list, self.result_tmp2))
@@ -112,7 +112,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item4, self.current_type3, self.data_list,
                 self.tmp_data2, self.token_types),
             (self.result_type3, self.result_list2, self.result_tmp4))
@@ -128,7 +128,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item3, self.current_type3, self.data_list,
                 self.tmp_data2, self.token_types),
             (self.result_type2, self.result_list, self.result_tmp3))
@@ -144,7 +144,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item2, self.current_type3, self.data_list,
                 self.tmp_data, self.token_types),
             (self.result_type2, self.result_list, self.result_tmp2))
@@ -163,7 +163,7 @@ class UnitTest(unittest.TestCase):
         mock_merge.return_value = self.tmp_data2
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item, self.current_type3, self.data_list,
                 self.tmp_data2, self.token_types),
             (self.result_type, self.result_list2, self.result_tmp))
@@ -179,7 +179,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item, self.current_type2, self.data_list,
                 self.tmp_data, self.token_types),
             (self.result_type, self.result_list, self.result_tmp))
@@ -195,7 +195,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.assertEqual(
-            rmq_metadata._sort_data(
+            rmq_metadata.sort_data(
                 self.item, self.current_type, self.data_list,
                 self.tmp_data, self.token_types),
             (self.result_type, self.result_list, self.result_tmp))
