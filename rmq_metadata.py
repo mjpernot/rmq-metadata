@@ -338,7 +338,7 @@ def validate_create_settings(cfg):
         status_flag = False
 
     # Check on file entries.
-    status_flag, err_msg = _validate_files(cfg, status_flag, err_msg)
+    status_flag, err_msg = validate_files(cfg, status_flag, err_msg)
 
     # Check on final directory for each queue.
     for queue in cfg.queue_list:
@@ -352,12 +352,11 @@ def validate_create_settings(cfg):
     return cfg, status_flag, err_msg
 
 
-def _validate_files(cfg, status_flag, err_msg):
+def validate_files(cfg, status_flag, err_msg):
 
-    """Function:  _validate_files
+    """Function:  validate_files
 
-    Description:  Private function for validate_create_settings.  Validates the
-        file entries in the configuration file.
+    Description:  Validates the file entries in the configuration file.
 
     Arguments:
         (input) cfg -> Configuration settings module for the program.

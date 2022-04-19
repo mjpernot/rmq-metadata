@@ -13,6 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- Renamed \_validate_files to validate_files.
 - Renamed \_sort_data to sort_data.
 - Renamed \_process_queue to process_message.
 - Renamed \_convert_data to convert_data.
