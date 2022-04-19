@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _validate_files.py
+"""Program:  validate_files.py
 
-    Description:  Unit testing of _validate_files in rmq_metadata.py.
+    Description:  Unit testing of validate_files in rmq_metadata.py.
 
     Usage:
-        test/unit/rmq_metadata/_validate_files.py
+        test/unit/rmq_metadata/validate_files.py
 
     Arguments:
 
@@ -135,7 +135,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(True, None),
                                              (False, self.err_msg6)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -157,7 +157,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -175,7 +175,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
@@ -194,7 +194,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg6),
                                              (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, self.err_msg6))
@@ -212,7 +212,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
@@ -235,7 +235,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
                                              (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -257,7 +257,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -275,7 +275,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
@@ -294,7 +294,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
                                              (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, self.err_msg5))
@@ -312,7 +312,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
