@@ -94,8 +94,8 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.stanford_jar = "./" + self.cfg.stanford_jar
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (False, self.err_msg4))
 
@@ -109,8 +109,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (True, ""))
 
@@ -127,8 +127,8 @@ class UnitTest(unittest.TestCase):
         self.cfg.stanford_jar = self.err_msg3
         full_msg = self.tmp4 % self.err_msg3 + self.tmp6 % self.err_msg3
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (False, full_msg))
 
@@ -142,8 +142,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (True, ""))
 
@@ -159,8 +159,8 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.lang_module = "./" + self.cfg.lang_module
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (False, self.err_msg2))
 
@@ -174,8 +174,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (True, ""))
 
@@ -192,8 +192,8 @@ class UnitTest(unittest.TestCase):
         self.cfg.lang_module = self.err_msg
         full_msg = self.tmp4 % self.err_msg + self.tmp6 % self.err_msg
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (False, full_msg))
 
@@ -207,8 +207,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        status, err_msg = rmq_metadata.validate_files(self.cfg, self.status,
-                                                       self.msg)
+        status, err_msg = rmq_metadata.validate_files(
+            self.cfg, self.status, self.msg)
 
         self.assertEqual((status, err_msg), (True, ""))
 
