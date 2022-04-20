@@ -291,8 +291,8 @@ def validate_create_settings(cfg):
     if not os.path.isabs(cfg.message_dir):
         cfg.message_dir = os.path.join(cfg.base_dir, cfg.message_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.message_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.message_dir, write=True, read=True, no_print=True)
 
     if not status:
         err_msg = err_msg + msg
@@ -302,8 +302,8 @@ def validate_create_settings(cfg):
     if not os.path.isabs(cfg.log_dir):
         cfg.log_dir = os.path.join(cfg.base_dir, cfg.log_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.log_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.log_dir, write=True, read=True, no_print=True)
 
     if status:
         base_name, ext_name = os.path.splitext(cfg.log_file)
@@ -319,8 +319,8 @@ def validate_create_settings(cfg):
         cfg.archive_dir = os.path.join(cfg.base_dir, cfg.archive_dir)
 
     if cfg.archive_dir:
-        status, msg = gen_libs.chk_crt_dir(cfg.archive_dir, write=True,
-                                           read=True, no_print=True)
+        status, msg = gen_libs.chk_crt_dir(
+            cfg.archive_dir, write=True, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -330,8 +330,8 @@ def validate_create_settings(cfg):
     if not os.path.isabs(cfg.tmp_dir):
         cfg.tmp_dir = os.path.join(cfg.base_dir, cfg.tmp_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.tmp_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.tmp_dir, write=True, read=True, no_print=True)
 
     if not status:
         err_msg = err_msg + msg
@@ -342,8 +342,8 @@ def validate_create_settings(cfg):
 
     # Check on final directory for each queue.
     for queue in cfg.queue_list:
-        status, msg = gen_libs.chk_crt_dir(queue["directory"], write=True,
-                                           read=True, no_print=True)
+        status, msg = gen_libs.chk_crt_dir(
+            queue["directory"], write=True, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -684,6 +684,7 @@ def sort_data(item, current_type, data_list, tmp_data, token_types):
         tmp_data.append(item)
 
     elif item[1] in token_types:
+
         if tmp_data:
             data_list = merge_data(data_list, tmp_data)
 
@@ -936,8 +937,8 @@ def pdf_to_string(f_name, log):
             rsrcmgr = PDFResourceManager()
             device = TextConverter(rsrcmgr, out_string, laparams=LAParams())
             interpreter = PDFPageInterpreter(rsrcmgr, device)
-
             log.log_info("pdf_to_string:  Extracting data...")
+
             for page in PDFPage.create_pages(doc):
                 interpreter.process_page(page)
 
@@ -1043,10 +1044,10 @@ def process_message(queue, cfg, f_name, log):
             status = False
 
         else:
-            log.log_info("process_message:  Moving PDF to: %s" %
-                         (queue["directory"]))
-            gen_libs.mv_file2(f_name, queue["directory"],
-                              os.path.basename(f_name))
+            log.log_info(
+                "process_message:  Moving PDF to: %s" % (queue["directory"]))
+            gen_libs.mv_file2(
+                f_name, queue["directory"], os.path.basename(f_name))
 
     else:
         log.log_err("process_message:  All extractions methods failed.")
@@ -1084,8 +1085,8 @@ def monitor_queue(cfg, log):
         log.log_info("callback:  Processing message with Routing Key: %s" %
                      (method.routing_key))
         process_msg(rmq, log, cfg, method, body)
-        log.log_info("Deleting message with Routing Key: %s" %
-                     (method.routing_key))
+        log.log_info(
+            "Deleting message with Routing Key: %s" % (method.routing_key))
         rmq.ack(method.delivery_tag)
 
     log.log_info("monitor_queue:  Initialize monitoring of queues...")
