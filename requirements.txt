@@ -1,5 +1,6 @@
 Pillow==6.2.2
 PyPDF2==1.26.0
+XlsxWriter==0.5.7
 enum34==1.1.10
 nltk==3.4.0
 pdfminer==20191010
