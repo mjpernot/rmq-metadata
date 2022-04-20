@@ -233,7 +233,7 @@ class UnitTest(unittest.TestCase):
                              "%m-%d-%YT%H:%M:%SZ|")
 
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=False))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=False))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -251,11 +251,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -277,11 +278,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -302,11 +304,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -326,11 +329,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -350,11 +354,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -372,11 +377,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -396,11 +402,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -420,11 +427,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -442,11 +450,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -466,11 +475,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -490,11 +500,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -514,11 +525,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -536,11 +548,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.rename_file",
                 mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -560,11 +573,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -582,11 +596,12 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
-    @mock.patch("rmq_metadata._process_queue", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.process_message", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.base64.decode", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.gen_libs.write_file",
@@ -604,9 +619,10 @@ class UnitTest(unittest.TestCase):
 
         mock_path.join.side_effect = [self.t_file, self.f_name]
 
-        self.assertFalse(rmq_metadata.convert_data(
-            self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
-            self.body, self.method.routing_key))
+        self.assertFalse(
+            rmq_metadata.convert_data(
+                self.rmq, self.logger, self.cfg, self.cfg.queue_list[0],
+                self.body, self.method.routing_key))
 
     def tearDown(self):
 
