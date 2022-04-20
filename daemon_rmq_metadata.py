@@ -73,7 +73,7 @@ class RmqMetadataDaemon(gen_class.Daemon):
             time.sleep(1)
 
 
-def is_active(pidfile, proc_name, **kwargs):
+def is_active(pidfile, proc_name):
 
     """Function:  is_active
 
