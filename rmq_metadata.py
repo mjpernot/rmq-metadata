@@ -291,8 +291,8 @@ def validate_create_settings(cfg):
     if not os.path.isabs(cfg.message_dir):
         cfg.message_dir = os.path.join(cfg.base_dir, cfg.message_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.message_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.message_dir, write=True, read=True, no_print=True)
 
     if not status:
         err_msg = err_msg + msg
@@ -302,8 +302,8 @@ def validate_create_settings(cfg):
     if not os.path.isabs(cfg.log_dir):
         cfg.log_dir = os.path.join(cfg.base_dir, cfg.log_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.log_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.log_dir, write=True, read=True, no_print=True)
 
     if status:
         base_name, ext_name = os.path.splitext(cfg.log_file)
@@ -319,8 +319,8 @@ def validate_create_settings(cfg):
         cfg.archive_dir = os.path.join(cfg.base_dir, cfg.archive_dir)
 
     if cfg.archive_dir:
-        status, msg = gen_libs.chk_crt_dir(cfg.archive_dir, write=True,
-                                           read=True, no_print=True)
+        status, msg = gen_libs.chk_crt_dir(
+            cfg.archive_dir, write=True, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -330,20 +330,20 @@ def validate_create_settings(cfg):
     if not os.path.isabs(cfg.tmp_dir):
         cfg.tmp_dir = os.path.join(cfg.base_dir, cfg.tmp_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.tmp_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.tmp_dir, write=True, read=True, no_print=True)
 
     if not status:
         err_msg = err_msg + msg
         status_flag = False
 
     # Check on file entries.
-    status_flag, err_msg = _validate_files(cfg, status_flag, err_msg)
+    status_flag, err_msg = validate_files(cfg, status_flag, err_msg)
 
     # Check on final directory for each queue.
     for queue in cfg.queue_list:
-        status, msg = gen_libs.chk_crt_dir(queue["directory"], write=True,
-                                           read=True, no_print=True)
+        status, msg = gen_libs.chk_crt_dir(
+            queue["directory"], write=True, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -352,12 +352,11 @@ def validate_create_settings(cfg):
     return cfg, status_flag, err_msg
 
 
-def _validate_files(cfg, status_flag, err_msg):
+def validate_files(cfg, status_flag, err_msg):
 
-    """Function:  _validate_files
+    """Function:  validate_files
 
-    Description:  Private function for validate_create_settings.  Validates the
-        file entries in the configuration file.
+    Description:  Validates the file entries in the configuration file.
 
     Arguments:
         (input) cfg -> Configuration settings module for the program.
@@ -492,17 +491,17 @@ def process_msg(rmq, log, cfg, method, body):
             break
 
     if queue:
-        _convert_data(rmq, log, cfg, queue, body, r_key)
+        convert_data(rmq, log, cfg, queue, body, r_key)
 
     else:
         non_proc_msg(rmq, log, cfg, body, "No queue detected", r_key)
 
 
-def _convert_data(rmq, log, cfg, queue, body, r_key):
+def convert_data(rmq, log, cfg, queue, body, r_key):
 
-    """Function:  _convert_data
+    """Function:  convert_data
 
-    Description:  Private function to process message queue.
+    Description:  Pre-processing of message and decode the message.
 
     Arguments:
         (input) rmq -> RabbitMQ class instance.
@@ -548,7 +547,7 @@ def _convert_data(rmq, log, cfg, queue, body, r_key):
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    status = _process_queue(queue, cfg, f_name, log)
+    status = process_message(queue, cfg, f_name, log)
 
     if status:
         log.log_info("Finished processing of: %s" % (f_filename))
@@ -641,7 +640,7 @@ def summarize_data(categorized_text, token_types):
     current_type = ""
 
     for item in categorized_text:
-        current_type, data_list, tmp_data = _sort_data(
+        current_type, data_list, tmp_data = sort_data(
             item, current_type, data_list, tmp_data, token_types)
 
     else:
@@ -651,13 +650,12 @@ def summarize_data(categorized_text, token_types):
     return data_list
 
 
-def _sort_data(item, current_type, data_list, tmp_data, token_types):
+def sort_data(item, current_type, data_list, tmp_data, token_types):
 
-    """Function:  _sort_data
+    """Function:  sort_data
 
-    Description:  Private function for summarize_data.  Combines a series of
-        same token types into a data set and ignores the "O" (OTHER) token
-        type.
+    Description:  Combines a series of same token types into a data set and
+        ignores the "O" (OTHER) token type.
 
     Arguments:
         (input) item -> Single set token.
@@ -686,6 +684,7 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types):
         tmp_data.append(item)
 
     elif item[1] in token_types:
+
         if tmp_data:
             data_list = merge_data(data_list, tmp_data)
 
@@ -938,8 +937,8 @@ def pdf_to_string(f_name, log):
             rsrcmgr = PDFResourceManager()
             device = TextConverter(rsrcmgr, out_string, laparams=LAParams())
             interpreter = PDFPageInterpreter(rsrcmgr, device)
-
             log.log_info("pdf_to_string:  Extracting data...")
+
             for page in PDFPage.create_pages(doc):
                 interpreter.process_page(page)
 
@@ -989,11 +988,11 @@ def get_pdfminer_data(f_name, cfg, log):
     return status, final_data
 
 
-def _process_queue(queue, cfg, f_name, log):
+def process_message(queue, cfg, f_name, log):
 
-    """Function:  _process_queue
+    """Function:  process_message
 
-    Description:  Private function to process message queue.
+    Description:  Extract metadata from message.
 
     Arguments:
         (input) queue -> RabbitMQ queue.
@@ -1007,7 +1006,7 @@ def _process_queue(queue, cfg, f_name, log):
     global DTG_FORMAT
 
     status = True
-    log.log_info("_process_queue:  Extracting and processing metadata.")
+    log.log_info("process_message:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
     metadata = {"FileName": os.path.basename(f_name),
                 "Directory": queue["directory"],
@@ -1017,41 +1016,41 @@ def _process_queue(queue, cfg, f_name, log):
     status_pypdf2, final_data = get_pypdf2_data(f_name, cfg, log)
 
     if status_pypdf2:
-        log.log_info("_process_queue:  Adding metadata from pypdf2.")
+        log.log_info("process_message:  Adding metadata from pypdf2.")
         metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
     status_textract, final_data = get_textract_data(f_name, cfg, log)
 
     if status_textract:
-        log.log_info("_process_queue:  Adding metadata from textract.")
+        log.log_info("process_message:  Adding metadata from textract.")
         metadata = create_metadata(metadata, final_data)
 
     # Use the pdfminer module to extract data.
     status_pdfminer, final_data = get_pdfminer_data(f_name, cfg, log)
 
     if status_pdfminer:
-        log.log_info("_process_queue:  Adding metadata from pdfminer.")
+        log.log_info("process_message:  Adding metadata from pdfminer.")
         metadata = create_metadata(metadata, final_data)
 
     if status_pypdf2 or status_textract or status_pdfminer:
-        log.log_info("_process_queue:  Insert metadata into MongoDB.")
+        log.log_info("process_message:  Insert metadata into MongoDB.")
         mongo_stat = mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs,
                                         cfg.mongo.tbl, metadata)
 
         if not mongo_stat[0]:
-            log.log_err("_process_queue:  Insert of data into MongoDB failed.")
+            log.log_err("process_message: Insert of data into MongoDB failed.")
             log.log_err("Mongo error message:  %s" % (mongo_stat[1]))
             status = False
 
         else:
-            log.log_info("_process_queue:  Moving PDF to: %s" %
-                         (queue["directory"]))
-            gen_libs.mv_file2(f_name, queue["directory"],
-                              os.path.basename(f_name))
+            log.log_info(
+                "process_message:  Moving PDF to: %s" % (queue["directory"]))
+            gen_libs.mv_file2(
+                f_name, queue["directory"], os.path.basename(f_name))
 
     else:
-        log.log_err("_process_queue:  All extractions methods failed.")
+        log.log_err("process_message:  All extractions methods failed.")
         status = False
 
     return status
@@ -1086,8 +1085,8 @@ def monitor_queue(cfg, log):
         log.log_info("callback:  Processing message with Routing Key: %s" %
                      (method.routing_key))
         process_msg(rmq, log, cfg, method, body)
-        log.log_info("Deleting message with Routing Key: %s" %
-                     (method.routing_key))
+        log.log_info(
+            "Deleting message with Routing Key: %s" % (method.routing_key))
         rmq.ack(method.delivery_tag)
 
     log.log_info("monitor_queue:  Initialize monitoring of queues...")

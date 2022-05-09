@@ -216,7 +216,7 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
                 mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_multiple_queue_archive(self):
 
@@ -231,10 +231,11 @@ class UnitTest(unittest.TestCase):
         self.cfg.queue_list.append(self.queue2)
         self.method.routing_key = "MY_ROUTING_KEY3"
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_multiple_queue_found(self):
 
@@ -249,12 +250,13 @@ class UnitTest(unittest.TestCase):
         self.cfg.queue_list.append(self.queue)
         self.method.routing_key = "MY_ROUTING_KEY2"
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
                 mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_archive_body(self):
 
@@ -268,10 +270,11 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list[0]["archive"] = True
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_queue_found(self):
 
@@ -283,8 +286,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_queue_not_found(self):
@@ -299,8 +303,9 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list[0]["routing_key"] = "NotMyKey"
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_no_queue_list(self):
@@ -315,8 +320,9 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list = []
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
 
 if __name__ == "__main__":

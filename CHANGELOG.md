@@ -13,6 +13,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- Renamed \_validate_files to validate_files.
+- Renamed \_sort_data to sort_data.
+- Renamed \_process_queue to process_message.
+- Renamed \_convert_data to convert_data.
 - config/rabbitmq.py.TEMPLATE: Added entry to connect to RabbitMQ cluster, base_dir entry and reformatted the file.
 - config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry and reformatted the file.
 - validate_create_settings:  Moved base_dir to configuration file entry: cfg.base_dir.

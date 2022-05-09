@@ -474,7 +474,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        tmp_dir = os.path.join(gen_libs.get_base_dir(__file__), "tmp")
         self.cfg.tmp_dir = "tmp"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)
@@ -556,7 +555,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        archive_dir = os.path.join(gen_libs.get_base_dir(__file__), "archive")
         self.cfg.archive_dir = "archive"
 
         _, status, err_msg = rmq_metadata.validate_create_settings(self.cfg)

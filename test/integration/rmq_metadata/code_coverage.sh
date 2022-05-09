@@ -8,10 +8,7 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
-coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_convert_data.py
-coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_process_queue.py
-coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_sort_data.py
-coverage run -a --source=rmq_metadata test/integration/rmq_metadata/_validate_files.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/convert_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/extract_pdf.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/find_tokens.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/get_pdfminer_data.py
@@ -20,11 +17,14 @@ coverage run -a --source=rmq_metadata test/integration/rmq_metadata/get_textract
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/main.py 
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/non_proc_msg.py 
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/pdf_to_string.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/process_message.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/process_msg.py 
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/read_pdf.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/run_program.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/sort_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/summarize_data.py
 coverage run -a --source=rmq_metadata test/integration/rmq_metadata/validate_create_settings.py
+coverage run -a --source=rmq_metadata test/integration/rmq_metadata/validate_files.py
 
 echo ""
 echo "Producing code coverage report"
