@@ -5,8 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.0] - 2020-10-05
-- Alpha release.
-- Upgrade Rabbitmq-lib module to v2.0.0.
+- Alpha release
+- Upgrade Rabbitmq-lib module to v2.2.0
+- Upgrade Python-lib module to v2.9.3
 
 ### Fixed
 - \_process_queue:  Added status check on Mongo data insert command.

@@ -34,6 +34,78 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_dir_chk
+        arg_require
+        get_args
+
+    """
+        
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+        self.opt_req = None
+        self.opt_req2 = True
+        self.dir_perms_chk = None
+        self.dir_perms_chk2 = True
+
+    def arg_dir_chk(self, dir_perms_chk):
+
+        """Method:  arg_dir_chk
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_dir_chk.
+
+        Arguments:
+
+        """
+
+        self.dir_perms_chk = dir_perms_chk
+
+        return self.dir_perms_chk2
+
+    def arg_require(self, opt_req):
+
+        """Method:  arg_require
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_require.
+
+        Arguments:
+
+        """
+
+        self.opt_req = opt_req
+
+        return self.opt_req2
+
+    def get_args(self):
+
+        """Method:  get_args
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args.
+
+        Arguments:
+
+        """
+
+        return self.args_array
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -44,10 +116,10 @@ class UnitTest(unittest.TestCase):
         setUp
         test_help_true
         test_help_false
-        test_require_true_chk_true
-        test_require_false_chk_true
-        test_require_true_chk_false
-        test_require_false_chk_falsee
+        test_arg_require_false
+        test_arg_require_true
+        test_arg_dir_chk_false
+        test_arg_dir_chk_true
 
     """
 
@@ -61,14 +133,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
+        self.args = ArgParser()
+#        self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_dict = {"-M": rmq_metadata.monitor_queue}
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
     @mock.patch("rmq_metadata.arg_parser.arg_parse2")
     def test_help_true(self, mock_arg, mock_help):
 
-        """Function:  test_status_true
+        """Function:  test_help_true
 
         Description:  Test main function with Help_Func returns True.
 
@@ -82,10 +155,10 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(rmq_metadata.main())
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
+    @mock.patch("rmq_metadata.gen_class.ArgParser")
     def test_help_false(self, mock_arg, mock_help):
 
-        """Function:  test_status_false
+        """Function:  test_help_false
 
         Description:  Test main function with Help_Func returns False.
 
@@ -93,90 +166,87 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_req2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
 
         self.assertFalse(rmq_metadata.main())
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_true_chk_true(self, mock_arg, mock_help):
+    @mock.patch("rmq_metadata.gen_class.ArgParser")
+    def test_arg_require_false(self, mock_arg, mock_help):
 
-        """Function:  test_require_true_chk_true
+        """Function:  test_arg_require_false
 
-        Description:  Test main function with arg_require returns True and
-            arg_dir_chk_crt returns True.
+        Description:  Test with arg_require returns false.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.opt_req2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = True
 
         self.assertFalse(rmq_metadata.main())
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_false_chk_true(self, mock_arg, mock_help):
+    @mock.patch("rmq_metadata.gen_class.ArgParser")
+    def test_arg_require_true(self, mock_arg, mock_help):
 
-        """Function:  test_require_false_chk_true
+        """Function:  test_arg_require_true
 
-        Description:  Test main function with arg_require returns False and
-            arg_dir_chk_crt returns True.
+        Description:  Test with arg_require returns true.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.dir_perms_chk2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = True
 
         self.assertFalse(rmq_metadata.main())
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_true_chk_false(self, mock_arg, mock_help):
+    @mock.patch("rmq_metadata.gen_class.ArgParser")
+    def test_arg_dir_chk_false(self, mock_arg, mock_help):
 
-        """Function:  test_require_true_chk_false
+        """Function:  test_arg_dir_chk_false
 
-        Description:  Test main function with arg_require returns True and
-            arg_dir_chk_crt returns False.
+        Description:  Test with arg_dir_chk returns false.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.dir_perms_chk2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
 
         self.assertFalse(rmq_metadata.main())
 
     @mock.patch("rmq_metadata.run_program")
     @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser")
-    def test_require_false_chk_false(self, mock_arg, mock_help, mock_run):
+    @mock.patch("rmq_metadata.gen_class.ArgParser")
+    def test_arg_dir_chk_true(self, mock_arg, mock_help, mock_run):
 
-        """Function:  test_require_false_chk_false
+        """Function:  test_arg_dir_chk_true
 
-        Description:  Test main function with arg_require returns False and
-            arg_dir_chk_crt returns False.
+        Description:  Test with arg_dir_chk returns true.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        self.args.dir_perms_chk2 = True
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
         mock_run.return_value = True
 
         self.assertFalse(rmq_metadata.main())

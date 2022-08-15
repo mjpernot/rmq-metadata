@@ -1232,12 +1232,12 @@ def main(**kwargs):
         cmdline.argv, opt_val=opt_val_list, do_parse=True)
 #    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
 
-    if not gen_libs.help_func(args_array, __version__, help_message)    \
+    if not gen_libs.help_func(args.get_args(), __version__, help_message)    \
        and args.arg_require(opt_req=opt_req_list)                       \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
 #       and not arg_parser.arg_require(args_array, opt_req_list) \
 #       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-        run_program(args_array, func_dict)
+        run_program(args, func_dict)
 
 
 if __name__ == "__main__":
