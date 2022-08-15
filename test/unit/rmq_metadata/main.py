@@ -134,7 +134,6 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
-#        self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_dict = {"-M": rmq_metadata.monitor_queue}
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
