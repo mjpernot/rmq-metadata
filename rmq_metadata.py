@@ -1155,7 +1155,6 @@ def run_program(args, func_dict, **kwargs):
     """
 
     cmdline = gen_libs.get_inst(sys)
-#    args_array = dict(args_array)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
     cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args.get_val("-d"))
