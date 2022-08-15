@@ -53,6 +53,56 @@ def monitor_queue(cfg, log):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "mysql_cfg", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return self.args_array.keys()
+
+
 class CfgTest2(object):
 
     """Class:  CfgTest2
@@ -196,12 +246,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+        self.args.args_array = {
+            "-c": "config_file", "-d": "config_dir", "-M": True}
+        self.args2 = ArgParser()
+        self.args2.args_array = {
+            "-c": "config_file", "-d": "config_dir", "-M": True,
+            "-y": "flavorid"}
         self.cfg = CfgTest()
         self.mongo_cfg = CfgTest2()
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
-        self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
-        self.args2 = {"-c": "config_file", "-d": "config_dir", "-M": True,
-                      "-y": "flavorid"}
         self.func_dict = {"-M": monitor_queue}
 
     @mock.patch("rmq_metadata.monitor_queue")
@@ -290,7 +344,7 @@ class UnitTest(unittest.TestCase):
         mock_log.log_close.return_value = True
 
         # Remove to skip "for" loop.
-        self.args.pop("-M")
+        self.args.args_array.pop("-M")
 
         self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
 
