@@ -20,7 +20,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Renamed \_process_queue to process_message.
 - Renamed \_convert_data to convert_data.
 - config/rabbitmq.py.TEMPLATE: Added entry to connect to RabbitMQ cluster, base_dir entry and reformatted the file.
-- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry and reformatted the file.
+- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry and reformatted the file and removed use_arg and use_uri entries.
 - validate_create_settings:  Moved base_dir to configuration file entry: cfg.base_dir.
 - run_program:  Determine whether to use exchange name or -y option for program lock flavor id.
 - main:  Add -y option for program lock option to have flavor id capability.
