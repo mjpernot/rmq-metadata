@@ -242,7 +242,6 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
 # Local
-import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import rabbit_lib.rabbitmq_class as rabbitmq_class
