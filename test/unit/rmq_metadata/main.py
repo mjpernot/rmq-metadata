@@ -137,7 +137,7 @@ class UnitTest(unittest.TestCase):
         self.func_dict = {"-M": rmq_metadata.monitor_queue}
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
-    @mock.patch("rmq_metadata.arg_parser.arg_parse2")
+    @mock.patch("rmq_metadata.gen_class.ArgParser")
     def test_help_true(self, mock_arg, mock_help):
 
         """Function:  test_help_true
