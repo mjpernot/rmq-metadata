@@ -93,7 +93,6 @@ class UnitTest(unittest.TestCase):
         opt_val_list = ["-c", "-d", "-y"]
         self.args = gen_class.ArgParser(
             cmdline, opt_val=opt_val_list, do_parse=True)
-        
 
     @mock.patch("rmq_metadata.gen_libs.load_module")
     def test_status_false(self, mock_load):

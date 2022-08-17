@@ -47,7 +47,7 @@ class ArgParser(object):
         get_args
 
     """
-        
+
     def __init__(self):
 
         """Method:  __init__
