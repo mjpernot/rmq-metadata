@@ -30,6 +30,7 @@ import mock
 sys.path.append(os.getcwd())
 import rmq_metadata
 import lib.gen_libs as gen_libs
+import lib.gen_class as gen_class
 import version
 
 __version__ = version.__version__
@@ -86,8 +87,13 @@ class UnitTest(unittest.TestCase):
         b_name, ext = os.path.splitext(self.cfg.log_file)
         l_name = b_name + "_" + self.cfg.exchange_name + ext
         self.log_file = os.path.join(log_dir, l_name)
-        self.args = {"-c": "rabbitmq", "-d": self.config_dir, "-M": True}
         self.func_dict = {"-M": monitor_queue}
+        cmdline = [
+            "./rmq_metadata.py", "-c", "rabbitmq", "-d", self.config_dir, "-M"]
+        opt_val_list = ["-c", "-d", "-y"]
+        self.args = gen_class.ArgParser(
+            cmdline, opt_val=opt_val_list, do_parse=True)
+        
 
     @mock.patch("rmq_metadata.gen_libs.load_module")
     def test_status_false(self, mock_load):
@@ -120,7 +126,7 @@ class UnitTest(unittest.TestCase):
         """
 
         # Remove to skip "for" loop.
-        self.args.pop("-M")
+        self.args.args_array.pop("-M")
 
         rmq_metadata.run_program(self.args, self.func_dict)
 
