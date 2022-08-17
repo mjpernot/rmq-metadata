@@ -242,7 +242,6 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
 # Local
-import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import rabbit_lib.rabbitmq_class as rabbitmq_class
@@ -277,10 +276,10 @@ def validate_create_settings(cfg):
         settings.
 
     Arguments:
-        (input) cfg -> Configuration module name.
-        (output) cfg -> Configuration module handler.
-        (output) status_flag -> True|False - successfully validation/creation.
-        (output) err_msg -> Error message from checks.
+        (input) cfg -> Configuration module name
+        (output) cfg -> Configuration module handler
+        (output) status_flag -> True|False - successfully validation/creation
+        (output) err_msg -> Error message from checks
 
     """
 
@@ -359,11 +358,11 @@ def validate_files(cfg, status_flag, err_msg):
     Description:  Validates the file entries in the configuration file.
 
     Arguments:
-        (input) cfg -> Configuration settings module for the program.
-        (input) status_flag -> True|False - successfully validation.
-        (input) err_msg -> Error message from checks.
-        (output) status_flag -> True|False - successfully validation.
-        (output) err_msg -> Error message from checks.
+        (input) cfg -> Configuration settings module for the program
+        (input) status_flag -> True|False - successfully validation
+        (input) err_msg -> Error message from checks
+        (output) status_flag -> True|False - successfully validation
+        (output) err_msg -> Error message from checks
 
     """
 
@@ -405,12 +404,12 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
     Description:  Process non-processed messages.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) data -> Body of message that was not processed.
-        (input) subj -> Email subject line.
-        (input) r_key -> Routing key for message.
+        (input) rmq -> RabbitMQ class instance
+        (input) log -> Log class instance
+        (input) cfg -> Configuration settings module for the program
+        (input) data -> Body of message that was not processed
+        (input) subj -> Email subject line
+        (input) r_key -> Routing key for message
 
     """
 
@@ -456,11 +455,11 @@ def process_msg(rmq, log, cfg, method, body):
     Description:  Process message from RabbitMQ queue.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) method -> Delivery properties.
-        (input) body -> Message body.
+        (input) rmq -> RabbitMQ class instance
+        (input) log -> Log class instance
+        (input) cfg -> Configuration settings module for the program
+        (input) method -> Delivery properties
+        (input) body -> Message body
 
     """
 
@@ -504,12 +503,12 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
     Description:  Pre-processing of message and decode the message.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) queue -> RabbitMQ queue.
-        (input) body -> Message body.
-        (input) r_key -> Routing key.
+        (input) rmq -> RabbitMQ class instance
+        (input) log -> Log class instance
+        (input) cfg -> Configuration settings module for the program
+        (input) queue -> RabbitMQ queue
+        (input) body -> Message body
+        (input) r_key -> Routing key
 
     """
 
@@ -569,10 +568,10 @@ def read_pdf(filename, log):
     Description:  Extract text from a PDF file using the PyPDF2 module.
 
     Arguments:
-        (input) filename -> PDF file name.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) text -> Raw text.
+        (input) filename -> PDF file name
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) text -> Raw text
 
     """
 
@@ -606,9 +605,9 @@ def find_tokens(tokenized_text, cfg):
         tokens.
 
     Arguments:
-        (input) tokenized_text -> List of tokens.
-        (input) cfg -> Configuration settings module for the program.
-        (output) categorized_text -> List of categorized tokens.
+        (input) tokenized_text -> List of tokens
+        (input) cfg -> Configuration settings module for the program
+        (output) categorized_text -> List of categorized tokens
 
     """
 
@@ -627,9 +626,9 @@ def summarize_data(categorized_text, token_types):
         a single unique list.
 
     Arguments:
-        (input) categorized_text -> List of categorized tokens.
-        (input) token_types -> List of token types to be accepted.
-        (output) data_list -> List of summarized categorized tokens.
+        (input) categorized_text -> List of categorized tokens
+        (input) token_types -> List of token types to be accepted
+        (output) data_list -> List of summarized categorized tokens
 
     """
 
@@ -658,14 +657,14 @@ def sort_data(item, current_type, data_list, tmp_data, token_types):
         ignores the "O" (OTHER) token type.
 
     Arguments:
-        (input) item -> Single set token.
-        (input) current_type -> Current token type.
-        (input) data_list -> List of summarized categorized tokens.
-        (input) tmp_data -> List of current series of token data.
-        (input) token_types -> List of token types.
-        (output) current_type -> Current token type.
-        (output) data_list -> List of summarized categorized tokens.
-        (output) tmp_data -> List of current series of token data.
+        (input) item -> Single set token
+        (input) current_type -> Current token type
+        (input) data_list -> List of summarized categorized tokens
+        (input) tmp_data -> List of current series of token data
+        (input) token_types -> List of token types
+        (output) current_type -> Current token type
+        (output) data_list -> List of summarized categorized tokens
+        (output) tmp_data -> List of current series of token data
 
     """
 
@@ -703,9 +702,9 @@ def merge_data(data_list, tmp_data):
         and adds the token type and string as set to a list.
 
     Arguments:
-        (input) data_list -> List of summarized categorized tokens.
-        (input) tmp_data -> List of current series of token data.
-        (output) data_list -> List of summarized categorized tokens.
+        (input) data_list -> List of summarized categorized tokens
+        (input) tmp_data -> List of current series of token data
+        (output) data_list -> List of summarized categorized tokens
 
     """
 
@@ -731,11 +730,11 @@ def get_pypdf2_data(f_name, cfg, log):
         file extracted using PyPDF2 module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) final_data -> List of categorized tokens from PDF file.
+        (input) f_name -> PDF file name
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) final_data -> List of categorized tokens from PDF file
 
     """
 
@@ -768,9 +767,9 @@ def create_metadata(metadata, data):
         based on the data set in the list.
 
     Arguments:
-        (input) metadata -> Dictionary of meta-data.
-        (input) data -> List of data sets.
-        (output) metadata -> Dictionary of meta-data.
+        (input) metadata -> Dictionary of meta-data
+        (input) data -> List of data sets
+        (output) metadata -> Dictionary of meta-data
 
     """
 
@@ -796,11 +795,11 @@ def extract_pdf(f_name, log, char_encoding=None):
     Description:  Extract text from PDF using textract module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) log -> Log class instance.
-        (input) char_encoding -> Character encoding code.
-        (output) status -> True|False - successfully extraction of data.
-        (output) text -> Raw text.
+        (input) f_name -> PDF file name
+        (input) log -> Log class instance
+        (input) char_encoding -> Character encoding code
+        (output) status -> True|False - successfully extraction of data
+        (output) text -> Raw text
 
     """
 
@@ -848,11 +847,11 @@ def get_textract_data(f_name, cfg, log):
     Description:  Process data using the textract module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) final_data -> List of categorized tokens from PDF file.
+        (input) f_name -> PDF file name
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) final_data -> List of categorized tokens from PDF file
 
     """
 
@@ -919,10 +918,10 @@ def pdf_to_string(f_name, log):
     Description:  Extract text from PDF using pdfminer module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) text -> Raw text.
+        (input) f_name -> PDF file name
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) text -> Raw text
 
     """
 
@@ -960,11 +959,11 @@ def get_pdfminer_data(f_name, cfg, log):
     Description:  Process data using the pdfminer module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) final_data -> List of categorized tokens from PDF file.
+        (input) f_name -> PDF file name
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) final_data -> List of categorized tokens from PDF file
 
     """
 
@@ -995,11 +994,11 @@ def process_message(queue, cfg, f_name, log):
     Description:  Extract metadata from message.
 
     Arguments:
-        (input) queue -> RabbitMQ queue.
-        (input) cfg -> Configuration settings module for the program.
-        (input) f_name -> PDF file name.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
+        (input) queue -> RabbitMQ queue
+        (input) cfg -> Configuration settings module for the program
+        (input) f_name -> PDF file name
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
 
     """
 
@@ -1063,8 +1062,8 @@ def monitor_queue(cfg, log):
     Description:  Monitor RabbitMQ queue for messages.
 
     Arguments:
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
 
     """
 
@@ -1075,10 +1074,10 @@ def monitor_queue(cfg, log):
         Description:  Process message from RabbitMQ.
 
         Arguments:
-            (input) channel -> Channel properties.
-            (input) method -> Delivery properties.
-            (input) properties -> Properties of the message.
-            (input) body -> Message body.
+            (input) channel -> Channel properties
+            (input) method -> Delivery properties
+            (input) properties -> Properties of the message
+            (input) body -> Message body
 
         """
 
@@ -1141,7 +1140,7 @@ def monitor_queue(cfg, log):
         log.log_err("Failed to connnect to RabbuitMQ -> Msg: %s" % (err_msg))
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -1149,16 +1148,15 @@ def run_program(args_array, func_dict, **kwargs):
         Set a program lock to prevent other instantiations from running.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dict of function calls and associated options.
+        (input) args -> ArgParser class instance.
+        (input) func_dict -> Dict of function calls and associated options
 
     """
 
     cmdline = gen_libs.get_inst(sys)
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
-    cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
-    cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args_array["-d"])
+    cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
+    cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args.get_val("-d"))
     cfg, status_flag, err_msg = validate_create_settings(cfg)
 
     if status_flag:
@@ -1179,11 +1177,11 @@ def run_program(args_array, func_dict, **kwargs):
         log.log_info("%s" % (str_val))
 
         try:
-            flavor_id = args_array.get("-y", cfg.exchange_name)
+            flavor_id = args.get_val("-y", def_val=cfg.exchange_name)
             prog_lock = gen_class.ProgramLock(cmdline.argv, flavor_id)
 
-            # Intersect args_array & func_dict to find which functions to call.
-            for opt in set(args_array.keys()) & set(func_dict.keys()):
+            # Intersect args.args_array & func_dict to determine function call
+            for opt in set(args.get_args_keys()) & set(func_dict.keys()):
                 func_dict[opt](cfg, log, **kwargs)
 
             del prog_lock
@@ -1206,7 +1204,8 @@ def main(**kwargs):
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
+        dir_perms_chk -> contains options which will be directories and the
+            octal permission settings
         func_dict -> dictionary list for the function calls or other options.
         opt_req_list -> contains options that are required for the program.
         opt_val_list -> contains options which require values.
@@ -1220,18 +1219,19 @@ def main(**kwargs):
 
     cmdline = gen_libs.get_inst(sys)
     cmdline.argv = list(kwargs.get("argv_list", cmdline.argv))
-    dir_chk_list = ["-d"]
+    dir_perms_chk = {"-d": 5}
     func_dict = {"-M": monitor_queue}
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-y"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
+    args = gen_class.ArgParser(
+        cmdline.argv, opt_val=opt_val_list, do_parse=True)
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and not arg_parser.arg_require(args_array, opt_req_list) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-        run_program(args_array, func_dict)
+    if not gen_libs.help_func(args.get_args(), __version__, help_message)    \
+       and args.arg_require(opt_req=opt_req_list)                       \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
+        run_program(args, func_dict)
 
 
 if __name__ == "__main__":

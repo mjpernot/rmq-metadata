@@ -5,20 +5,22 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.0] - 2020-10-05
-- Alpha release.
-- Upgrade Rabbitmq-lib module to v2.0.0.
+- Alpha release
+- Upgrade Rabbitmq-lib module to v2.2.0
+- Upgrade Python-lib module to v2.9.3
 
 ### Fixed
 - \_process_queue:  Added status check on Mongo data insert command.
 - validate_create_settings:  Incorrect setting of tmp_dir if not absolute path setting.
 
 ### Changed
+- main, run_program: Replaced the use of arg_parser (args_array) with gen_class.ArgParser class (args).
 - Renamed \_validate_files to validate_files.
 - Renamed \_sort_data to sort_data.
 - Renamed \_process_queue to process_message.
 - Renamed \_convert_data to convert_data.
 - config/rabbitmq.py.TEMPLATE: Added entry to connect to RabbitMQ cluster, base_dir entry and reformatted the file.
-- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry and reformatted the file.
+- config/mongo.py.TEMPLATE: Added SSL connection entries and auth_db entry and reformatted the file and removed use_arg and use_uri entries.
 - validate_create_settings:  Moved base_dir to configuration file entry: cfg.base_dir.
 - run_program:  Determine whether to use exchange name or -y option for program lock flavor id.
 - main:  Add -y option for program lock option to have flavor id capability.
