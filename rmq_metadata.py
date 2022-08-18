@@ -10,7 +10,9 @@
         file.
 
     Usage:
-        rmq_metadata.py -c config_file -d dir_path {-M}
+        rmq_metadata.py -c config_file -d dir_path
+            {-M}
+            [-y flavor_id]
             [-v | -h]
 
     Arguments:
@@ -18,7 +20,10 @@
             Required argument.
         -d dir_path => Directory path for option '-c'.
             Required argument.
+
         -M => Monitor and process messages from a RabbitMQ queue.
+
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -39,10 +44,12 @@
             exchange_name = "EXCHANGE_NAME"
             # Email address(es) to send non-processed messages to or None.
             # None state no emails are required to be sent.
-            to_line = "EMAIL_ADDRESS"|None
-            # RabbitMQ listening port, default is 5672.
+            to_line = "EMAIL_ADDRESS@EMAIL_DOMAIN"
+            # RabbitMQ listening port.
+            # Default is 5672.
             port = 5672
-            # Type of exchange:  direct, topic, fanout, headers
+            # Type of exchange.
+            # Names allowed:  direct, topic, fanout, headers
             exchange_type = "direct"
             # Is exchange durable: True|False
             x_durable = True
@@ -50,19 +57,28 @@
             q_durable = True
             # Queues automatically delete message after processing: True|False
             auto_delete = False
+            # Directory name for archived messages.
+            # Must be set if archive in any of the queue entries is set to
+            #   True.
+            # Note: If absolute paths are used in the message_dir, log_dir,
+            #   archive_dir, or tmp_dir entries, then they will be used in
+            #   place of combining the base directory and directory name.
+            base_dir = "DIRECTORY_PATH"
             # Directory name for non-processed messages.
-            message_dir = "DIRECTORY_PATH/message_dir"
+            message_dir = "message_dir"
             # Directory name for log files.
-            log_dir = "DIRECTORY_PATH/logs"
+            log_dir = "logs"
             # File name to program log.
-            # Note:  Name will be changed to include the exchange name being
+            # Note:  Name chould be changed to include the exchange name being
             #   processed.
             log_file = "rmq_metadata.log"
             # Directory name for archived messages.
             # Must be set if archive in any of the queues is set to True.
-            archive_dir = "DIRECTORY_PATH/archive"|None
+            # None states no archiving will take place.
+            # Syntax:  archive_dir = "archive"
+            archive_dir = None
             # Directory name for temporary message processing.
-            tmp_dir = "DIRECTORY_PATH/tmp"
+            tmp_dir = "tmp"
             # These entries for the Stanford NLP library module.
             # Path to Stanford language module.
             # By default lang_module will point to the English language module.
@@ -122,36 +138,71 @@
             # For internal use.  Do not change.
             mongo = None
 
-        Mongo configuration file format (config/mongo.py.TEMPLATE).
+        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
+            configuration file format is for connecting to a Mongo database or
+            replica set for monitoring.  A second configuration file can also
+            be used to connect to a Mongo database or replica set to insert the
+            results of the performance monitoring into.
 
-            # Mongo DB Configuration file
-            # All Mongo configuration settings.
+            There are two ways to connect methods:  single Mongo database or a
+            Mongo replica set.
+
+            Single database connection:
+
+            # Single Configuration file for Mongo Database Server.
             user = "USER"
             japd = "PSWORD"
-            # Mongo DB host information
-            host = "IP_ADDRESS"
+            host = "HOST_IP"
             name = "HOSTNAME"
-            # Mongo database port (default is 27017)
             port = 27017
-            # Mongo configuration settings
             conf_file = None
-            # Authentication required:  True|False
             auth = True
-            # Name of Mongo database.
+            auth_db = "admin"
+            auth_mech = "SCRAM-SHA-1"
+            use_arg = True
+            use_uri = False
+
+            Replica set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file.  By
+                default all these entries are set to None to represent not
+                connecting to a replica set.
+
+            repset = "REPLICA_SET_NAME"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
+            db_auth = "AUTHENTICATION_DATABASE"
+
+            Note:  If using SSL connections then set one or more of the
+                following entries.  This will automatically enable SSL
+                connections. Below are the configuration settings for SSL
+                connections.  See configuration file for details on each entry:
+
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+            ssl_client_phrase = None
+
+            Note:  FIPS Environment for Mongo.
+              If operating in a FIPS 104-2 environment, this package will
+              require at least a minimum of pymongo==3.8.0 or better.  It will
+              also require a manual change to the auth.py module in the pymongo
+              package.  See below for changes to auth.py.
+
+            - Locate the auth.py file python installed packages on the system
+                in the pymongo package directory.
+            - Edit the file and locate the "_password_digest" function.
+            - In the "_password_digest" function there is an line that should
+                match: "md5hash = hashlib.md5()".  Change it to
+                "md5hash = hashlib.md5(usedforsecurity=False)".
+            - Lastly, it will require the Mongo configuration file entry
+                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
+
+            # Name of Mongo database for data insertion
             db = "DATABASE"
             # Name of Mongo table/collection.
             tbl = "TABLE"
-            # Replica Set Mongo configuration settings.
-            # None means the Mongo database is not part of a replica set.
-            # Replica set name.
-            #    Format:  repset = "REPLICA_SET_NAME"
-            repset = None
-            # Replica host listing.
-            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            repset_hosts = None
-            # Database to authentication to.
-            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
-            db_auth = None
+
+        Configuration modules -> Name is runtime dependent as it can be used to
+            connect to different databases with different names.
 
     Example:
         Command Line:
@@ -176,8 +227,6 @@ import datetime
 from io import BytesIO
 
 # Third-party
-import ast
-import json
 import base64
 import chardet
 import PyPDF2
@@ -193,7 +242,6 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
 # Local
-import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import rabbit_lib.rabbitmq_class as rabbitmq_class
@@ -206,7 +254,7 @@ __version__ = version.__version__
 DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
 
 
-def help_message(**kwargs):
+def help_message():
 
     """Function:  help_message
 
@@ -220,7 +268,7 @@ def help_message(**kwargs):
     print(__doc__)
 
 
-def validate_create_settings(cfg, **kwargs):
+def validate_create_settings(cfg):
 
     """Function:  validate_create_settings
 
@@ -228,23 +276,22 @@ def validate_create_settings(cfg, **kwargs):
         settings.
 
     Arguments:
-        (input) cfg -> Configuration module name.
-        (output) cfg -> Configuration module handler.
-        (output) status_flag -> True|False - successfully validation/creation.
-        (output) err_msg -> Error message from checks.
+        (input) cfg -> Configuration module name
+        (output) cfg -> Configuration module handler
+        (output) status_flag -> True|False - successfully validation/creation
+        (output) err_msg -> Error message from checks
 
     """
 
     err_msg = ""
     status_flag = True
-    base_dir = gen_libs.get_base_dir(__file__)
 
     # Check on non-processed messages directory.
     if not os.path.isabs(cfg.message_dir):
-        cfg.message_dir = os.path.join(base_dir, cfg.message_dir)
+        cfg.message_dir = os.path.join(cfg.base_dir, cfg.message_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.message_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.message_dir, write=True, read=True, no_print=True)
 
     if not status:
         err_msg = err_msg + msg
@@ -252,10 +299,10 @@ def validate_create_settings(cfg, **kwargs):
 
     # Check on log files directory.
     if not os.path.isabs(cfg.log_dir):
-        cfg.log_dir = os.path.join(base_dir, cfg.log_dir)
+        cfg.log_dir = os.path.join(cfg.base_dir, cfg.log_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.log_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.log_dir, write=True, read=True, no_print=True)
 
     if status:
         base_name, ext_name = os.path.splitext(cfg.log_file)
@@ -268,11 +315,11 @@ def validate_create_settings(cfg, **kwargs):
 
     # Check on archived messages directory.
     if cfg.archive_dir and not os.path.isabs(cfg.archive_dir):
-        cfg.archive_dir = os.path.join(base_dir, cfg.archive_dir)
+        cfg.archive_dir = os.path.join(cfg.base_dir, cfg.archive_dir)
 
     if cfg.archive_dir:
-        status, msg = gen_libs.chk_crt_dir(cfg.archive_dir, write=True,
-                                           read=True, no_print=True)
+        status, msg = gen_libs.chk_crt_dir(
+            cfg.archive_dir, write=True, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -280,22 +327,22 @@ def validate_create_settings(cfg, **kwargs):
 
     # Check on temporary message processing directory.
     if not os.path.isabs(cfg.tmp_dir):
-        cfg.message_dir = os.path.join(base_dir, cfg.tmp_dir)
+        cfg.tmp_dir = os.path.join(cfg.base_dir, cfg.tmp_dir)
 
-    status, msg = gen_libs.chk_crt_dir(cfg.tmp_dir, write=True, read=True,
-                                       no_print=True)
+    status, msg = gen_libs.chk_crt_dir(
+        cfg.tmp_dir, write=True, read=True, no_print=True)
 
     if not status:
         err_msg = err_msg + msg
         status_flag = False
 
     # Check on file entries.
-    status_flag, err_msg = _validate_files(cfg, status_flag, err_msg)
+    status_flag, err_msg = validate_files(cfg, status_flag, err_msg)
 
     # Check on final directory for each queue.
     for queue in cfg.queue_list:
-        status, msg = gen_libs.chk_crt_dir(queue["directory"], write=True,
-                                           read=True, no_print=True)
+        status, msg = gen_libs.chk_crt_dir(
+            queue["directory"], write=True, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -304,19 +351,18 @@ def validate_create_settings(cfg, **kwargs):
     return cfg, status_flag, err_msg
 
 
-def _validate_files(cfg, status_flag, err_msg, **kwargs):
+def validate_files(cfg, status_flag, err_msg):
 
-    """Function:  _validate_files
+    """Function:  validate_files
 
-    Description:  Private function for validate_create_settings.  Validates the
-        file entries in the configuration file.
+    Description:  Validates the file entries in the configuration file.
 
     Arguments:
-        (input) cfg -> Configuration settings module for the program.
-        (input) status_flag -> True|False - successfully validation.
-        (input) err_msg -> Error message from checks.
-        (output) status_flag -> True|False - successfully validation.
-        (output) err_msg -> Error message from checks.
+        (input) cfg -> Configuration settings module for the program
+        (input) status_flag -> True|False - successfully validation
+        (input) err_msg -> Error message from checks
+        (output) status_flag -> True|False - successfully validation
+        (output) err_msg -> Error message from checks
 
     """
 
@@ -351,19 +397,19 @@ def _validate_files(cfg, status_flag, err_msg, **kwargs):
     return status_flag, err_msg
 
 
-def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
+def non_proc_msg(rmq, log, cfg, data, subj, r_key):
 
     """Function:  non_proc_msg
 
     Description:  Process non-processed messages.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) data -> Body of message that was not processed.
-        (input) subj -> Email subject line.
-        (input) r_key -> Routing key for message.
+        (input) rmq -> RabbitMQ class instance
+        (input) log -> Log class instance
+        (input) cfg -> Configuration settings module for the program
+        (input) data -> Body of message that was not processed
+        (input) subj -> Email subject line
+        (input) r_key -> Routing key for message
 
     """
 
@@ -380,7 +426,8 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
     subj = "rmq_metadata: " + subj
     line1 = "RabbitMQ message was not processed due to: %s" % (subj)
     line2 = "Exchange: %s, Routing Key: %s" % (rmq.exchange, r_key)
-    line3 = "The body of the message is encoded data."
+    line3 = "Check log file: %s near timestamp: %s for more information." \
+            % (cfg.log_file, dtg)
     line4 = "Body of message saved to: %s" % (f_path)
 
     if cfg.to_line:
@@ -397,23 +444,22 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key, **kwargs):
 
     log.log_err(line1)
     log.log_err(line2)
-    log.log_err(line3)
     log.log_err(line4)
     gen_libs.write_file(f_path, data=data, mode="w")
 
 
-def process_msg(rmq, log, cfg, method, body, **kwargs):
+def process_msg(rmq, log, cfg, method, body):
 
     """Function:  process_msg
 
     Description:  Process message from RabbitMQ queue.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) method -> Delivery properties.
-        (input) body -> Message body.
+        (input) rmq -> RabbitMQ class instance
+        (input) log -> Log class instance
+        (input) cfg -> Configuration settings module for the program
+        (input) method -> Delivery properties
+        (input) body -> Message body
 
     """
 
@@ -444,25 +490,25 @@ def process_msg(rmq, log, cfg, method, body, **kwargs):
             break
 
     if queue:
-        _convert_data(rmq, log, cfg, queue, body, r_key)
+        convert_data(rmq, log, cfg, queue, body, r_key)
 
     else:
         non_proc_msg(rmq, log, cfg, body, "No queue detected", r_key)
 
 
-def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
+def convert_data(rmq, log, cfg, queue, body, r_key):
 
-    """Function:  _convert_data
+    """Function:  convert_data
 
-    Description:  Private function to process message queue.
+    Description:  Pre-processing of message and decode the message.
 
     Arguments:
-        (input) rmq -> RabbitMQ class instance.
-        (input) log -> Log class instance.
-        (input) cfg -> Configuration settings module for the program.
-        (input) queue -> RabbitMQ queue.
-        (input) body -> Message body.
-        (input) r_key -> Routing key.
+        (input) rmq -> RabbitMQ class instance
+        (input) log -> Log class instance
+        (input) cfg -> Configuration settings module for the program
+        (input) queue -> RabbitMQ queue
+        (input) body -> Message body
+        (input) r_key -> Routing key
 
     """
 
@@ -493,38 +539,39 @@ def _convert_data(rmq, log, cfg, queue, body, r_key, **kwargs):
 
     if queue["stype"] == "encoded":
         log.log_info("_convert_data:  Decoding data in message body.")
-        base64.decode(open(t_file, 'rb'), open(f_name, 'wb'))
+        base64.decode(open(t_file, "rb"), open(f_name, "wb"))
         os.remove(t_file)
 
     else:
         log.log_info("_convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
-    status = _process_queue(queue, body, r_key, cfg, f_name, log)
+    status = process_message(queue, cfg, f_name, log)
 
     if status:
         log.log_info("Finished processing of: %s" % (f_filename))
 
     else:
-        log.log_err("All extractions failed on: %s" % (f_filename))
+        log.log_err("Insert or extractions failed on: %s" % (f_filename))
         log.log_info("Body of message being saved to a file - see below")
-        non_proc_msg(rmq, log, cfg, body, "All extractions failed", r_key)
+        non_proc_msg(rmq, log, cfg, body,
+                     "All extractions or Mongo insertion failure", r_key)
         os.remove(f_name)
         log.log_info("Cleanup of temporary files completed.")
         log.log_info("Finished processing of: %s" % (f_filename))
 
 
-def read_pdf(filename, log, **kwargs):
+def read_pdf(filename, log):
 
     """Function:  read_pdf
 
     Description:  Extract text from a PDF file using the PyPDF2 module.
 
     Arguments:
-        (input) filename -> PDF file name.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) text -> Raw text.
+        (input) filename -> PDF file name
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) text -> Raw text
 
     """
 
@@ -550,7 +597,7 @@ def read_pdf(filename, log, **kwargs):
     return status, text
 
 
-def find_tokens(tokenized_text, cfg, **kwargs):
+def find_tokens(tokenized_text, cfg):
 
     """Function:  find_tokens
 
@@ -558,9 +605,9 @@ def find_tokens(tokenized_text, cfg, **kwargs):
         tokens.
 
     Arguments:
-        (input) tokenized_text -> List of tokens.
-        (input) cfg -> Configuration settings module for the program.
-        (output) categorized_text -> List of categorized tokens.
+        (input) tokenized_text -> List of tokens
+        (input) cfg -> Configuration settings module for the program
+        (output) categorized_text -> List of categorized tokens
 
     """
 
@@ -571,7 +618,7 @@ def find_tokens(tokenized_text, cfg, **kwargs):
     return categorized_text
 
 
-def summarize_data(categorized_text, token_types, **kwargs):
+def summarize_data(categorized_text, token_types):
 
     """Function:  summarize_data
 
@@ -579,9 +626,9 @@ def summarize_data(categorized_text, token_types, **kwargs):
         a single unique list.
 
     Arguments:
-        (input) categorized_text -> List of categorized tokens.
-        (input) token_types -> List of token types to be accepted.
-        (output) data_list -> List of summarized categorized tokens.
+        (input) categorized_text -> List of categorized tokens
+        (input) token_types -> List of token types to be accepted
+        (output) data_list -> List of summarized categorized tokens
 
     """
 
@@ -592,7 +639,7 @@ def summarize_data(categorized_text, token_types, **kwargs):
     current_type = ""
 
     for item in categorized_text:
-        current_type, data_list, tmp_data = _sort_data(
+        current_type, data_list, tmp_data = sort_data(
             item, current_type, data_list, tmp_data, token_types)
 
     else:
@@ -602,23 +649,22 @@ def summarize_data(categorized_text, token_types, **kwargs):
     return data_list
 
 
-def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
+def sort_data(item, current_type, data_list, tmp_data, token_types):
 
-    """Function:  _sort_data
+    """Function:  sort_data
 
-    Description:  Private function for summarize_data.  Combines a series of
-        same token types into a data set and ignores the "O" (OTHER) token
-        type.
+    Description:  Combines a series of same token types into a data set and
+        ignores the "O" (OTHER) token type.
 
     Arguments:
-        (input) item -> Single set token.
-        (input) current_type -> Current token type.
-        (input) data_list -> List of summarized categorized tokens.
-        (input) tmp_data -> List of current series of token data.
-        (input) token_types -> List of token types.
-        (output) current_type -> Current token type.
-        (output) data_list -> List of summarized categorized tokens.
-        (output) tmp_data -> List of current series of token data.
+        (input) item -> Single set token
+        (input) current_type -> Current token type
+        (input) data_list -> List of summarized categorized tokens
+        (input) tmp_data -> List of current series of token data
+        (input) token_types -> List of token types
+        (output) current_type -> Current token type
+        (output) data_list -> List of summarized categorized tokens
+        (output) tmp_data -> List of current series of token data
 
     """
 
@@ -637,6 +683,7 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
         tmp_data.append(item)
 
     elif item[1] in token_types:
+
         if tmp_data:
             data_list = merge_data(data_list, tmp_data)
 
@@ -647,7 +694,7 @@ def _sort_data(item, current_type, data_list, tmp_data, token_types, **kwargs):
     return current_type, data_list, tmp_data
 
 
-def merge_data(data_list, tmp_data, **kwargs):
+def merge_data(data_list, tmp_data):
 
     """Function:  merge_data
 
@@ -655,9 +702,9 @@ def merge_data(data_list, tmp_data, **kwargs):
         and adds the token type and string as set to a list.
 
     Arguments:
-        (input) data_list -> List of summarized categorized tokens.
-        (input) tmp_data -> List of current series of token data.
-        (output) data_list -> List of summarized categorized tokens.
+        (input) data_list -> List of summarized categorized tokens
+        (input) tmp_data -> List of current series of token data
+        (output) data_list -> List of summarized categorized tokens
 
     """
 
@@ -675,7 +722,7 @@ def merge_data(data_list, tmp_data, **kwargs):
     return data_list
 
 
-def get_pypdf2_data(f_name, cfg, log, **kwargs):
+def get_pypdf2_data(f_name, cfg, log):
 
     """Function:  get_pypdf2_data
 
@@ -683,11 +730,11 @@ def get_pypdf2_data(f_name, cfg, log, **kwargs):
         file extracted using PyPDF2 module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) final_data -> List of categorized tokens from PDF file.
+        (input) f_name -> PDF file name
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) final_data -> List of categorized tokens from PDF file
 
     """
 
@@ -711,7 +758,7 @@ def get_pypdf2_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def create_metadata(metadata, data, **kwargs):
+def create_metadata(metadata, data):
 
     """Function:  create_metadata2
 
@@ -720,9 +767,9 @@ def create_metadata(metadata, data, **kwargs):
         based on the data set in the list.
 
     Arguments:
-        (input) metadata -> Dictionary of meta-data.
-        (input) data -> List of data sets.
-        (output) metadata -> Dictionary of meta-data.
+        (input) metadata -> Dictionary of meta-data
+        (input) data -> List of data sets
+        (output) metadata -> Dictionary of meta-data
 
     """
 
@@ -741,18 +788,18 @@ def create_metadata(metadata, data, **kwargs):
     return metadata
 
 
-def extract_pdf(f_name, log, char_encoding=None, **kwargs):
+def extract_pdf(f_name, log, char_encoding=None):
 
     """Function:  extract_pdf
 
     Description:  Extract text from PDF using textract module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) log -> Log class instance.
-        (input) char_encoding -> Character encoding code.
-        (output) status -> True|False - successfully extraction of data.
-        (output) text -> Raw text.
+        (input) f_name -> PDF file name
+        (input) log -> Log class instance
+        (input) char_encoding -> Character encoding code
+        (output) status -> True|False - successfully extraction of data
+        (output) text -> Raw text
 
     """
 
@@ -793,18 +840,18 @@ def extract_pdf(f_name, log, char_encoding=None, **kwargs):
     return status, text
 
 
-def get_textract_data(f_name, cfg, log, **kwargs):
+def get_textract_data(f_name, cfg, log):
 
     """Function:  get_textract_data
 
     Description:  Process data using the textract module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) final_data -> List of categorized tokens from PDF file.
+        (input) f_name -> PDF file name
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) final_data -> List of categorized tokens from PDF file
 
     """
 
@@ -864,24 +911,24 @@ def get_textract_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def pdf_to_string(f_name, log, **kwargs):
+def pdf_to_string(f_name, log):
 
     """Function:  pdf_to_string
 
     Description:  Extract text from PDF using pdfminer module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) text -> Raw text.
+        (input) f_name -> PDF file name
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) text -> Raw text
 
     """
 
     status = True
     out_string = BytesIO()
 
-    with open(f_name, 'rb') as f_hdlr:
+    with open(f_name, "rb") as f_hdlr:
         parser = PDFParser(f_hdlr)
 
         try:
@@ -889,8 +936,8 @@ def pdf_to_string(f_name, log, **kwargs):
             rsrcmgr = PDFResourceManager()
             device = TextConverter(rsrcmgr, out_string, laparams=LAParams())
             interpreter = PDFPageInterpreter(rsrcmgr, device)
-
             log.log_info("pdf_to_string:  Extracting data...")
+
             for page in PDFPage.create_pages(doc):
                 interpreter.process_page(page)
 
@@ -900,23 +947,23 @@ def pdf_to_string(f_name, log, **kwargs):
             text = ""
 
     data = (out_string.getvalue())
-    text = data.replace('.','')
+    text = data.replace(".", "")
 
     return status, text
 
 
-def get_pdfminer_data(f_name, cfg, log, **kwargs):
+def get_pdfminer_data(f_name, cfg, log):
 
     """Function:  get_pdfminer_data
 
     Description:  Process data using the pdfminer module.
 
     Arguments:
-        (input) f_name -> PDF file name.
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
-        (output) final_data -> List of categorized tokens from PDF file.
+        (input) f_name -> PDF file name
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
+        (output) final_data -> List of categorized tokens from PDF file
 
     """
 
@@ -940,27 +987,25 @@ def get_pdfminer_data(f_name, cfg, log, **kwargs):
     return status, final_data
 
 
-def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
+def process_message(queue, cfg, f_name, log):
 
-    """Function:  _process_queue
+    """Function:  process_message
 
-    Description:  Private function to process message queue.
+    Description:  Extract metadata from message.
 
     Arguments:
-        (input) queue -> RabbitMQ queue.
-        (input) body -> Message body.
-        (input) r_key -> Routing key.
-        (input) cfg -> Configuration settings module for the program.
-        (input) f_name -> PDF file name.
-        (input) log -> Log class instance.
-        (output) status -> True|False - successfully extraction of data.
+        (input) queue -> RabbitMQ queue
+        (input) cfg -> Configuration settings module for the program
+        (input) f_name -> PDF file name
+        (input) log -> Log class instance
+        (output) status -> True|False - successfully extraction of data
 
     """
 
     global DTG_FORMAT
 
     status = True
-    log.log_info("_process_queue:  Extracting and processing metadata.")
+    log.log_info("process_message:  Extracting and processing metadata.")
     dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
     metadata = {"FileName": os.path.basename(f_name),
                 "Directory": queue["directory"],
@@ -970,46 +1015,55 @@ def _process_queue(queue, body, r_key, cfg, f_name, log, **kwargs):
     status_pypdf2, final_data = get_pypdf2_data(f_name, cfg, log)
 
     if status_pypdf2:
-        log.log_info("_process_queue:  Adding metadata from pypdf2.")
+        log.log_info("process_message:  Adding metadata from pypdf2.")
         metadata = create_metadata(metadata, final_data)
 
     # Use the textract module to extract data.
     status_textract, final_data = get_textract_data(f_name, cfg, log)
 
     if status_textract:
-        log.log_info("_process_queue:  Adding metadata from textract.")
+        log.log_info("process_message:  Adding metadata from textract.")
         metadata = create_metadata(metadata, final_data)
 
     # Use the pdfminer module to extract data.
     status_pdfminer, final_data = get_pdfminer_data(f_name, cfg, log)
 
     if status_pdfminer:
-        log.log_info("_process_queue:  Adding metadata from pdfminer.")
+        log.log_info("process_message:  Adding metadata from pdfminer.")
         metadata = create_metadata(metadata, final_data)
-    
 
     if status_pypdf2 or status_textract or status_pdfminer:
-        log.log_info("_process_queue:  Insert metadata into MongoDB.")
-        mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs, cfg.mongo.tbl, metadata)
-        log.log_info("_process_queue:  Moving PDF to: %s" % (queue["directory"]))
-        gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
+        log.log_info("process_message:  Insert metadata into MongoDB.")
+        mongo_stat = mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs,
+                                        cfg.mongo.tbl, metadata)
+
+        if not mongo_stat[0]:
+            log.log_err("process_message: Insert of data into MongoDB failed.")
+            log.log_err("Mongo error message:  %s" % (mongo_stat[1]))
+            status = False
+
+        else:
+            log.log_info(
+                "process_message:  Moving PDF to: %s" % (queue["directory"]))
+            gen_libs.mv_file2(
+                f_name, queue["directory"], os.path.basename(f_name))
 
     else:
-        log.log_err("_process_queue:  All extractions methods failed.")
+        log.log_err("process_message:  All extractions methods failed.")
         status = False
 
     return status
 
 
-def monitor_queue(cfg, log, **kwargs):
+def monitor_queue(cfg, log):
 
     """Function:  monitor_queue
 
     Description:  Monitor RabbitMQ queue for messages.
 
     Arguments:
-        (input) cfg -> Configuration settings module for the program.
-        (input) log -> Log class instance.
+        (input) cfg -> Configuration settings module for the program
+        (input) log -> Log class instance
 
     """
 
@@ -1020,18 +1074,18 @@ def monitor_queue(cfg, log, **kwargs):
         Description:  Process message from RabbitMQ.
 
         Arguments:
-            (input) channel -> Channel properties.
-            (input) method -> Delivery properties.
-            (input) properties -> Properties of the message.
-            (input) body -> Message body.
+            (input) channel -> Channel properties
+            (input) method -> Delivery properties
+            (input) properties -> Properties of the message
+            (input) body -> Message body
 
         """
 
         log.log_info("callback:  Processing message with Routing Key: %s" %
                      (method.routing_key))
         process_msg(rmq, log, cfg, method, body)
-        log.log_info("Deleting message with Routing Key: %s" %
-                     (method.routing_key))
+        log.log_info(
+            "Deleting message with Routing Key: %s" % (method.routing_key))
         rmq.ack(method.delivery_tag)
 
     log.log_info("monitor_queue:  Initialize monitoring of queues...")
@@ -1086,7 +1140,7 @@ def monitor_queue(cfg, log, **kwargs):
         log.log_err("Failed to connnect to RabbuitMQ -> Msg: %s" % (err_msg))
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args, func_dict, **kwargs):
 
     """Function:  run_program
 
@@ -1094,22 +1148,21 @@ def run_program(args_array, func_dict, **kwargs):
         Set a program lock to prevent other instantiations from running.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dict of function calls and associated options.
+        (input) args -> ArgParser class instance.
+        (input) func_dict -> Dict of function calls and associated options
 
     """
 
     cmdline = gen_libs.get_inst(sys)
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
-    cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
-    cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args_array["-d"])
+    cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
+    cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args.get_val("-d"))
     cfg, status_flag, err_msg = validate_create_settings(cfg)
 
     if status_flag:
-        log = gen_class.Logger(cfg.log_file, cfg.log_file, "INFO",
-                               "%(asctime)s %(levelname)s %(message)s",
-                               "%Y-%m-%dT%H:%M:%SZ")
+        log = gen_class.Logger(
+            cfg.log_file, cfg.log_file, "INFO",
+            "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
         str_val = "=" * 80
         log.log_info("%s:%s Initialized" % (cfg.host, cfg.exchange_name))
         log.log_info("%s" % (str_val))
@@ -1124,11 +1177,11 @@ def run_program(args_array, func_dict, **kwargs):
         log.log_info("%s" % (str_val))
 
         try:
-            flavor_id = cfg.exchange_name
+            flavor_id = args.get_val("-y", def_val=cfg.exchange_name)
             prog_lock = gen_class.ProgramLock(cmdline.argv, flavor_id)
 
-            # Intersect args_array & func_dict to find which functions to call.
-            for opt in set(args_array.keys()) & set(func_dict.keys()):
+            # Intersect args.args_array & func_dict to determine function call
+            for opt in set(args.get_args_keys()) & set(func_dict.keys()):
                 func_dict[opt](cfg, log, **kwargs)
 
             del prog_lock
@@ -1151,7 +1204,8 @@ def main(**kwargs):
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
+        dir_perms_chk -> contains options which will be directories and the
+            octal permission settings
         func_dict -> dictionary list for the function calls or other options.
         opt_req_list -> contains options that are required for the program.
         opt_val_list -> contains options which require values.
@@ -1165,18 +1219,19 @@ def main(**kwargs):
 
     cmdline = gen_libs.get_inst(sys)
     cmdline.argv = list(kwargs.get("argv_list", cmdline.argv))
-    dir_chk_list = ["-d"]
+    dir_perms_chk = {"-d": 5}
     func_dict = {"-M": monitor_queue}
     opt_req_list = ["-c", "-d"]
-    opt_val_list = ["-c", "-d"]
+    opt_val_list = ["-c", "-d", "-y"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
+    args = gen_class.ArgParser(
+        cmdline.argv, opt_val=opt_val_list, do_parse=True)
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and not arg_parser.arg_require(args_array, opt_req_list) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-        run_program(args_array, func_dict)
+    if not gen_libs.help_func(args.get_args(), __version__, help_message)    \
+       and args.arg_require(opt_req=opt_req_list)                       \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
+        run_program(args, func_dict)
 
 
 if __name__ == "__main__":

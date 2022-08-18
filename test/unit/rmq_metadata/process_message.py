@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _process_queue.py
+"""Program:  process_message.py
 
-    Description:  Unit testing of _process_queue in rmq_metadata.py.
+    Description:  Unit testing of process_message in rmq_metadata.py.
 
     Usage:
-        test/unit/rmq_metadata/_process_queue.py
+        test/unit/rmq_metadata/process_message.py
 
     Arguments:
 
@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,7 +96,7 @@ class CfgTest2(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -136,7 +129,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -188,15 +181,17 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_all_extract_fails -> Test with all extracts fails.
-        test_two_extract_fails3 -> Test with two extracts fails.
-        test_two_extract_fails2 -> Test with two extracts fails.
-        test_two_extract_fails -> Test with two extracts fails.
-        test_pdfminer_extract_fails -> Test with pdfminer extract fails.
-        test_textract_extract_fails -> Test with textract extract fails.
-        test_pypdf2_extract_fails -> Test with pypdf2 extract fails.
-        test_all_successful_extracts -> Test with all successful extracts.
+        setUp
+        test_mongo_failed
+        test_mongo_successful
+        test_all_extract_fails
+        test_two_extract_fails3
+        test_two_extract_fails2
+        test_two_extract_fails
+        test_pdfminer_extract_fails
+        test_textract_extract_fails
+        test_pypdf2_extract_fails
+        test_all_successful_extracts
 
     """
 
@@ -214,10 +209,55 @@ class UnitTest(unittest.TestCase):
         self.cfg.mongo = CfgTest2()
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
-        self.r_key = "ROUTING_KEY"
-        self.body = "ThekljdsfkjsfdJVBERi0xLjQKJeLjz9MKMTAgMCBvYmoKPDwKL0EgP"
         self.f_name = "/working/path/Filename.pdf"
         self.final_data = ["List", "of", "a", "data"]
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=(False, "Connection Error")))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_mongo_failed(self, mock_pypdf2, mock_textract, mock_pdfminer):
+
+        """Function:  test_mongo_failed
+
+        Description:  Test with failed Mongo insert.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertFalse(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
+
+    @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
+    @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.mongo_libs.ins_doc",
+                mock.Mock(return_value=(True, None)))
+    @mock.patch("rmq_metadata.get_pdfminer_data")
+    @mock.patch("rmq_metadata.get_textract_data")
+    @mock.patch("rmq_metadata.get_pypdf2_data")
+    def test_mongo_successful(self, mock_pypdf2, mock_textract, mock_pdfminer):
+
+        """Function:  test_mongo_successful
+
+        Description:  Test with successful Mongo insert.
+
+        Arguments:
+
+        """
+
+        mock_pypdf2.return_value = (True, self.final_data)
+        mock_textract.return_value = (True, self.final_data)
+        mock_pdfminer.return_value = (True, self.final_data)
+
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
@@ -237,14 +277,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (False, [])
 
-        self.assertFalse(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertFalse(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -263,14 +302,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -289,14 +327,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (False, [])
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -315,14 +352,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (False, [])
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -341,14 +377,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (False, [])
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -367,14 +402,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (False, [])
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -393,14 +427,13 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
     @mock.patch("rmq_metadata.create_metadata", mock.Mock(return_value="data"))
     @mock.patch("rmq_metadata.gen_libs.mv_file2", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.mongo_libs.ins_doc",
-                mock.Mock(return_value=True))
+                mock.Mock(return_value=(True, None)))
     @mock.patch("rmq_metadata.get_pdfminer_data")
     @mock.patch("rmq_metadata.get_textract_data")
     @mock.patch("rmq_metadata.get_pypdf2_data")
@@ -419,9 +452,8 @@ class UnitTest(unittest.TestCase):
         mock_textract.return_value = (True, self.final_data)
         mock_pdfminer.return_value = (True, self.final_data)
 
-        self.assertTrue(rmq_metadata._process_queue(
-            self.cfg.queue_list[0], self.body, self.r_key, self.cfg,
-            self.f_name, self.logger))
+        self.assertTrue(rmq_metadata.process_message(
+            self.cfg.queue_list[0], self.cfg, self.f_name, self.logger))
 
 
 if __name__ == "__main__":

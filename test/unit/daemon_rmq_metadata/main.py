@@ -42,17 +42,17 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_start_remove -> Test with daemon start option, but pid file exist.
-        test_start_exists -> Test with daemon start option but already running.
-        test_pid_not_running -> Test with pid file and process not running.
-        test_pid_running -> Test with pid file and process running.
-        test_start_daemon -> Test main function with daemon start option.
-        test_stop_daemon -> Test main function with daemon stop option.
-        test_restart_daemon -> Test main function with daemon restart option.
-        test_invalid_daemon -> Test main function with invalid option.
-        test_arg_require_false -> Test main function with arg_require false.
-        test_arg_require_true -> Test main function with arg_require true.
+        setUp
+        test_start_remove
+        test_start_exists
+        test_pid_not_running
+        test_pid_running
+        test_start_daemon
+        test_stop_daemon
+        test_restart_daemon
+        test_invalid_daemon
+        test_arg_require_false
+        test_arg_require_true
 
     """
 

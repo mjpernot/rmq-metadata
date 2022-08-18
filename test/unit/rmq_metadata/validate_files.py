@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  _validate_files.py
+"""Program:  validate_files.py
 
-    Description:  Unit testing of _validate_files in rmq_metadata.py.
+    Description:  Unit testing of validate_files in rmq_metadata.py.
 
     Usage:
-        test/unit/rmq_metadata/_validate_files.py
+        test/unit/rmq_metadata/validate_files.py
 
     Arguments:
 
@@ -41,7 +41,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -83,16 +83,17 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_stanford_jar_path_false2 -> Test stanford_jar path check is False.
-        test_stanford_jar_path_false -> Test stanford_jar path check is False.
-        test_stanford_jar_path_true -> Test if stanford_jar path check is True.
-        test_stanford_jar_false -> Test if stanford_jar check returns False.
-        test_stanford_jar_true -> Test if stanford_jar check returns True.
-        test_lang_module_path_false -> Test if lang_module path check is False.
-        test_lang_module_path_true -> Test if lang_module path check is True.
-        test_lang_module_false -> Test if lang_module check returns False.
-        test_lang_module_true -> Test if lang_module check returns True.
+        setUp
+        test_stanford_jar_path_false2
+        test_stanford_jar_path_false
+        test_stanford_jar_path_true
+        test_stanford_jar_false
+        test_stanford_jar_true
+        test_lang_module_path_false2
+        test_lang_module_path_false
+        test_lang_module_path_true
+        test_lang_module_false
+        test_lang_module_true
 
     """
 
@@ -134,7 +135,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(True, None),
                                              (False, self.err_msg6)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -156,7 +157,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -174,7 +175,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
@@ -193,7 +194,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg6),
                                              (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, self.err_msg6))
@@ -211,7 +212,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
@@ -234,7 +235,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
                                              (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -256,7 +257,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, msg))
@@ -274,7 +275,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))
@@ -293,7 +294,7 @@ class UnitTest(unittest.TestCase):
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
                                              (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (False, self.err_msg5))
@@ -311,7 +312,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
-        status_flag, err_msg = rmq_metadata._validate_files(
+        status_flag, err_msg = rmq_metadata.validate_files(
             self.cfg, self.status, self.msg)
 
         self.assertEqual((status_flag, err_msg), (True, ""))

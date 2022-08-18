@@ -41,9 +41,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_empty_categorized_text -> Test with empty categorized_text list.
-        test_summarize_data -> Test with summarize data returned.
+        setUp
+        test_empty_categorized_text
+        test_summarize_data
 
     """
 
@@ -66,14 +66,14 @@ class UnitTest(unittest.TestCase):
         self.loop2 = ("LOCATION", [], [(u'London', u'LOCATION')])
         self.loop3 = ("O", [(u'London', u'LOCATION')], [])
         self.loop4 = ("O", [(u'London', u'LOCATION')], [])
-        self.loop4A = ("O", [(u'London', u'LOCATION')],
+        self.loop4a = ("O", [(u'London', u'LOCATION')],
                        [(u'SW1W9AX', u'LOCATION')])
         self.data_list = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
         self.results = [(u'London', u'LOCATION')]
         self.results2 = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
 
     @mock.patch("rmq_metadata.merge_data")
-    @mock.patch("rmq_metadata._sort_data")
+    @mock.patch("rmq_metadata.sort_data")
     def test_end_loop_data(self, mock_sort, mock_merge):
 
         """Function:  test_end_loop_data
@@ -85,11 +85,12 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_sort.side_effect = [self.loop1, self.loop2, self.loop3,
-                                 self.loop4A]
+                                 self.loop4a]
         mock_merge.return_value = self.data_list
 
-        self.assertEqual(rmq_metadata.summarize_data(
-            self.categorized_text2, self.token_types), self.results2)
+        self.assertEqual(
+            rmq_metadata.summarize_data(
+                self.categorized_text2, self.token_types), self.results2)
 
     def test_empty_categorized_text(self):
 
@@ -103,7 +104,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(rmq_metadata.summarize_data([], self.token_types), [])
 
-    @mock.patch("rmq_metadata._sort_data")
+    @mock.patch("rmq_metadata.sort_data")
     def test_summarize_data(self, mock_sort):
 
         """Function:  test_summarize_data
@@ -117,8 +118,9 @@ class UnitTest(unittest.TestCase):
         mock_sort.side_effect = [self.loop1, self.loop2, self.loop3,
                                  self.loop4]
 
-        self.assertEqual(rmq_metadata.summarize_data(
-            self.categorized_text, self.token_types), self.results)
+        self.assertEqual(
+            rmq_metadata.summarize_data(
+                self.categorized_text, self.token_types), self.results)
 
 
 if __name__ == "__main__":

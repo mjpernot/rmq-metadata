@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,7 +96,7 @@ class PageExtract(object):
     Description:  Class which is a representation of PageExtract class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -139,8 +132,8 @@ class PyPDF2(object):
     Description:  Class which is a representation of PyPDF2 class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        getPage -> Data from page number passed.
+        __init__
+        getPage
 
     """
 
@@ -166,8 +159,6 @@ class PyPDF2(object):
         Description:  Data from page number passed.
 
         Arguments:
-            (input) pagenum -> Page number of document.
-            (output) Class instance of PageExtract.
 
         """
 
@@ -183,10 +174,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_is_encrypted -> Test with PDF encrypted.
-        test_not_encrypted -> Test with PDF not encrypted.
-        test_read_pdf -> Test with extracting data.
+        setUp
+        test_is_encrypted
+        test_not_encrypted
+        test_read_pdf
 
     """
 

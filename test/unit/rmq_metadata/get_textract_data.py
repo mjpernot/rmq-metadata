@@ -41,10 +41,10 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_warn -> log_warn method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_warn
+        log_err
 
     """
 
@@ -55,11 +55,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -77,7 +72,7 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
+            (input) data
 
         """
 
@@ -90,7 +85,6 @@ class Logger(object):
         Description:  log_warn method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,7 +97,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -117,7 +110,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -168,14 +161,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_extract_failure -> Test with failed extraction of data.
-        test_extract_successful -> Test with successful extraction of data.
-        test_categorized_text2 -> Test with no categorized text.
-        test_categorized_text -> Test with categorized text.
-        test_confidence2 -> Test with confidence not equal to 1.
-        test_confidence -> Test with confidence equal to 1.
-        test_get_textract_data -> Test with extracting data.
+        setUp
+        test_extract_failure
+        test_extract_successful
+        test_categorized_text2
+        test_categorized_text
+        test_confidence2
+        test_confidence
+        test_get_textract_data
 
     """
 

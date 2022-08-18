@@ -41,7 +41,7 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        test_help_message -> Test with no arguments.
+        test_help_message
 
     """
 

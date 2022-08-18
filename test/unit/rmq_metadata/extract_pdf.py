@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,9 +96,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_encoding -> Test with extracting data with encoding.
-        test_extract_pdf -> Test with extracting data.
+        setUp
+        test_encoding
+        test_extract_pdf
 
     """
 
@@ -141,9 +134,10 @@ class UnitTest(unittest.TestCase):
 
         mock_tract.return_value = self.text
 
-        self.assertEqual(rmq_metadata.extract_pdf(
-            self.f_name, self.logger, char_encoding=self.encoding),
-                         (True, self.results))
+        self.assertEqual(
+            rmq_metadata.extract_pdf(
+                self.f_name, self.logger, char_encoding=self.encoding),
+            (True, self.results))
 
     @mock.patch("rmq_metadata.textract.process")
     def test_extract_pdf(self, mock_tract):

@@ -42,7 +42,7 @@ class RabbitMQCon(object):
         rabbitmq_class.RabbitMQCon class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -66,8 +66,8 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
+        __init__
+        log_info
 
     """
 
@@ -78,11 +78,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -100,7 +95,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -114,7 +108,7 @@ class MethodTest(object):
     Description:  Class which is a representation of a method module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -138,7 +132,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -183,13 +177,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_multiple_queue_archive -> Test archiving body in multiple queues.
-        test_multiple_queue_found -> Test with multiple queues in queue_list.
-        test_archive_body -> Test with archiving message body.
-        test_queue_found -> Test with queue found in queue_list.
-        test_queue_not_found -> Test with no queue found in queue_list.
-        test_no_queue_list -> Test with an empty queue list.
+        setUp
+        test_multiple_queue_archive
+        test_multiple_queue_found
+        test_archive_body
+        test_queue_found
+        test_queue_not_found
+        test_no_queue_list
 
     """
 
@@ -222,7 +216,7 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
                 mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_multiple_queue_archive(self):
 
@@ -237,10 +231,11 @@ class UnitTest(unittest.TestCase):
         self.cfg.queue_list.append(self.queue2)
         self.method.routing_key = "MY_ROUTING_KEY3"
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_multiple_queue_found(self):
 
@@ -255,12 +250,13 @@ class UnitTest(unittest.TestCase):
         self.cfg.queue_list.append(self.queue)
         self.method.routing_key = "MY_ROUTING_KEY2"
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
     @mock.patch("rmq_metadata.gen_libs.write_file",
                 mock.Mock(return_value=True))
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_archive_body(self):
 
@@ -274,10 +270,11 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list[0]["archive"] = True
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
-    @mock.patch("rmq_metadata._convert_data", mock.Mock(return_value=True))
+    @mock.patch("rmq_metadata.convert_data", mock.Mock(return_value=True))
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_queue_found(self):
 
@@ -289,8 +286,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_queue_not_found(self):
@@ -305,8 +303,9 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list[0]["routing_key"] = "NotMyKey"
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
     @mock.patch("rmq_metadata.non_proc_msg", mock.Mock(return_value=True))
     def test_no_queue_list(self):
@@ -321,8 +320,9 @@ class UnitTest(unittest.TestCase):
 
         self.cfg.queue_list = []
 
-        self.assertFalse(rmq_metadata.process_msg(
-            self.rmq, self.logger, self.cfg, self.method, self.body))
+        self.assertFalse(
+            rmq_metadata.process_msg(
+                self.rmq, self.logger, self.cfg, self.method, self.body))
 
 
 if __name__ == "__main__":

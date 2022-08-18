@@ -24,7 +24,6 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
@@ -41,14 +40,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_multiple_sets2 -> Test with adding multiple sets.
-        test_multiple_sets -> Test with adding multiple sets.
-        test_duplicate_value -> Test with duplicate value in list.
-        test_add_to_key -> Test with adding to existing key.
-        test_create_new_key2 -> Test with creating new key in dictionary.
-        test_create_new_key -> Test with creating new key in dictionary.
-        test_empty_data_list -> Test with empty data list.
+        setUp
+        test_multiple_sets2
+        test_multiple_sets
+        test_duplicate_value
+        test_add_to_key
+        test_create_new_key2
+        test_create_new_key
+        test_empty_data_list
 
     """
 
