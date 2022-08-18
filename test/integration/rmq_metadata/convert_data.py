@@ -283,10 +283,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename3)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -323,10 +328,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename2)
         self.filename = ""
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -369,10 +379,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -411,10 +426,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -452,10 +472,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -493,10 +518,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -533,10 +563,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -574,10 +609,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -615,10 +655,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -655,10 +700,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -697,10 +747,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -739,10 +794,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -781,10 +841,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -821,10 +886,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
@@ -861,10 +931,15 @@ class UnitTest(unittest.TestCase):
         run_program(self.filename1)
         data = {}
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
+        cnt = 0
 
         while self.rmq.channel._consumer_infos:
-            self.rmq.channel.connection.process_data_events(time_limit=1)
-            break
+            if cnt == 0:
+                self.rmq.channel.connection.process_data_events(time_limit=1)
+                cnt += 1
+
+            else:
+                break
 
         self.rmq.drop_connection()
 
