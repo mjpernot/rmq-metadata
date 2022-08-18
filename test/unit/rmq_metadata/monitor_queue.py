@@ -41,7 +41,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -96,19 +96,19 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_two_queue_partial2 -> Test with two queues w/ first queue failure.
-        test_two_queue_partial -> Test with two queues with one queue failure.
-        test_two_queue_fail -> Test with two queues fails to initialize.
-        test_two_queue_success -> Test with two queues initialized & monitored.
-        test_one_queue_fail -> Test with one queue fails to initialize.
-        test_one_queue_success -> Test with one queue initialized & monitored.
-        test_false_and_data_msg -> Test with status is False and error message.
-        test_false_and_false -> Test status is False and channel is False.
-        test_true_and_false -> Test status is True and channel is False.
-        test_false_and_true -> Test status is False and channel is True.
-        test_true_and_true -> Test status is True and channel is True.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_two_queue_partial2
+        test_two_queue_partial
+        test_two_queue_fail
+        test_two_queue_success
+        test_one_queue_fail
+        test_one_queue_success
+        test_false_and_data_msg
+        test_false_and_false
+        test_true_and_false
+        test_false_and_true
+        test_true_and_true
+        tearDown
 
     """
 

@@ -42,8 +42,6 @@ def monitor_queue(cfg, log):
     Description:  This is a function stub for rmq_metadata.monitor_queue
 
     Arguments:
-        cfg -> Stub argument holder.
-        log -> Stub argument holder.
 
     """
 
@@ -55,6 +53,56 @@ def monitor_queue(cfg, log):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "mysql_cfg", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return self.args_array.keys()
+
+
 class CfgTest2(object):
 
     """Class:  CfgTest2
@@ -62,7 +110,7 @@ class CfgTest2(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -95,7 +143,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -150,7 +198,7 @@ class ProgramLock(object):
     Description:  Class stub holder for gen_class.ProgramLock class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -161,8 +209,8 @@ class ProgramLock(object):
         Description:  Class initialization.
 
         Arguments:
-            (input) cmdline -> Argv command line.
-            (input) flavor -> Lock flavor ID.
+            (input) cmdline
+            (input) flavor
 
         """
 
@@ -177,12 +225,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_status_false -> Test with status is False.
-        test_status_true -> Test with status is True.
-        test_func_call -> Test with call to function.
-        test_raise_exception -> Test with raising exception.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_flavor_id2
+        test_flavor_id
+        test_status_false
+        test_status_true
+        test_func_call
+        test_raise_exception
+        tearDown
 
     """
 
@@ -196,11 +246,63 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+        self.args.args_array = {
+            "-c": "config_file", "-d": "config_dir", "-M": True}
+        self.args2 = ArgParser()
+        self.args2.args_array = {
+            "-c": "config_file", "-d": "config_dir", "-M": True,
+            "-y": "flavorid"}
         self.cfg = CfgTest()
         self.mongo_cfg = CfgTest2()
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
-        self.args = {"-c": "config_file", "-d": "config_dir", "-M": True}
         self.func_dict = {"-M": monitor_queue}
+
+    @mock.patch("rmq_metadata.monitor_queue")
+    @mock.patch("rmq_metadata.validate_create_settings")
+    @mock.patch("rmq_metadata.gen_libs.load_module")
+    @mock.patch("rmq_metadata.gen_class")
+    def test_flavor_id2(self, mock_class, mock_load, mock_valid, mock_func):
+
+        """Function:  test_flavor_id2
+
+        Description:  Test with passed flavor id argument.
+
+        Arguments:
+
+        """
+
+        mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
+        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_valid.return_value = (self.cfg, True, "")
+        mock_class.Logger.log_close.return_value = True
+        mock_class.ProgramLock.return_value = self.proglock
+        mock_func.return_value = True
+
+        self.assertFalse(rmq_metadata.run_program(self.args2, self.func_dict))
+
+    @mock.patch("rmq_metadata.monitor_queue")
+    @mock.patch("rmq_metadata.validate_create_settings")
+    @mock.patch("rmq_metadata.gen_libs.load_module")
+    @mock.patch("rmq_metadata.gen_class")
+    def test_flavor_id(self, mock_class, mock_load, mock_valid, mock_func):
+
+        """Function:  test_flavor_id
+
+        Description:  Test with default setting.
+
+        Arguments:
+
+        """
+
+        mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
+        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_valid.return_value = (self.cfg, True, "")
+        mock_class.Logger.log_close.return_value = True
+        mock_class.ProgramLock.return_value = self.proglock
+        mock_func.return_value = True
+
+        self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
 
     @mock.patch("rmq_metadata.validate_create_settings")
     @mock.patch("rmq_metadata.gen_libs.load_module")
@@ -242,7 +344,7 @@ class UnitTest(unittest.TestCase):
         mock_log.log_close.return_value = True
 
         # Remove to skip "for" loop.
-        self.args.pop("-M")
+        self.args.args_array.pop("-M")
 
         self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
 

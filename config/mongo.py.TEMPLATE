@@ -6,28 +6,57 @@
 user = "USER"
 japd = "PSWORD"
 # Mongo DB host information
-host = "IP_ADDRESS"
+host = "HOST_IP"
 name = "HOSTNAME"
-# Mongo database port (default is 27017)
+# Mongo database port
+# Default port for Mongo is 27017.
 port = 27017
 # Mongo configuration settings
+# Only set if using a different Mongo configuration file.
 conf_file = None
 # Authentication required:  True|False
+# Only set to False if no authentication is taking place.
 auth = True
-# Name of Mongo database.
-dbs = "DATABASE"
-# Name of Mongo table/collection.
-tbl = "TABLE"
+# Authentication database
+# Name of database to authenticate the user in.
+auth_db = "admin"
+# Authentication mechanism
+#   Current values allowed:  MONGODB-CR, SCRAM-SHA-1, SCRAM-SHA-256
+#   NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
+#   NOTE 2:  FIPS 140-2 environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
+#   NOTE 3:  MONGODB-CR is not suppoerted in Mongodb 4.0 and better.
+auth_mech = "SCRAM-SHA-1"
 
 # Replica Set Mongo configuration settings.
-# None means the Mongo database is not part of a replica set.
+# By default all settings are set to None.
+#    None means the Mongo database is not part of a replica set.
+#
 # Replica set name.
-#    Format:  repset = "REPLICA_SET_NAME"
+# Format:  repset = "REPLICA_SET_NAME"
 repset = None
 # Replica host listing.
-#    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+# Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
 repset_hosts = None
 # Database to authentication to.
-#    Format:  db_auth = "AUTHENTICATION_DATABASE"
-db_auth = None 
+# Format:  db_auth = "AUTHENTICATION_DATABASE"
+db_auth = None
 
+# SSL Configuration settings
+# If not set will connect to Mongo without using SSL connections.
+# File containing the SSL certificate authority.
+# Example: ssl_client_ca = "/opt/mongo/certs/ca.pem"
+ssl_client_ca = None
+# File containing the SSL key.
+# Example:  ssl_client_key = "/opt/mongo/certs/client-key.pem"
+ssl_client_key = None
+# File containing the SSL certificate file.
+# Example: ssl_client_cert = "/opt/mongo/certs/client-cert.pem"
+ssl_client_cert = None
+# Pass phrase for the SSL Client Key, if one is set.
+# Example:  ssl_client_phrase = "Phrase"
+ssl_client_phrase = None
+
+# Name of Mongo database for data insertion
+dbs = "DATABASE"
+# Name of Mongo collection
+tbl = "TABLE"

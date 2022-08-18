@@ -9,19 +9,16 @@ pipeline {
         stage('Test') {
             steps {
                 dir ('lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/293", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 dir ('rabbit_lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/rabbitmq-lib.git"
-                }
-                dir ('rabbit_lib/lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/220", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/rabbitmq-lib.git"
                 }
                 dir ('mongo_lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
+                    git branch: "mod/420", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
                 }
                 dir ('mongo_lib/lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/282", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 sh """
                 virtualenv test_env
@@ -31,16 +28,13 @@ pipeline {
                 pip2 install mock==2.0.0 --user
                 pip2 install nltk==3.4.0 --user
                 pip2 install pdfminer==20191010 --user
-                pip2 install pika==0.11.0 --user
+                pip2 install pika==1.2.0 --user
                 pip2 install psutil==5.4.3 --user
-                pip2 install pymongo==3.2.0 --user
+                pip2 install pymongo==3.8.0 --user
                 pip2 install simplejson==2.0.9 --user
                 pip2 install soupsieve==1.9.6 --user
                 pip2 install textract==1.6.3 --user
-                ./test/unit/rmq_metadata/_convert_data.py
-                ./test/unit/rmq_metadata/_process_queue.py
-                ./test/unit/rmq_metadata/_sort_data.py
-                ./test/unit/rmq_metadata/_validate_files.py
+                ./test/unit/rmq_metadata/convert_data.py
                 ./test/unit/rmq_metadata/create_metadata.py
                 ./test/unit/rmq_metadata/extract_pdf.py
                 ./test/unit/rmq_metadata/find_tokens.py
@@ -53,11 +47,14 @@ pipeline {
                 ./test/unit/rmq_metadata/monitor_queue.py
                 ./test/unit/rmq_metadata/non_proc_msg.py
                 ./test/unit/rmq_metadata/pdf_to_string.py
+                ./test/unit/rmq_metadata/process_message.py
                 ./test/unit/rmq_metadata/process_msg.py
                 ./test/unit/rmq_metadata/read_pdf.py
                 ./test/unit/rmq_metadata/run_program.py
+                ./test/unit/rmq_metadata/sort_data.py
                 ./test/unit/rmq_metadata/summarize_data.py
                 ./test/unit/rmq_metadata/validate_create_settings.py
+                ./test/unit/rmq_metadata/validate_files.py
                 ./test/unit/daemon_rmq_metadata/is_active.py
                 ./test/unit/daemon_rmq_metadata/main.py
                 deactivate
@@ -115,6 +112,11 @@ pipeline {
                     server.upload(uploadSpec)
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs disableDeferredWipeout: true
         }
     }
 }

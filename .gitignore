@@ -4,11 +4,8 @@
 *.HOLD
 ./*.sh
 coverage.xml
+test/integration/rmq_metadata/config/*.py
 config/*.py
-config/*.cfg
-logs/*.log
-message_dir/*.txt
-tmp/*.pid
 lib
 rabbit_lib
 mongo_lib

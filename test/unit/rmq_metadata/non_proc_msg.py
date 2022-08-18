@@ -34,6 +34,33 @@ import version
 __version__ = version.__version__
 
 
+class CfgTest(object):
+
+    """Class:  CfgTest
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.exchange = "test_exchange"
+        self.to_line = ""
+        self.message_dir = "message_dir"
+        self.log_file = "rmq_metadata.log"
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -41,10 +68,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_to_empty_line -> Test for empty to line.
-        test_to_line -> Test for valid to line.
-        tearDown -> Clean up of testing environment.
+        setUp
+        test_to_empty_line
+        test_to_line
+        tearDown
 
     """
 
@@ -57,31 +84,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        class CfgTest(object):
-
-            """Class:  CfgTest
-
-            Description:  Class which is a representation of a cfg module.
-
-            Methods:
-                __init__ -> Initialize configuration environment.
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.exchange = "test_exchange"
-                self.to_line = ""
-                self.message_dir = "message_dir"
 
         self.cfg = CfgTest()
         self.r_key = "Routing Key"

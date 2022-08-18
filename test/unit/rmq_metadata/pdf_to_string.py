@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,8 +96,8 @@ class BytesIO(object):
     Description:  Class which is a representation of a io class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        getvalue -> getvalue method.
+        __init__
+        getvalue
 
     """
 
@@ -140,8 +133,8 @@ class PDFPageInterpreter(object):
     Description:  Class which is a representation of PDFPageInterpreter class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        process_page -> process_page method.
+        __init__
+        process_page
 
     """
 
@@ -177,9 +170,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_multiple_pages -> Test with multiple pages in document.
-        test_pdf_to_string -> Test with extracting data.
+        setUp
+        test_multiple_pages
+        test_pdf_to_string
 
     """
 

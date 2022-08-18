@@ -41,9 +41,9 @@ class Logger(object):
     Description:  Class which is a representation of gen_class.Logger class.
 
     Methods:
-        __init__ -> Initialize configuration environment.
-        log_info -> log_info method.
-        log_err -> log_err method.
+        __init__
+        log_info
+        log_err
 
     """
 
@@ -54,11 +54,6 @@ class Logger(object):
         Description:  Initialization instance of the class.
 
         Arguments:
-            (input) job_name -> Instance name.
-            (input) job_log -> Log name.
-            (input) log_type -> Log type.
-            (input) log_format -> Log format.
-            (input) log_time -> Time format.
 
         """
 
@@ -76,7 +71,6 @@ class Logger(object):
         Description:  log_info method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -89,7 +83,6 @@ class Logger(object):
         Description:  log_err method.
 
         Arguments:
-            (input) data -> Log entry.
 
         """
 
@@ -103,7 +96,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -154,12 +147,12 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_extract_failure -> Test with failure of extraction.
-        test_extract_success -> Test with successful extraction.
-        test_categorized_text2 -> Test with no categorized text.
-        test_categorized_text -> Test with categorized text.
-        test_get_pdfminer_data -> Test with extracting data.
+        setUp
+        test_extract_failure
+        test_extract_success
+        test_categorized_text2
+        test_categorized_text
+        test_get_pdfminer_data
 
     """
 
@@ -189,7 +182,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.pdf_to_string")
     def test_extract_failure(self, mock_extract, mock_token, mock_find,
-                              mock_sum):
+                             mock_sum):
 
         """Function:  test_extract_failure
 
@@ -261,7 +254,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.pdf_to_string")
     def test_categorized_text(self, mock_extract, mock_token, mock_find,
-                               mock_sum):
+                              mock_sum):
 
         """Function:  test_categorized_text
 

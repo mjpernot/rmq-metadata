@@ -41,7 +41,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -55,8 +55,6 @@ class CfgTest(object):
 
         """
 
-        path = "/dir/path"
-
         self.host = "HOSTNAME"
         self.exchange_name = "rmq_metadata_unit_test"
         self.to_line = None
@@ -65,17 +63,18 @@ class CfgTest(object):
         self.x_durable = True
         self.q_durable = True
         self.auto_delete = False
+        self.base_dir = "/base/directory_path"
         self.message_dir = "message_dir"
         self.log_dir = "logs"
         self.log_file = "rmq_metadata.log"
-        self.archive_dir = path
+        self.archive_dir = "archive"
         self.tmp_dir = "/dir/tmp_path"
         self.lang_module = "/path/Stanford_lang_module"
         self.stanford_jar = "/path/Stanford.jar"
         self.queue_list = [
             {"queue": "rmq_metadata_unit_test",
              "routing_key": "MY_ROUTING_KEY",
-             "directory": path}]
+             "directory": "/dir/final_data"}]
 
 
 class UnitTest(unittest.TestCase):
@@ -85,30 +84,30 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_stanford_jar_path_false -> Test stanford_jar path check is False.
-        test_stanford_jar_path_true -> Test if stanford_jar path check is True.
-        test_stanford_jar_false -> Test if stanford_jar check returns False.
-        test_stanford_jar_true -> Test if stanford_jar check returns True.
-        test_lang_module_path_false -> Test if lang_module path check is False.
-        test_lang_module_path_true -> Test if lang_module path check is True.
-        test_lang_module_false -> Test if lang_module check returns False.
-        test_lang_module_true -> Test if lang_module check returns True.
-        test_tmp_dir_false -> Test if tmp_dir check returns False.
-        test_tmp_dir_not_abs -> Test when tmp_dir is not abs.
-        test_tmp_dir_true -> Test if tmp_dir check returns True.
-        test_archive_dir_false -> Test if archive_dir check returns False.
-        test_archive_not_abs -> Test when archive_dir is not abs.
-        test_archive_dir_true -> Test if archive_dir check returns True.
-        test_multi_queues_two_fail -> Test with multi queues and two failure.
-        test_multi_queues_one_fail -> Test with multi queues and one failure.
-        test_multiple_queues -> Test with multiple queues.
-        test_multiple_false2 -> Test if multiple checks return False.
-        test_multiple_false -> Test if multiple checks return False.
-        test_log_dir_false -> Test if log_dir check returns False.
-        test_log_dir_true -> Test if log_dir check returns True.
-        test_message_dir_false -> Test if message_dir check returns False.
-        test_message_dir_true -> Test if message_dir check returns True.
+        setUp
+        test_stanford_jar_path_false
+        test_stanford_jar_path_true
+        test_stanford_jar_false
+        test_stanford_jar_true
+        test_lang_module_path_false
+        test_lang_module_path_true
+        test_lang_module_false
+        test_lang_module_true
+        test_tmp_dir_false
+        test_tmp_dir_not_abs
+        test_tmp_dir_true
+        test_archive_dir_false
+        test_archive_not_abs
+        test_archive_dir_true
+        test_multi_queues_two_fail
+        test_multi_queues_one_fail
+        test_multiple_queues
+        test_multiple_false2
+        test_multiple_false
+        test_log_dir_false
+        test_log_dir_true
+        test_message_dir_false
+        test_message_dir_true
 
     """
 
@@ -136,6 +135,8 @@ class UnitTest(unittest.TestCase):
         base_name, ext_name = os.path.splitext(self.cfg.log_file)
         self.log_name = \
             base_name + "_" + self.cfg.exchange_name + "_" + ext_name
+        self.log_name = \
+            base_name + "_" + self.cfg.exchange_name + ext_name
 
     @mock.patch("rmq_metadata.gen_libs")
     def test_stanford_jar_path_false(self, mock_lib):
@@ -320,7 +321,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
         mock_lib.chk_crt_dir.side_effect = [
-            (True, None), (True, None), (True, None), (False, self.err_msg1), 
+            (True, None), (True, None), (True, None), (False, self.err_msg1),
             (True, None)]
         _, status_flag, err_msg = \
             rmq_metadata.validate_create_settings(self.cfg)
