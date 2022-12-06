@@ -242,11 +242,20 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
 # Local
-import lib.gen_libs as gen_libs
-import lib.gen_class as gen_class
-import rabbit_lib.rabbitmq_class as rabbitmq_class
-import mongo_lib.mongo_libs as mongo_libs
-import version
+try:
+    from .lib import arg_parser
+    from .lib import gen_libs
+    from .lib import gen_class
+    from .rabbit_lib import rabbitmq_class
+    from .mongo_lib import mongo_libs
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import lib.gen_libs as gen_libs
+    import lib.gen_class as gen_class
+    import rabbit_lib.rabbitmq_class as rabbitmq_class
+    import mongo_lib.mongo_libs as mongo_libs
+    import version
 
 __version__ = version.__version__
 
@@ -778,7 +787,7 @@ def create_metadata(metadata, data):
     for item in data:
 
         # Create new key.
-        if item[1] not in metadata.keys():
+        if item[1] not in list(metadata.keys()):
             metadata[item[1]] = [item[0]]
 
         # Check for duplicate entry in dictionary's list.
