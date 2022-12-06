@@ -220,7 +220,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
-# Libraries
+# Standard
 import sys
 import os
 import socket
@@ -241,7 +241,7 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
-# Local Libraries
+# Local
 try:
     from .lib import arg_parser
     from .lib import gen_libs
