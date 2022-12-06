@@ -217,16 +217,16 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
+from __future__ import absolute_import
 
-# Standard
+# Libraries
 import sys
 import os
 import socket
 import getpass
 import datetime
-from io import BytesIO
-
-# Third-party
+import io
 import base64
 import chardet
 import PyPDF2
@@ -241,7 +241,7 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
-# Local
+# Local Libraries
 try:
     from .lib import arg_parser
     from .lib import gen_libs
@@ -259,7 +259,7 @@ except (ValueError, ImportError) as err:
 
 __version__ = version.__version__
 
-# Global
+# Global Variables
 DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
 
 
@@ -428,7 +428,7 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
         "non_proc_msg:  Processing failed message: Routing Key: %s" % (r_key))
     frm_line = getpass.getuser() + "@" + socket.gethostname()
     rdtg = datetime.datetime.now()
-    msecs = str(rdtg.microsecond / 100)
+    msecs = str(int(rdtg.microsecond / 100))
     dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + "." + msecs
     f_name = rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
@@ -486,7 +486,7 @@ def process_msg(rmq, log, cfg, method, body):
 
             if queue["archive"] and cfg.archive_dir:
                 rdtg = datetime.datetime.now()
-                msecs = str(rdtg.microsecond / 100)
+                msecs = str(int(rdtg.microsecond / 100))
                 dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + \
                     "." + msecs
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
@@ -526,7 +526,7 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
     ext = ""
     log.log_info("_convert_data:  Converting data in message body.")
     rdtg = datetime.datetime.now()
-    msecs = str(rdtg.microsecond / 100)
+    msecs = str(int(rdtg.microsecond / 100))
     dtg = datetime.datetime.strftime(rdtg, "%Y%m%d%H%M%S") + "." + msecs
     t_filename = "tmp_" + rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     t_file = os.path.join(cfg.tmp_dir, t_filename)
@@ -935,7 +935,7 @@ def pdf_to_string(f_name, log):
     """
 
     status = True
-    out_string = BytesIO()
+    out_string = io.BytesIO()
 
     with open(f_name, "rb") as f_hdlr:
         parser = PDFParser(f_hdlr)

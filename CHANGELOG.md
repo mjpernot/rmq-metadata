@@ -13,6 +13,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Changed
 - Converted imports to use Python 2.7 or Python 3.
 - rmq_metadata.create_metadata: Changed output of dictionary keys call to a list.
+- rmq_metadata: non_proc_msg, process_msg, convert_data: Converted division results to an integer.
+- pdf_to_string:  Fully qualified BytesIO call.
 
 
 ## [0.1.0] - 2020-10-05
