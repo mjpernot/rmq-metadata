@@ -243,7 +243,6 @@ from pdfminer.pdfparser import PDFParser
 
 # Local
 try:
-    from .lib import arg_parser
     from .lib import gen_libs
     from .lib import gen_class
     from .rabbit_lib import rabbitmq_class

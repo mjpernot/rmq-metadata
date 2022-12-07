@@ -103,7 +103,11 @@ class PageExtract(object):
 
         """
 
-        self.body = u'Intheseunprecedentedtimeswewanttomakesurewecankeep'
+        if sys.version_info < (3, 0):
+            self.body = u'Intheseunprecedentedtimeswewanttomakesurewecankeep'
+
+        else:
+            self.body = 'Intheseunprecedentedtimeswewanttomakesurewecankeep'
 
     def extractText(self):
 

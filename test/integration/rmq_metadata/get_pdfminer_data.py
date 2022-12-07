@@ -67,9 +67,16 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
-        self.final_data = [
-            (u'London', u'LOCATION'), (u'Riccardo Tisci', u'PERSON'),
-            (u'Givenchy', u'ORGANIZATION'), (u'Christopher Bailey', u'PERSON')]
+        if sys.version_info < (3, 0):
+            self.final_data = [
+                (u'London', u'LOCATION'), (u'Riccardo Tisci', u'PERSON'),
+                (u'Givenchy', u'ORGANIZATION'),
+                (u'Christopher Bailey', u'PERSON')]
+
+        else:
+            self.final_data = [
+                ('London', 'LOCATION'), ('Riccardo Tisci', 'PERSON'),
+                ('Givenchy', 'ORGANIZATION'), ('Christopher Bailey', 'PERSON')]
 
     def test_extract_failure(self):
 

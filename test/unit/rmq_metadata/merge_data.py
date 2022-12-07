@@ -54,19 +54,43 @@ class UnitTest(unittest.TestCase):
         """
 
         self.data_list = []
-        self.data_list2 = [(u'Ipswich', u'LOCATION')]
-        self.tmp_data = [(u'London', u'LOCATION')]
-        self.tmp_data2 = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
-        self.tmp_data3 = [(u'High_Road', u'LOCATION'),
-                          (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
-        self.results = [(u'London', u'LOCATION')]
-        self.results2 = [(u'London SW1W9AX', u'LOCATION')]
-        self.results3 = [(u'High_Road London SW1W9AX', u'LOCATION')]
-        self.results4 = [(u'Ipswich', u'LOCATION'), (u'London', u'LOCATION')]
-        self.results5 = [(u'Ipswich', u'LOCATION'),
-                         (u'London SW1W9AX', u'LOCATION')]
-        self.results6 = [(u'Ipswich', u'LOCATION'),
-                         (u'High_Road London SW1W9AX', u'LOCATION')]
+
+        if sys.version_info < (3, 0):
+            self.data_list2 = [(u'Ipswich', u'LOCATION')]
+            self.tmp_data = [(u'London', u'LOCATION')]
+            self.tmp_data2 = [
+                (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
+            self.tmp_data3 = [
+                (u'High_Road', u'LOCATION'), (u'London', u'LOCATION'),
+                (u'SW1W9AX', u'LOCATION')]
+            self.results = [(u'London', u'LOCATION')]
+            self.results2 = [(u'London SW1W9AX', u'LOCATION')]
+            self.results3 = [(u'High_Road London SW1W9AX', u'LOCATION')]
+            self.results4 = [
+                (u'Ipswich', u'LOCATION'), (u'London', u'LOCATION')]
+            self.results5 = [
+                (u'Ipswich', u'LOCATION'), (u'London SW1W9AX', u'LOCATION')]
+            self.results6 = [
+                (u'Ipswich', u'LOCATION'),
+                (u'High_Road London SW1W9AX', u'LOCATION')]
+
+        else:
+            self.data_list2 = [('Ipswich', 'LOCATION')]
+            self.tmp_data = [('London', 'LOCATION')]
+            self.tmp_data2 = [
+                ('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
+            self.tmp_data3 = [
+                ('High_Road', 'LOCATION'), ('London', 'LOCATION'),
+                ('SW1W9AX', 'LOCATION')]
+            self.results = [('London', 'LOCATION')]
+            self.results2 = [('London SW1W9AX', 'LOCATION')]
+            self.results3 = [('High_Road London SW1W9AX', 'LOCATION')]
+            self.results4 = [('Ipswich', 'LOCATION'), ('London', 'LOCATION')]
+            self.results5 = [
+                ('Ipswich', 'LOCATION'), ('London SW1W9AX', 'LOCATION')]
+            self.results6 = [
+                ('Ipswich', 'LOCATION'),
+                ('High_Road London SW1W9AX', 'LOCATION')]
 
     def test_pre_data_three_items(self):
 

@@ -93,7 +93,7 @@ class ArgParser(object):
 
         """
 
-        return self.args_array.keys()
+        return list(self.args_array.keys())
 
 
 class CfgTest2(object):
@@ -249,7 +249,7 @@ class UnitTest(unittest.TestCase):
         self.cfg = CfgTest()
         self.mongo_cfg = CfgTest2()
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
-        self.func_dict = {"-M": monitor_queue}
+        self.func_names = {"-M": monitor_queue}
 
     @mock.patch("rmq_metadata.monitor_queue")
     @mock.patch("rmq_metadata.validate_create_settings")
@@ -272,7 +272,7 @@ class UnitTest(unittest.TestCase):
         mock_class.ProgramLock.return_value = self.proglock
         mock_func.return_value = True
 
-        self.assertFalse(rmq_metadata.run_program(self.args2, self.func_dict))
+        self.assertFalse(rmq_metadata.run_program(self.args2, self.func_names))
 
     @mock.patch("rmq_metadata.monitor_queue")
     @mock.patch("rmq_metadata.validate_create_settings")
@@ -295,7 +295,7 @@ class UnitTest(unittest.TestCase):
         mock_class.ProgramLock.return_value = self.proglock
         mock_func.return_value = True
 
-        self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
+        self.assertFalse(rmq_metadata.run_program(self.args, self.func_names))
 
     @mock.patch("rmq_metadata.validate_create_settings")
     @mock.patch("rmq_metadata.gen_libs.load_module")
@@ -316,7 +316,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(rmq_metadata.run_program(self.args,
-                                                      self.func_dict))
+                                                      self.func_names))
 
     @mock.patch("rmq_metadata.validate_create_settings")
     @mock.patch("rmq_metadata.gen_libs.load_module")
@@ -339,7 +339,7 @@ class UnitTest(unittest.TestCase):
         # Remove to skip "for" loop.
         self.args.args_array.pop("-M")
 
-        self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
+        self.assertFalse(rmq_metadata.run_program(self.args, self.func_names))
 
     @mock.patch("rmq_metadata.monitor_queue")
     @mock.patch("rmq_metadata.validate_create_settings")
@@ -362,7 +362,7 @@ class UnitTest(unittest.TestCase):
         mock_class.ProgramLock.return_value = self.proglock
         mock_func.return_value = True
 
-        self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
+        self.assertFalse(rmq_metadata.run_program(self.args, self.func_names))
 
     @mock.patch("rmq_metadata.gen_class.Logger")
     @mock.patch("rmq_metadata.validate_create_settings")
@@ -385,7 +385,7 @@ class UnitTest(unittest.TestCase):
         mock_load.side_effect = [self.cfg, self.mongo_cfg]
         mock_valid.return_value = (self.cfg, True, "")
 
-        self.assertFalse(rmq_metadata.run_program(self.args, self.func_dict))
+        self.assertFalse(rmq_metadata.run_program(self.args, self.func_names))
 
     def tearDown(self):
 

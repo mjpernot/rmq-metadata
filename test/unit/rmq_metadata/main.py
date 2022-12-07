@@ -127,7 +127,6 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
-        self.func_dict = {"-M": rmq_metadata.monitor_queue}
 
     @mock.patch("rmq_metadata.gen_libs.help_func")
     @mock.patch("rmq_metadata.gen_class.ArgParser")

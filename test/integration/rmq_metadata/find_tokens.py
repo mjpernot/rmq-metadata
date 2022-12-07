@@ -56,19 +56,37 @@ class UnitTest(unittest.TestCase):
         base_path = os.path.join(os.getcwd(), integration_dir)
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
-        self.categorized_text = [
-            (u'First', u'O'), (u'up', u'O'), (u'in', u'O'),
-            (u'London', u'LOCATION'), (u'will', u'O'), (u'be', u'O'),
-            (u'Riccardo', u'PERSON'), (u'Tisci', u'PERSON'), (u',', u'O'),
-            (u'onetime', u'O'), (u'Givenchy', u'ORGANIZATION'),
-            (u'darling', u'O'), (u',', u'O'), (u'favorite', u'O'),
-            (u'of', u'O'), (u'Kardashian', u'PERSON'), (u'-', u'O'),
-            (u'Jenners', u'O'), (u'everywhere', u'O'), (u',', u'O'),
-            (u'who', u'O'), (u'returns', u'O'), (u'to', u'O'), (u'the', u'O'),
-            (u'catwalk', u'O'), (u'with', u'O'), (u'Burberry', u'O'),
-            (u'after', u'O'), (u'the', u'O'), (u'departure', u'O'),
-            (u'of', u'O'), (u'Chri', u'O'), (u'stopher', u'O'),
-            (u'Bailey', u'PERSON'), (u'.', u'O')]
+
+        if sys.version_info < (3, 0):
+            self.categorized_text = [
+                (u'First', u'O'), (u'up', u'O'), (u'in', u'O'),
+                (u'London', u'LOCATION'), (u'will', u'O'), (u'be', u'O'),
+                (u'Riccardo', u'PERSON'), (u'Tisci', u'PERSON'), (u',', u'O'),
+                (u'onetime', u'O'), (u'Givenchy', u'ORGANIZATION'),
+                (u'darling', u'O'), (u',', u'O'), (u'favorite', u'O'),
+                (u'of', u'O'), (u'Kardashian', u'PERSON'), (u'-', u'O'),
+                (u'Jenners', u'O'), (u'everywhere', u'O'), (u',', u'O'),
+                (u'who', u'O'), (u'returns', u'O'), (u'to', u'O'),
+                (u'the', u'O'), (u'catwalk', u'O'), (u'with', u'O'),
+                (u'Burberry', u'O'), (u'after', u'O'), (u'the', u'O'),
+                (u'departure', u'O'), (u'of', u'O'), (u'Chri', u'O'),
+                (u'stopher', u'O'), (u'Bailey', u'PERSON'), (u'.', u'O')]
+
+        else:
+            self.categorized_text = [
+                ('First', 'O'), ('up', 'O'), ('in', 'O'),
+                ('London', 'LOCATION'), ('will', 'O'), ('be', 'O'),
+                ('Riccardo', 'PERSON'), ('Tisci', 'PERSON'), (',', 'O'),
+                ('onetime', 'O'), ('Givenchy', 'ORGANIZATION'),
+                ('darling', 'O'), (',', u'O'), ('favorite', 'O'),
+                ('of', 'O'), ('Kardashian', 'PERSON'), ('-', 'O'),
+                ('Jenners', 'O'), ('everywhere', 'O'), (',', 'O'),
+                ('who', 'O'), ('returns', 'O'), ('to', 'O'), ('the', 'O'),
+                ('catwalk', 'O'), ('with', 'O'), ('Burberry', 'O'),
+                ('after', 'O'), ('the', 'O'), ('departure', 'O'),
+                ('of', 'O'), ('Chri', 'O'), ('stopher', 'O'),
+                ('Bailey', 'PERSON'), ('.', 'O')]
+
 
         # Read in PDF file.
         pdf_dir = os.path.join(base_path, "testfiles")
