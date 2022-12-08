@@ -54,28 +54,42 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.item = (u'Text', u'O')
-        self.item2 = (u'London', u'LOCATION')
-        self.item3 = (u'SW1W9AX', u'LOCATION')
-        self.item4 = (u'Smith', u'PERSON')
+        if sys.version_info < (3, 0):
+            self.item = (u'Text', u'O')
+            self.item2 = (u'London', u'LOCATION')
+            self.item3 = (u'SW1W9AX', u'LOCATION')
+            self.item4 = (u'Smith', u'PERSON')
+            self.tmp_data2 = [(u'London', u'LOCATION')]
+            self.result_list2 = [(u'London', u'LOCATION')]
+            self.result_tmp2 = [(u'London', u'LOCATION')]
+            self.result_tmp3 = [
+                (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
+            self.result_tmp4 = [(u'Smith', u'PERSON')]
+
+        else:
+            self.item = ('Text', 'O')
+            self.item2 = ('London', 'LOCATION')
+            self.item3 = ('SW1W9AX', 'LOCATION')
+            self.item4 = ('Smith', 'PERSON')
+            self.tmp_data2 = [('London', 'LOCATION')]
+            self.result_list2 = [('London', 'LOCATION')]
+            self.result_tmp2 = [('London', 'LOCATION')]
+            self.result_tmp3 = [
+                ('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
+            self.result_tmp4 = [('Smith', 'PERSON')]
+
         self.current_type = ""
         self.current_type2 = "O"
         self.current_type3 = "LOCATION"
         self.current_type4 = "ORGANIZATION"
         self.data_list = []
         self.tmp_data = []
-        self.tmp_data2 = [(u'London', u'LOCATION')]
         self.token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
         self.result_type = "O"
         self.result_type2 = "LOCATION"
         self.result_type3 = "PERSON"
         self.result_list = []
-        self.result_list2 = [(u'London', u'LOCATION')]
         self.result_tmp = []
-        self.result_tmp2 = [(u'London', u'LOCATION')]
-        self.result_tmp3 = [(u'London', u'LOCATION'),
-                            (u'SW1W9AX', u'LOCATION')]
-        self.result_tmp4 = [(u'Smith', u'PERSON')]
 
     def test_new_type2(self):
 

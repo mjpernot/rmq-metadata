@@ -80,7 +80,7 @@ class UnitTest(unittest.TestCase):
         b_name, ext = os.path.splitext(self.cfg.log_file)
         l_name = b_name + "_" + self.cfg.exchange_name + ext
         self.log_file = os.path.join(log_dir, l_name)
-        self.func_dict = {"-M": monitor_queue}
+        self.func_names = {"-M": monitor_queue}
         cmdline = [
             "./rmq_metadata.py", "-c", "rabbitmq", "-d", self.config_dir, "-M"]
         opt_val_list = ["-c", "-d", "-y"]
@@ -103,7 +103,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         with gen_libs.no_std_out():
-            rmq_metadata.run_program(self.args, self.func_dict)
+            rmq_metadata.run_program(self.args, self.func_names)
 
         self.assertFalse(os.path.isfile(self.log_file))
 
@@ -120,7 +120,7 @@ class UnitTest(unittest.TestCase):
         # Remove to skip "for" loop.
         self.args.args_array.pop("-M")
 
-        rmq_metadata.run_program(self.args, self.func_dict)
+        rmq_metadata.run_program(self.args, self.func_names)
 
         self.assertTrue(os.path.isfile(self.log_file))
 
@@ -139,7 +139,7 @@ class UnitTest(unittest.TestCase):
 
         mock_func.return_value = True
 
-        rmq_metadata.run_program(self.args, self.func_dict)
+        rmq_metadata.run_program(self.args, self.func_names)
 
         self.assertTrue(os.path.isfile(self.log_file))
 

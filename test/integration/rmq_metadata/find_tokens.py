@@ -78,7 +78,7 @@ class UnitTest(unittest.TestCase):
                 ('London', 'LOCATION'), ('will', 'O'), ('be', 'O'),
                 ('Riccardo', 'PERSON'), ('Tisci', 'PERSON'), (',', 'O'),
                 ('onetime', 'O'), ('Givenchy', 'ORGANIZATION'),
-                ('darling', 'O'), (',', u'O'), ('favorite', 'O'),
+                ('darling', 'O'), (',', 'O'), ('favorite', 'O'),
                 ('of', 'O'), ('Kardashian', 'PERSON'), ('-', 'O'),
                 ('Jenners', 'O'), ('everywhere', 'O'), (',', 'O'),
                 ('who', 'O'), ('returns', 'O'), ('to', 'O'), ('the', 'O'),

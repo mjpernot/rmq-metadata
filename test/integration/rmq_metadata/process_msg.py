@@ -12,6 +12,7 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
@@ -279,8 +280,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_encrypted_pdf(self):
 
@@ -418,8 +419,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_archive_false(self):
 
@@ -559,8 +560,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_queue_not_found(self):
 

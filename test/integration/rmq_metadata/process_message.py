@@ -12,6 +12,7 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
@@ -120,9 +121,9 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(data["FileName"] == self.f_name3 and
                         data["Directory"] == self.final_dir and
-                        ("LOCATION" not in data.keys() and
-                         "ORGANIZATION" not in data.keys() and
-                         "PERSON" not in data.keys()))
+                        ("LOCATION" not in list(data.keys()) and
+                         "ORGANIZATION" not in list(data.keys()) and
+                         "PERSON" not in list(data.keys())))
 
     def test_all_extract_fails(self):
 
