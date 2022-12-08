@@ -87,7 +87,6 @@ class UnitTest(unittest.TestCase):
                 ('of', 'O'), ('Chri', 'O'), ('stopher', 'O'),
                 ('Bailey', 'PERSON'), ('.', 'O')]
 
-
         # Read in PDF file.
         pdf_dir = os.path.join(base_path, "testfiles")
         self.filename = os.path.join(pdf_dir, "TestPDF.pdf")
