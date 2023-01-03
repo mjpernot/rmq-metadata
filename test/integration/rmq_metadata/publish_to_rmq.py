@@ -19,8 +19,6 @@ from __future__ import print_function
 # Standard
 import os
 import sys
-
-# Third-party
 import base64
 import email.Parser
 
