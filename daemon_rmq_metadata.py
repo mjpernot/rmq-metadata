@@ -32,8 +32,6 @@ import time
 import os
 import psutil
 
-# Third-party
-
 # Local
 try:
     from .lib import arg_parser
