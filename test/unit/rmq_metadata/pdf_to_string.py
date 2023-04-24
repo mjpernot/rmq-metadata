@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  pdf_to_string.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -203,7 +196,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.PDFParser", mock.Mock(return_value="parser"))
     @mock.patch("rmq_metadata.PDFPage.create_pages")
     @mock.patch("rmq_metadata.PDFPageInterpreter")
-    @mock.patch("rmq_metadata.BytesIO")
+    @mock.patch("rmq_metadata.io.BytesIO")
     def test_multiple_pages(self, mock_io, mock_inter, mock_pages):
 
         """Function:  test_multiple_pages
@@ -229,7 +222,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.PDFParser", mock.Mock(return_value="parser"))
     @mock.patch("rmq_metadata.PDFPage.create_pages")
     @mock.patch("rmq_metadata.PDFPageInterpreter")
-    @mock.patch("rmq_metadata.BytesIO")
+    @mock.patch("rmq_metadata.io.BytesIO")
     def test_pdf_to_string(self, mock_io, mock_inter, mock_pages):
 
         """Function:  test_pdf_to_string

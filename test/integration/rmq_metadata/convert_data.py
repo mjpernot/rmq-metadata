@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  convert_data.py
@@ -13,17 +12,12 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import base64
 import email.Parser
 
@@ -299,8 +293,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_extract_fails(self):
 
@@ -395,8 +389,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_prename_postname(self):
 
@@ -442,8 +436,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_no_prename(self):
 
@@ -488,8 +482,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_prename_change(self):
 
@@ -534,8 +528,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_prename_default(self):
 
@@ -579,8 +573,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_no_postname(self):
 
@@ -625,8 +619,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_postname_change(self):
 
@@ -671,8 +665,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_postname_default(self):
 
@@ -716,8 +710,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     @unittest.skip("Does not work with no extension - need further testing")
     def test_empty_ext(self):
@@ -763,8 +757,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     @unittest.skip("Does not work with no extension - need further testing")
     def test_no_ext(self):
@@ -810,8 +804,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     @unittest.skip("Does not work with a new extension - need further testing")
     def test_ext_change(self):
@@ -857,8 +851,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_ext_default(self):
 
@@ -902,8 +896,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_file_encoded(self):
 
@@ -947,8 +941,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_default_name(self):
 
@@ -991,8 +985,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def tearDown(self):
 

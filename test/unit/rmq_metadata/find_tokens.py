@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  find_tokens.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -60,8 +53,16 @@ class StanfordNERTagger(object):
         self.stanford_jar = stanford_jar
         self.encoding = encoding
         self.tokenized_text = None
-        self.categorized_text = [(u',', u'O'), (u'London', u'LOCATION'),
-                                 (u',', u'O'), (u'SW1W9AX', u'O')]
+
+        if sys.version_info < (3, 0):
+            self.categorized_text = [
+                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
+                (u'SW1W9AX', u'O')]
+
+        else:
+            self.categorized_text = [
+                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+                ('SW1W9AX', 'O')]
 
     def tag(self, tokenized_text):
 
@@ -150,13 +151,23 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.tokenized_text = [u'2.08', u'%', u'BalanceTransfer22.9', u'%',
-                               u'1.74']
-        self.categorized_text = [(u',', u'O'), (u'London', u'LOCATION'),
-                                 (u',', u'O'), (u'SW1W9AX', u'O')]
+        if sys.version_info < (3, 0):
+            self.tokenized_text = [
+                u'2.08', u'%', u'BalanceTransfer22.9', u'%', u'1.74']
+            self.categorized_text = [
+                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
+                (u'SW1W9AX', u'O')]
+
+        else:
+            self.tokenized_text = [
+                '2.08', '%', 'BalanceTransfer22.9', '%', '1.74']
+            self.categorized_text = [
+                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+                ('SW1W9AX', 'O')]
+
         self.cfg = CfgTest()
-        self.nlp = StanfordNERTagger(self.cfg.lang_module,
-                                     self.cfg.stanford_jar, self.cfg.encoding)
+        self.nlp = StanfordNERTagger(
+            self.cfg.lang_module, self.cfg.stanford_jar, self.cfg.encoding)
 
     @mock.patch("rmq_metadata.StanfordNERTagger")
     def test_categorized_data(self, mock_nlp):

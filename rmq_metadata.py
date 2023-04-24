@@ -217,6 +217,8 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
+from __future__ import absolute_import
 
 # Standard
 import sys
@@ -224,9 +226,7 @@ import os
 import socket
 import getpass
 import datetime
-from io import BytesIO
-
-# Third-party
+import io
 import base64
 import chardet
 import PyPDF2
@@ -242,15 +242,23 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
 # Local
-import lib.gen_libs as gen_libs
-import lib.gen_class as gen_class
-import rabbit_lib.rabbitmq_class as rabbitmq_class
-import mongo_lib.mongo_libs as mongo_libs
-import version
+try:
+    from .lib import gen_libs
+    from .lib import gen_class
+    from .rabbit_lib import rabbitmq_class
+    from .mongo_lib import mongo_libs
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import lib.gen_libs as gen_libs
+    import lib.gen_class as gen_class
+    import rabbit_lib.rabbitmq_class as rabbitmq_class
+    import mongo_lib.mongo_libs as mongo_libs
+    import version
 
 __version__ = version.__version__
 
-# Global
+# Global Variables
 DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
 
 
@@ -419,7 +427,7 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
         "non_proc_msg:  Processing failed message: Routing Key: %s" % (r_key))
     frm_line = getpass.getuser() + "@" + socket.gethostname()
     rdtg = datetime.datetime.now()
-    msecs = str(rdtg.microsecond / 100)
+    msecs = str(int(rdtg.microsecond / 100))
     dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + "." + msecs
     f_name = rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
@@ -477,7 +485,7 @@ def process_msg(rmq, log, cfg, method, body):
 
             if queue["archive"] and cfg.archive_dir:
                 rdtg = datetime.datetime.now()
-                msecs = str(rdtg.microsecond / 100)
+                msecs = str(int(rdtg.microsecond / 100))
                 dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + \
                     "." + msecs
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
@@ -517,7 +525,7 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
     ext = ""
     log.log_info("_convert_data:  Converting data in message body.")
     rdtg = datetime.datetime.now()
-    msecs = str(rdtg.microsecond / 100)
+    msecs = str(int(rdtg.microsecond / 100))
     dtg = datetime.datetime.strftime(rdtg, "%Y%m%d%H%M%S") + "." + msecs
     t_filename = "tmp_" + rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     t_file = os.path.join(cfg.tmp_dir, t_filename)
@@ -539,7 +547,7 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
 
     if queue["stype"] == "encoded":
         log.log_info("_convert_data:  Decoding data in message body.")
-        base64.decode(open(t_file, "rb"), open(f_name, "wb"))
+        base64.decode(io.open(t_file, "rb"), io.open(f_name, "wb"))
         os.remove(t_file)
 
     else:
@@ -577,7 +585,7 @@ def read_pdf(filename, log):
 
     text = ""
     status = True
-    pdf = open(filename, "rb")
+    pdf = io.open(filename, "rb")
     pdfreader = PyPDF2.PdfFileReader(pdf)
 
     if pdfreader.isEncrypted:
@@ -778,7 +786,7 @@ def create_metadata(metadata, data):
     for item in data:
 
         # Create new key.
-        if item[1] not in metadata.keys():
+        if item[1] not in list(metadata.keys()):
             metadata[item[1]] = [item[0]]
 
         # Check for duplicate entry in dictionary's list.
@@ -926,9 +934,9 @@ def pdf_to_string(f_name, log):
     """
 
     status = True
-    out_string = BytesIO()
+    out_string = io.BytesIO()
 
-    with open(f_name, "rb") as f_hdlr:
+    with io.open(f_name, "rb") as f_hdlr:
         parser = PDFParser(f_hdlr)
 
         try:

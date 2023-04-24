@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  get_pypdf2_data.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -165,20 +158,39 @@ class UnitTest(unittest.TestCase):
         """
 
         self.f_name = "FileName.pdf"
-        self.rawtext = u'Intheseunprecedentedtimeswewanttomakesurewecankeepin'
-        self.tokens = [u'2.08', u'%', u'BalanceTransfer22.9', u'%', u'1.74']
-        self.categorized_text = [(u',', u'O'), (u'London', u'LOCATION'),
-                                 (u',', u'O'), (u'SW1W9AX', u'O')]
-
-        self.final_data = {
-            u'ORGANIZATION': [u'PAYPAL', u'HOMEBASE'],
-            u'LOCATION': [u'London', u'Brighton', u'England', u'Wales'],
-            u'PERSON': [u'John Street', u'SMITH'],
-            'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
-            'datetime': '20200924_082717'}
         self.cfg = CfgTest()
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
+
+        if sys.version_info < (3, 0):
+            self.rawtext = \
+                u'Intheseunprecedentedtimeswewanttomakesurewecankeepin'
+            self.tokens = [
+                u'2.08', u'%', u'BalanceTransfer22.9', u'%', u'1.74']
+            self.categorized_text = [
+                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
+                (u'SW1W9AX', u'O')]
+            self.final_data = {
+                u'ORGANIZATION': [u'PAYPAL', u'HOMEBASE'],
+                u'LOCATION': [u'London', u'Brighton', u'England', u'Wales'],
+                u'PERSON': [u'John Street', u'SMITH'],
+                'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
+                'datetime': '20200924_082717'}
+
+        else:
+            self.rawtext = \
+                'Intheseunprecedentedtimeswewanttomakesurewecankeepin'
+            self.tokens = [
+                '2.08', '%', 'BalanceTransfer22.9', '%', '1.74']
+            self.categorized_text = [
+                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+                ('SW1W9AX', 'O')]
+            self.final_data = {
+                'ORGANIZATION': ['PAYPAL', 'HOMEBASE'],
+                'LOCATION': ['London', 'Brighton', 'England', 'Wales'],
+                'PERSON': ['John Street', 'SMITH'],
+                'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
+                'datetime': '20200924_082717'}
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")

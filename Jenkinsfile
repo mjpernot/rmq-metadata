@@ -9,16 +9,16 @@ pipeline {
         stage('Test') {
             steps {
                 dir ('lib') {
-                    git branch: "mod/293", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/294", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 dir ('rabbit_lib') {
-                    git branch: "mod/220", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/rabbitmq-lib.git"
+                    git branch: "mod/221", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/rabbitmq-lib.git"
                 }
                 dir ('mongo_lib') {
-                    git branch: "mod/420", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
+                    git branch: "mod/422", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
                 }
                 dir ('mongo_lib/lib') {
-                    git branch: "mod/282", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/294", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 sh """
                 virtualenv test_env
@@ -34,29 +34,29 @@ pipeline {
                 pip2 install simplejson==2.0.9 --user
                 pip2 install soupsieve==1.9.6 --user
                 pip2 install textract==1.6.3 --user
-                ./test/unit/rmq_metadata/convert_data.py
-                ./test/unit/rmq_metadata/create_metadata.py
-                ./test/unit/rmq_metadata/extract_pdf.py
-                ./test/unit/rmq_metadata/find_tokens.py
-                ./test/unit/rmq_metadata/get_pdfminer_data.py
-                ./test/unit/rmq_metadata/get_pypdf2_data.py
-                ./test/unit/rmq_metadata/get_textract_data.py
-                ./test/unit/rmq_metadata/help_message.py
-                ./test/unit/rmq_metadata/main.py
-                ./test/unit/rmq_metadata/merge_data.py
-                ./test/unit/rmq_metadata/monitor_queue.py
-                ./test/unit/rmq_metadata/non_proc_msg.py
-                ./test/unit/rmq_metadata/pdf_to_string.py
-                ./test/unit/rmq_metadata/process_message.py
-                ./test/unit/rmq_metadata/process_msg.py
-                ./test/unit/rmq_metadata/read_pdf.py
-                ./test/unit/rmq_metadata/run_program.py
-                ./test/unit/rmq_metadata/sort_data.py
-                ./test/unit/rmq_metadata/summarize_data.py
-                ./test/unit/rmq_metadata/validate_create_settings.py
-                ./test/unit/rmq_metadata/validate_files.py
-                ./test/unit/daemon_rmq_metadata/is_active.py
-                ./test/unit/daemon_rmq_metadata/main.py
+                /usr/bin/python ./test/unit/rmq_metadata/convert_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/create_metadata.py
+                /usr/bin/python ./test/unit/rmq_metadata/extract_pdf.py
+                /usr/bin/python ./test/unit/rmq_metadata/find_tokens.py
+                /usr/bin/python ./test/unit/rmq_metadata/get_pdfminer_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/get_pypdf2_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/get_textract_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/help_message.py
+                /usr/bin/python ./test/unit/rmq_metadata/main.py
+                /usr/bin/python ./test/unit/rmq_metadata/merge_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/monitor_queue.py
+                /usr/bin/python ./test/unit/rmq_metadata/non_proc_msg.py
+                /usr/bin/python ./test/unit/rmq_metadata/pdf_to_string.py
+                /usr/bin/python ./test/unit/rmq_metadata/process_message.py
+                /usr/bin/python ./test/unit/rmq_metadata/process_msg.py
+                /usr/bin/python ./test/unit/rmq_metadata/read_pdf.py
+                /usr/bin/python ./test/unit/rmq_metadata/run_program.py
+                /usr/bin/python ./test/unit/rmq_metadata/sort_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/summarize_data.py
+                /usr/bin/python ./test/unit/rmq_metadata/validate_create_settings.py
+                /usr/bin/python ./test/unit/rmq_metadata/validate_files.py
+                /usr/bin/python ./test/unit/daemon_rmq_metadata/is_active.py
+                /usr/bin/python ./test/unit/daemon_rmq_metadata/main.py
                 deactivate
                 rm -rf test_env
                 """
