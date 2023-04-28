@@ -30,15 +30,8 @@
 
 # Prerequisites:
   * List of Linux packages that need to be installed on the server.
-    - git
-    - python-pip
     - openjdk-8-jdk
-    - python-devel
-
-  * Local class/library dependencies within the program structure.
-    - python-lib
-    - rabbitmq-lib
-    - mongo-lib
+    - python-devel (python3-devel for Python 3)
 
   * FIPS Environment:  If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.  In addition, other modules may require to have the same modification as the auth.py module.  If a stacktrace occurs and it states "= hashlib.md5()" is the problem, then note the module name "= hashlib.md5()" is in and make the same change as in auth.py:  "usedforsecurity=False".
     - Locate the auth.py file python installed packages on the system in the pymongo package directory.

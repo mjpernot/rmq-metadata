@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  summarize_data.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 
 # Local
 sys.path.append(os.getcwd())
@@ -57,12 +50,27 @@ class UnitTest(unittest.TestCase):
         """
 
         self.token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
-        self.categorized_text = [(u',', u'O'), (u'London', u'LOCATION'),
-                                 (u',', u'O'), (u'SW1W9AX', u'O')]
-        self.categorized_text2 = [(u',', u'O'), (u'London', u'LOCATION'),
-                                  (u',', u'O'), (u'SW1W9AX', u'LOCATION')]
-        self.results = [(u'London', u'LOCATION')]
-        self.results2 = [(u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
+
+        if sys.version_info < (3, 0):
+            self.categorized_text = [
+                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
+                (u'SW1W9AX', u'O')]
+            self.categorized_text2 = [
+                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
+                (u'SW1W9AX', u'LOCATION')]
+            self.results = [(u'London', u'LOCATION')]
+            self.results2 = [
+                (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
+
+        else:
+            self.categorized_text = [
+                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+                ('SW1W9AX', 'O')]
+            self.categorized_text2 = [
+                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+                ('SW1W9AX', 'LOCATION')]
+            self.results = [('London', 'LOCATION')]
+            self.results2 = [('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
 
     def test_end_loop_data(self):
 

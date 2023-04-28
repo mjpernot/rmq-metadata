@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  get_pypdf2_data.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 
 # Local
 sys.path.append(os.getcwd())
@@ -75,10 +68,17 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
-        self.final_data = [
-            (u'London', u'LOCATION'), (u'Riccardo Tisci', u'PERSON'),
-            (u'Givenchy', u'ORGANIZATION'), (u'Kardashian', u'PERSON'),
-            (u'Bailey', u'PERSON')]
+        if sys.version_info < (3, 0):
+            self.final_data = [
+                (u'London', u'LOCATION'), (u'Riccardo Tisci', u'PERSON'),
+                (u'Givenchy', u'ORGANIZATION'), (u'Kardashian', u'PERSON'),
+                (u'Bailey', u'PERSON')]
+
+        else:
+            self.final_data = [
+                ('London', 'LOCATION'), ('Riccardo Tisci', 'PERSON'),
+                ('Givenchy', 'ORGANIZATION'), ('Kardashian', 'PERSON'),
+                ('Bailey', 'PERSON')]
 
     def test_extract_failed(self):
 
