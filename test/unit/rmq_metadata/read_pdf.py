@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  read_pdf.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -110,7 +103,11 @@ class PageExtract(object):
 
         """
 
-        self.body = u'Intheseunprecedentedtimeswewanttomakesurewecankeep'
+        if sys.version_info < (3, 0):
+            self.body = u'Intheseunprecedentedtimeswewanttomakesurewecankeep'
+
+        else:
+            self.body = 'Intheseunprecedentedtimeswewanttomakesurewecankeep'
 
     def extractText(self):
 

@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  process_msg.py
@@ -13,17 +12,12 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import base64
 import email.Parser
 
@@ -286,8 +280,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_encrypted_pdf(self):
 
@@ -425,8 +419,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_archive_false(self):
 
@@ -566,8 +560,8 @@ class UnitTest(unittest.TestCase):
             data = self.mongo.coll_find1()
             self.filename = os.path.join(data["Directory"], data["FileName"])
 
-        self.assertTrue("FileName" in data.keys() and
-                        "Directory" in data.keys())
+        self.assertTrue("FileName" in list(data.keys()) and
+                        "Directory" in list(data.keys()))
 
     def test_queue_not_found(self):
 

@@ -6,6 +6,6 @@
 
 echo ""
 echo "Unit test:  daemon_rmq_metadata.py"
-/usr/bin/python test/unit/daemon_rmq_metadata/is_active.py
-/usr/bin/python test/unit/daemon_rmq_metadata/main.py
+/usr/bin/python3 test/unit/daemon_rmq_metadata/is_active.py
+/usr/bin/python3 test/unit/daemon_rmq_metadata/main.py
 

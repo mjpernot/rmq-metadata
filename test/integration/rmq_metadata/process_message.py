@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  process_message.py
@@ -13,17 +12,12 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 
 # Local
 sys.path.append(os.getcwd())
@@ -127,9 +121,9 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(data["FileName"] == self.f_name3 and
                         data["Directory"] == self.final_dir and
-                        ("LOCATION" not in data.keys() and
-                         "ORGANIZATION" not in data.keys() and
-                         "PERSON" not in data.keys()))
+                        ("LOCATION" not in list(data.keys()) and
+                         "ORGANIZATION" not in list(data.keys()) and
+                         "PERSON" not in list(data.keys())))
 
     def test_all_extract_fails(self):
 
