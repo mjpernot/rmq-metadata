@@ -318,8 +318,8 @@ class UnitTest(unittest.TestCase):
         mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = True
 
-        #with gen_libs.no_std_out():
-        self.assertRaises(SystemExit, daemon_rmq_metadata.main)
+        with gen_libs.no_std_out():
+            self.assertRaises(SystemExit, daemon_rmq_metadata.main)
 
 
 if __name__ == "__main__":
