@@ -28,6 +28,61 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_require
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+        self.opt_req = None
+        self.opt_req2 = True
+
+    def arg_require(self, opt_req):
+
+        """Method:  arg_require
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_require.
+
+        Arguments:
+
+        """
+
+        self.opt_req = opt_req
+
+        return self.opt_req2
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -59,7 +114,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args = {"-a": "start", "-c": "rabbitmq"}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args3 = ArgParser()
+        self.args4 = ArgParser()
+        self.args.args_array = {"-a": "start", "-c": "rabbitmq"}
+        self.args2.args_array = {"-a": "stop", "-c": "rabbitmq"}
+        self.args3.args_array = {"-a": "restart", "-c": "rabbitmq"}
+        self.args4.args_array = {"-a": "nostart", "-c": "rabbitmq"}
 
     @mock.patch("daemon_rmq_metadata.os.remove", mock.Mock(return_value=True))
     @mock.patch("daemon_rmq_metadata.os.path.isfile",
@@ -68,7 +130,7 @@ class UnitTest(unittest.TestCase):
                 mock.Mock(return_value=False))
     @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.start",
                 mock.Mock(return_value=True))
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_start_remove(self, mock_arg):
 
         """Function:  test_start_remove
@@ -79,7 +141,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = False
 
         self.assertRaises(SystemExit, daemon_rmq_metadata.main)
@@ -88,7 +150,7 @@ class UnitTest(unittest.TestCase):
                 mock.Mock(return_value=True))
     @mock.patch("daemon_rmq_metadata.is_active",
                 mock.Mock(return_value=True))
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_start_exists(self, mock_arg):
 
         """Function:  test_start_exists
@@ -99,7 +161,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = False
 
         with gen_libs.no_std_out():
@@ -111,7 +173,7 @@ class UnitTest(unittest.TestCase):
                 mock.Mock(return_value=True))
     @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.start",
                 mock.Mock(return_value=True))
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_pid_not_running(self, mock_arg):
 
         """Function:  test_pid_not_running
@@ -122,7 +184,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = False
 
         self.assertRaises(SystemExit, daemon_rmq_metadata.main)
@@ -132,7 +194,7 @@ class UnitTest(unittest.TestCase):
                 mock.Mock(return_value=True))
     @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.start",
                 mock.Mock(return_value=True))
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_pid_running(self, mock_arg):
 
         """Function:  test_pid_running
@@ -143,7 +205,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = False
 
         with gen_libs.no_std_out():
@@ -153,7 +215,7 @@ class UnitTest(unittest.TestCase):
                 mock.Mock(return_value=False))
     @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.start",
                 mock.Mock(return_value=True))
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_start_daemon(self, mock_arg):
 
         """Function:  test_start_daemon
@@ -164,12 +226,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = False
 
         self.assertRaises(SystemExit, daemon_rmq_metadata.main)
 
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.stop")
     def test_stop_daemon(self, mock_daemon, mock_arg):
 
@@ -181,14 +243,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-a"] = "stop"
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args2
         mock_arg.arg_require.return_value = False
         mock_daemon.return_value = True
 
         self.assertRaises(SystemExit, daemon_rmq_metadata.main)
 
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.restart")
     def test_restart_daemon(self, mock_daemon, mock_arg):
 
@@ -200,14 +261,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-a"] = "restart"
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args3
         mock_arg.arg_require.return_value = False
         mock_daemon.return_value = True
 
         self.assertRaises(SystemExit, daemon_rmq_metadata.main)
 
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_invalid_daemon(self, mock_arg):
 
         """Function:  test_invalid_daemon
@@ -218,8 +278,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args["-a"] = "nostart"
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args4
         mock_arg.arg_require.return_value = False
 
         with gen_libs.no_std_out():
@@ -227,9 +286,7 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("daemon_rmq_metadata.os.path.isfile",
                 mock.Mock(return_value=False))
-    @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.start",
-                mock.Mock(return_value=True))
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_arg_require_false(self, mock_arg):
 
         """Function:  test_arg_require_false
@@ -240,12 +297,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = False
 
         self.assertRaises(SystemExit, daemon_rmq_metadata.main)
 
-    @mock.patch("daemon_rmq_metadata.arg_parser")
+    @mock.patch("daemon_rmq_metadata.RmqMetadataDaemon.start",
+                mock.Mock(return_value=True))
+    @mock.patch("daemon_rmq_metadata.gen_class.ArgParser")
     def test_arg_require_true(self, mock_arg):
 
         """Function:  test_arg_require_true
@@ -256,11 +315,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args
+        mock_arg.return_value = self.args
         mock_arg.arg_require.return_value = True
 
-        with gen_libs.no_std_out():
-            self.assertRaises(SystemExit, daemon_rmq_metadata.main)
+        #with gen_libs.no_std_out():
+        self.assertRaises(SystemExit, daemon_rmq_metadata.main)
 
 
 if __name__ == "__main__":

@@ -1161,7 +1161,6 @@ def run_program(args, func_dict, **kwargs):
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
     cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args.get_val("-d"))
@@ -1186,7 +1185,7 @@ def run_program(args, func_dict, **kwargs):
 
         try:
             flavor_id = args.get_val("-y", def_val=cfg.exchange_name)
-            prog_lock = gen_class.ProgramLock(cmdline.argv, flavor_id)
+            prog_lock = gen_class.ProgramLock(sys.argv, flavor_id)
 
             # Intersect args.args_array & func_dict to determine function call
             for opt in set(args.get_args_keys()) & set(func_dict.keys()):
@@ -1225,8 +1224,7 @@ def main(**kwargs):
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
-    cmdline.argv = list(kwargs.get("argv_list", cmdline.argv))
+    sys.argv = list(kwargs.get("argv_list", sys.argv))
     dir_perms_chk = {"-d": 5}
     func_dict = {"-M": monitor_queue}
     opt_req_list = ["-c", "-d"]
@@ -1234,10 +1232,10 @@ def main(**kwargs):
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
-        cmdline.argv, opt_val=opt_val_list, do_parse=True)
+        sys.argv, opt_val=opt_val_list, do_parse=True)
 
-    if not gen_libs.help_func(args.get_args(), __version__, help_message)    \
-       and args.arg_require(opt_req=opt_req_list)                       \
+    if not gen_libs.help_func(args, __version__, help_message)  \
+       and args.arg_require(opt_req=opt_req_list)               \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
         run_program(args, func_dict)
 
