@@ -34,14 +34,12 @@ import psutil
 
 # Local
 try:
-    from .lib import arg_parser
     from .lib import gen_libs
     from .lib import gen_class
     from . import rmq_metadata
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.arg_parser as arg_parser
     import lib.gen_libs as gen_libs
     import lib.gen_class as gen_class
     import rmq_metadata
@@ -127,20 +125,20 @@ def main():
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     opt_val_list = ["-a", "-c", "-d"]
     opt_req_list = ["-a", "-c", "-d"]
     proc_name = "daemon_rmq_2_sy"
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
-    f_name = "rmqmetadata_daemon_" + args_array.get("-c", "") + ".pid"
+    args = gen_class.ArgParser(
+        sys.argv, opt_val=opt_val_list, do_parse=True)
+    f_name = "rmqmetadata_daemon_" + args.get_val("-c", def_val="") + ".pid"
     pid_file = os.path.join(gen_libs.get_base_dir(__file__), "tmp", f_name)
-    daemon = RmqMetadataDaemon(pid_file, argv_list=cmdline.argv)
+    daemon = RmqMetadataDaemon(pid_file, argv_list=sys.argv)
 
-    if not arg_parser.arg_require(args_array, opt_req_list):
+    if args.arg_require(opt_req=opt_req_list):
 
-        if args_array["-a"] == "start":
+        if args.get_val("-a") == "start":
 
             if os.path.isfile(pid_file) and is_active(pid_file, proc_name):
 
@@ -154,10 +152,10 @@ def main():
             else:
                 daemon.start()
 
-        elif args_array["-a"] == "stop":
+        elif args.get_val("-a") == "stop":
             daemon.stop()
 
-        elif args_array["-a"] == "restart":
+        elif args.get_val("-a") == "restart":
             daemon.restart()
 
         else:
@@ -169,7 +167,7 @@ def main():
     else:
         print("Usage: %s -a start|stop|restart -c module -d directory/config \
 {rmq_metadata options}"
-              % cmdline.argv[0])
+              % sys.argv[0])
         sys.exit(2)
 
 

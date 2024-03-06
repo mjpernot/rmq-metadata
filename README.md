@@ -31,7 +31,12 @@
 # Prerequisites:
   * List of Linux packages that need to be installed on the server.
     - openjdk-8-jdk
-    - python-devel (python3-devel for Python 3)
+    - Centos 7 (Running Python 2.7):
+      -> python-pip
+      -> python-devel
+    - Redhat 8 (Running Python 3.6):
+      -> python3-pip
+      -> python3-devel
 
   * FIPS Environment:  If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.  In addition, other modules may require to have the same modification as the auth.py module.  If a stacktrace occurs and it states "= hashlib.md5()" is the problem, then note the module name "= hashlib.md5()" is in and make the same change as in auth.py:  "usedforsecurity=False".
     - Locate the auth.py file python installed packages on the system in the pymongo package directory.
@@ -45,29 +50,45 @@ Install the project using git.
   * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
-umask 022
-cd {Python_Project}
 git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-metadata.git
 cd rmq-metadata
 ```
 
 Install/upgrade system modules.
 
+Centos 7 (Running Python 2.7):
 ```
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
+sudo pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
+
+Redhat 8 (Running Python 3.6):
+NOTE: Install as the user that will run the program.
+
+```
+python -m pip install --user -r requirements3.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
 
 Install supporting classes and libraries.
 
+Centos 7 (Running Python 2.7):
 ```
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
+
+Redhat 8 (Running Python 3.6):
+```
+python -m pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
 
 # Configuration:
 

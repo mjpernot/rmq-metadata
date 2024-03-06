@@ -8,8 +8,8 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
-coverage run -a --source=daemon_rmq_metadata test/unit/daemon_rmq_2_sysmon/is_active.py 
-coverage run -a --source=daemon_rmq_metadata test/unit/daemon_rmq_2_sysmon/main.py 
+coverage run -a --source=daemon_rmq_metadata test/unit/daemon_rmq_metadata/main.py 
+coverage run -a --source=daemon_rmq_metadata test/unit/daemon_rmq_metadata/is_active.py 
 
 echo ""
 echo "Producing code coverage report"

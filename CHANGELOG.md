@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.2] - 2024-03-05
+- Updated to work in Red Hat 8
+- Updated rabbitmq-lib to v2.2.3
+- Updated mongo-lib to v4.2.9
+- Updated python-lib to v3.0.3
+
+### Changed
+- daemon_rmq_metadata: Replaced arg_parser.arg_parse2 with gen_class.ArgParser class.
+- daemon_rmq_metadata.main:  Removed gen_libs.get_inst call.
+- rmq_metadata: main, run_program: Removed gen_libs.get_inst call.
+- rmq_metadata.main: Replaced args.get_args with args in gen_libs.help_func parameter list.
+- Set simplejson to 3.12.0 for Python 3.
+- Set chardet to 3.0.4 for Python 2.
+- Documentation updates.
+
+
 ## [0.1.1] - 2022-12-06
 - Updated to work in Python 3 too
 - Upgraded python-lib to v2.9.4
