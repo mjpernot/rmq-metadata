@@ -219,11 +219,19 @@ Create Mongodb configuration file.  Make the appropriate change to the environme
     - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
     - db_auth = "AUTHENTICATION_DATABASE"
 
-  * If using SSL connections then set one or more of the following entries.  This will automatically enable SSL connections. Below are the configuration settings for SSL connections.  See configuration file for details on each entry:
-    - ssl_client_ca = None
-    - ssl_client_key = None
-    - ssl_client_cert = None
-    - ssl_client_phrase = None
+  * If Mongo is set to use TLS or SSL connections, then one or more of the following entries will need to be completed to connect using TLS or SSL protocols.  Note:  Read the configuration file to determine which entries will need to be
+set.
+    - SSL:
+        -> auth_type = None
+        -> ssl_client_ca = None
+        -> ssl_client_key = None
+        -> ssl_client_cert = None
+        -> ssl_client_phrase = None
+    - TLS:
+        -> auth_type = None
+        -> tls_ca_certs = None
+        -> tls_certkey = None
+        -> tls_certkey_phrase = None 
 
   * FIPS Environment for Mongo:  If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.
     - Locate the auth.py file python installed packages on the system in the pymongo package directory.

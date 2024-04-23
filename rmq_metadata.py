@@ -171,15 +171,23 @@
             repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
 
-            Note:  If using SSL connections then set one or more of the
-                following entries.  This will automatically enable SSL
-                connections. Below are the configuration settings for SSL
-                connections.  See configuration file for details on each entry:
+            If Mongo is set to use TLS or SSL connections, then one or more of
+                the following entries will need to be completed to connect
+                using TLS or SSL protocols.
+                Note:  Read the configuration file to determine which entries
+                    will need to be set.
 
-            ssl_client_ca = None
-            ssl_client_key = None
-            ssl_client_cert = None
-            ssl_client_phrase = None
+                SSL:
+                    auth_type = None
+                    ssl_client_ca = None
+                    ssl_client_key = None
+                    ssl_client_cert = None
+                    ssl_client_phrase = None
+                TLS:
+                    auth_type = None
+                    tls_ca_certs = None
+                    tls_certkey = None
+                    tls_certkey_phrase = None
 
             Note:  FIPS Environment for Mongo.
               If operating in a FIPS 104-2 environment, this package will

@@ -41,6 +41,11 @@ repset_hosts = None
 # Format:  db_auth = "AUTHENTICATION_DATABASE"
 db_auth = None
 
+# Authorization Type
+# If not set will connect to Mongo without using TLS or SSL connections.
+# Values: TLS | SSL | None
+auth_type = None
+
 # SSL Configuration settings
 # If not set will connect to Mongo without using SSL connections.
 # File containing the SSL certificate authority.
@@ -55,6 +60,17 @@ ssl_client_cert = None
 # Pass phrase for the SSL Client Key, if one is set.
 # Example:  ssl_client_phrase = "Phrase"
 ssl_client_phrase = None
+
+# TLS Configuration settings
+# File containing the TLS certificate authority.
+# Example: tls_ca_certs = "/opt/mongo/certs/ca.pem"
+tls_ca_certs = None 
+# File containing the TLS Certificate and key.
+# Example:  tls_certkey = "/opt/mongo/certs/client-key.pem"
+tls_certkey = None
+# Pass phrase for the TLS Client Key, if one is set.
+# Example:  tls_certkey_phrase = "Phrase"
+tls_certkey_phrase = None
 
 # Name of Mongo database for data insertion
 dbs = "DATABASE"
