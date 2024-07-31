@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.4] - 2024-07-31
+- Set urllib3 to 1.26.19 for Python 2 for security reasons.
+- Updated rabbitmq-lib to v2.2.4
+
+### Changed
+- main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
+
+
 ## [0.1.3] - 2024-04-23
 - Updated mongo-lib to v4.3.0
 - Added TLS capability for Mongo
