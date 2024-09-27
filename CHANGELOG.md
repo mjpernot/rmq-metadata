@@ -5,8 +5,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.6] - 2024-09-27
-- Updated pymongo==4.1.1 for Python 3
+- Updated pymongo==4.1.1 for Python 3.6
 - Updated simplejson=3.13.2 for Python 3
+- Updated python-lib to v3.0.5
+- Updated mongo-lib to v4.3.2
 
 
 ## [0.1.5] - 2024-08-07
