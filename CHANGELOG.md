@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.7] - 2024-11-12
+- Updated Pillow==8.4.0 for Python 3.
+- Updated PyPDF2==3.0.1 for Python 3.
+- Updated distro==1.9.0 for Python 3.
+- Added idna==2.10 for Python 3.
+- Updated pika==1.3.1 for Python 3.
+- Updated psutil==5.9.4 for Python 3.
+- Updated requests==2.25.0 for Python 3.
+- Updated urllib3==1.26.19 for Python 3.
+- Added six==1.12.0 for Python 3.
+- Added joblib==1.1.1 for Python 3.
+- Added tqdm==4.67.0 for Python 3.
+- Added click==8.1.7 for Python 3.
+- Added typing-extensions==4.12.2 for Python 3.
+- Added regex==2023.8.8 for Python 3.
+- Updated nltk==3.6.7 for Python 3.
+- Added pycryptodome==3.21.0 for Python 3.
+- Added SpeechRecognition==3.8.1 for Python 3.
+- Added sortedcontainers==2.4.0 for Python 3.
+- Added pytz==2024.2 for Python 3.
+- Added docx2txt==0.8 for Python 3.
+- Added argcomplete==1.10.0 for Python 3.
+- Added xlrd==1.2.0 for Python 3.
+- Added tzlocal==1.5.1 for Python 3.
+- Added python-pptx==0.6.18 for Python 3.
+- Added olefile==0.46 for Python 3.
+- Added imapclient==2.1.0 for Python 3.
+- Added EbookLib==0.17.1 for Python 3.
+- Added beautifulsoup4==4.8.0 for Python 3.
+- Added extract-msg==0.23.1 for Python 3.
+- Updated mongo-lib to v4.3.3
+- Updated python-lib to v3.0.8
+- Updated rabbitmq-lib to v2.2.7
+
+### Deprecated
+- Support for Python 2.7
+
+
 ## [0.1.6] - 2024-09-27
 - Updated pymongo==4.1.1 for Python 3.6
 - Updated simplejson=3.13.2 for Python 3
