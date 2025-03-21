@@ -1,7 +1,25 @@
-#!/usr/bin/python
+#!/bin/sh
 # Classification (U)
 
-"""Program:  daemon_rmq_metadata.py
+# Shell commands follow
+# Next line is bilingual: it starts a comment in Python & is a no-op in shell
+""":"
+
+# Find a suitable python interpreter (can adapt for specific needs)
+# NOTE: Ignore this section if passing the -h option to the program.
+#   This code must be included in the program's initial docstring.
+for cmd in python3.12 python3.9 ; do
+   command -v > /dev/null $cmd && exec $cmd $0 "$@"
+done
+
+echo "OMG Python not found, exiting...."
+
+exit 2
+
+# Previous line is bilingual: it ends a comment in Python & is a no-op in shell
+# Shell commands end here
+
+   Program:  daemon_rmq_metadata.py
 
     Description:  Run the rmq_metadata program as a daemon.
 
@@ -20,11 +38,10 @@
     Example:
         daemon_rmq_metadata.py -a start -c rabbitmq -d /path/config -M
 
-"""
+":"""
+# Python program follows
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -40,9 +57,9 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import rmq_metadata
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import rmq_metadata                                 # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -95,7 +112,7 @@ def is_active(pidfile, proc_name):
 
     status = False
 
-    with open(pidfile, "r") as pfile:
+    with open(pidfile, mode="r", encoding="UTF-8") as pfile:
         pid = int(pfile.read().strip())
 
     if pid:
@@ -127,7 +144,7 @@ def main():
 
     opt_val_list = ["-a", "-c", "-d"]
     opt_req_list = ["-a", "-c", "-d"]
-    proc_name = "daemon_rmq_2_sy"
+    proc_name = "daemon_rmq_meta"
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
@@ -142,8 +159,8 @@ def main():
 
             if os.path.isfile(pid_file) and is_active(pid_file, proc_name):
 
-                print("Warning:  Pidfile %s exists and process is running."
-                      % (pid_file))
+                print(f"Warning:  Pidfile {pid_file} exists and process is"
+                      f"running.")
 
             elif os.path.isfile(pid_file):
                 os.remove(pid_file)
@@ -165,9 +182,8 @@ def main():
         sys.exit(0)
 
     else:
-        print("Usage: %s -a start|stop|restart -c module -d directory/config \
-{rmq_metadata options}"
-              % sys.argv[0])
+        print(f"Usage: {sys.argv[0]} -a start|stop|restart -c module -d"
+              f" directory/config <rmq_metadata options>")
         sys.exit(2)
 
 
