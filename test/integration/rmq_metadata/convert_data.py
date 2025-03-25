@@ -1,4 +1,4 @@
-# Classification (U)
+# Classification (U)                                    # pylint:disable=C0302
 
 """Program:  convert_data.py
 
@@ -23,12 +23,12 @@ import email.Parser
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import lib.gen_class as gen_class
-import lib.gen_libs as gen_libs
-import mongo_lib.mongo_class as mongo_class
-import rabbit_lib.rabbitmq_class as rabbitmq_class
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import mongo_lib.mongo_class as mclass      # pylint:disable=E0401,C0413,R0402
+import rabbit_lib.rabbitmq_class as rcls    # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -44,7 +44,8 @@ def parse_email_file(fname):
     """
 
     parser = email.Parser.Parser()
-    msg = parser.parse(open(fname))
+    msg = parser.parse(open(                            # pylint:disable=R1732
+        fname, mode="r", encoding="UTF-8"))
 
     return msg
 
@@ -62,7 +63,7 @@ def publish_msg(rmq, fname):
     status = True
     err_msg = None
 
-    with open(fname, "r") as f_hldr:
+    with open(fname, mode="r", encoding="UTF-8") as f_hldr:
         body = f_hldr.read()
 
     if not rmq.publish_msg(body):
@@ -82,7 +83,7 @@ def create_rq_pub(cfg):
 
     """
 
-    rmq = rabbitmq_class.RabbitMQPub(
+    rmq = rcls.RabbitMQPub(
         cfg.user, cfg.japd, cfg.host, cfg.port,
         exchange_name=cfg.exchange_name, exchange_type=cfg.exchange_type,
         queue_name=cfg.queue_list[0]["queue"],
@@ -95,7 +96,7 @@ def create_rq_pub(cfg):
         return rmq
 
     print("Error:  Failed to connect to RabbitMQ as Publisher.")
-    print("Error Message: %s" % (err_msg))
+    print(f"Error Message: {err_msg}")
 
     return None
 
@@ -131,11 +132,16 @@ def run_program(fname):
             for item in msg.walk():
                 if item.get_content_type() in ["application/pdf"]:
                     filename = os.path.join(tmp_dir, item.get_filename())
-                    open(filename, "wb").write(item.get_payload(decode=True))
+                    open(                               # pylint:disable=R1732
+                        filename, mode="wb",
+                        encoding="UTF-8").write(item.get_payload(decode=True))
                     break
 
     base64_file = filename + ".encoded"
-    base64.encode(open(filename, "rb"), open(base64_file, "wb"))
+    base64.encode(
+        open(filename, mode="rb", encoding="UTF-8"),    # pylint:disable=R1732
+        open(                                           # pylint:disable=R1732
+            base64_file, mode="wb", encoding="UTF-8"))
     cfg = gen_libs.load_module("rabbitmq", config_dir)
     rmq = create_rq_pub(cfg)
 
@@ -143,7 +149,7 @@ def run_program(fname):
         status, err_msg = publish_msg(rmq, base64_file)
 
         if not status:
-            print("Error Message:  %s" % (err_msg))
+            print(f"Error Message:  {err_msg}")
             print("Error:  Publish failed\n")
 
     else:
@@ -225,7 +231,7 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
-        self.rmq = rabbitmq_class.RabbitMQCon(
+        self.rmq = rcls.RabbitMQCon(
             self.cfg.user, self.cfg.japd, self.cfg.host, self.cfg.port,
             exchange_name=self.cfg.exchange_name,
             exchange_type=self.cfg.exchange_type,
@@ -238,10 +244,10 @@ class UnitTest(unittest.TestCase):
         if not connect_status or not self.rmq.channel.is_open:
             self.rmq.drop_connection()
             print("Error:  Unable to connect to RabbitMQ.")
-            print("Message:  %s" % (err_msg))
+            print(f"Message:  {err_msg}")
             self.skipTest("No connection to RabbitMQ.")
 
-        self.mongo = mongo_class.Coll(
+        self.mongo = mclass.Coll(
             self.cfg.mongo.name, self.cfg.mongo.user, self.cfg.mongo.japd,
             self.cfg.mongo.host, self.cfg.mongo.port, db=self.cfg.mongo.dbs,
             coll=self.cfg.mongo.tbl, auth=self.cfg.mongo.auth, use_arg=True,
@@ -261,7 +267,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -279,7 +286,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -306,7 +313,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -324,7 +332,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -354,7 +362,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -375,7 +384,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -402,7 +411,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -422,7 +432,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -449,7 +459,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -468,7 +479,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -495,7 +506,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -514,7 +526,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -541,7 +553,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -559,7 +572,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -586,7 +599,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -605,7 +619,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -632,7 +646,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -651,7 +666,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -678,7 +693,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -696,7 +712,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -724,7 +740,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -743,7 +760,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -771,7 +788,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -790,7 +808,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -818,7 +836,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -837,7 +856,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -864,7 +883,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -882,7 +902,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -909,7 +929,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -927,7 +948,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt == 0:
                 self.rmq.channel.connection.process_data_events(time_limit=1)
                 cnt += 1
@@ -954,7 +975,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        def callback(channel, method, properties, body):
+        def callback(                                   # pylint:disable=W0613
+                channel, method, properties, body):
 
             """Function:  callback
 
@@ -972,7 +994,7 @@ class UnitTest(unittest.TestCase):
         self.rmq.consume(callback, queue=self.cfg.queue_list[0]["queue"])
         cnt = 0
 
-        while self.rmq.channel._consumer_infos:
+        while self.rmq.channel._consumer_infos:         # pylint:disable=W0212
             if cnt > 0:
                 break
 

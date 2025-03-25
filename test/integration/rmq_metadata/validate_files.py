@@ -20,9 +20,9 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import lib.gen_libs as gen_libs
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -69,11 +69,11 @@ class UnitTest(unittest.TestCase):
         self.status = True
         self.msg = ""
         self.err_msg = "/mytmp/fake_lang_module"
-        self.err_msg2 = "lang_module not set to absolute path: ./%s" % \
-                        self.cfg.lang_module
+        self.err_msg2 = \
+            f"lang_module not set to absolute path: ./{self.cfg.lang_module}"
         self.err_msg3 = "/mytmp/fake_jar"
-        self.err_msg4 = "stanford_jar not set to absolute path: ./%s" % \
-                        self.cfg.stanford_jar
+        self.err_msg4 = \
+            f"stanford_jar not set to absolute path: ./{self.cfg.stanford_jar}"
 
     def test_stanford_jar_path_false(self):
 

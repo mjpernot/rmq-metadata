@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Logger(object):
+class Logger():
 
     """Class:  Logger
 
@@ -40,7 +40,8 @@ class Logger(object):
 
     """
 
-    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+    def __init__(                                       # pylint:disable=R0913
+            self, job_name, job_log, log_type, log_format, log_time):
 
         """Method:  __init__
 
@@ -82,7 +83,7 @@ class Logger(object):
         self.data = data
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -162,35 +163,19 @@ class UnitTest(unittest.TestCase):
         self.logger = Logger("Name", "Name", "INFO", "%(asctime)s%(message)s",
                              "%m-%d-%YT%H:%M:%SZ|")
 
-        if sys.version_info < (3, 0):
-            self.rawtext = \
-                u'Intheseunprecedentedtimeswewanttomakesurewecankeepin'
-            self.tokens = [
-                u'2.08', u'%', u'BalanceTransfer22.9', u'%', u'1.74']
-            self.categorized_text = [
-                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
-                (u'SW1W9AX', u'O')]
-            self.final_data = {
-                u'ORGANIZATION': [u'PAYPAL', u'HOMEBASE'],
-                u'LOCATION': [u'London', u'Brighton', u'England', u'Wales'],
-                u'PERSON': [u'John Street', u'SMITH'],
-                'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
-                'datetime': '20200924_082717'}
-
-        else:
-            self.rawtext = \
-                'Intheseunprecedentedtimeswewanttomakesurewecankeepin'
-            self.tokens = [
-                '2.08', '%', 'BalanceTransfer22.9', '%', '1.74']
-            self.categorized_text = [
-                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
-                ('SW1W9AX', 'O')]
-            self.final_data = {
-                'ORGANIZATION': ['PAYPAL', 'HOMEBASE'],
-                'LOCATION': ['London', 'Brighton', 'England', 'Wales'],
-                'PERSON': ['John Street', 'SMITH'],
-                'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
-                'datetime': '20200924_082717'}
+        self.rawtext = \
+            'Intheseunprecedentedtimeswewanttomakesurewecankeepin'
+        self.tokens = [
+            '2.08', '%', 'BalanceTransfer22.9', '%', '1.74']
+        self.categorized_text = [
+            (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+            ('SW1W9AX', 'O')]
+        self.final_data = {
+            'ORGANIZATION': ['PAYPAL', 'HOMEBASE'],
+            'LOCATION': ['London', 'Brighton', 'England', 'Wales'],
+            'PERSON': ['John Street', 'SMITH'],
+            'filename': 'mail2rmq_mail2rmq_file_20200924082706.1493.pdf',
+            'datetime': '20200924_082717'}
 
     @mock.patch("rmq_metadata.summarize_data")
     @mock.patch("rmq_metadata.find_tokens")

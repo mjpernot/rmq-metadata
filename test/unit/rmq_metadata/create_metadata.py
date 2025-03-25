@@ -20,8 +20,8 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -58,31 +58,17 @@ class UnitTest(unittest.TestCase):
         self.data = []
         self.results = {}
 
-        if sys.version_info < (3, 0):
-            self.name = u'United Kingdom'
-            self.metadata2 = {u'LOCATION': [u'London']}
-            self.data2 = [(u'London', u'LOCATION')]
-            self.data3 = [(u'Steve Jones', u'PERSON')]
-            self.data4 = [(self.name, u'LOCATION')]
-            self.data5 = [
-                (u'London', u'LOCATION'), (self.name, u'LOCATION')]
-            self.results2 = {u'LOCATION': [u'London']}
-            self.results3 = {
-                u'PERSON': [u'Steve Jones'], u'LOCATION': [u'London']}
-            self.results4 = {u'LOCATION': [u'London', self.name]}
-
-        else:
-            self.name = 'United Kingdom'
-            self.metadata2 = {'LOCATION': ['London']}
-            self.data2 = [('London', 'LOCATION')]
-            self.data3 = [('Steve Jones', 'PERSON')]
-            self.data4 = [(self.name, 'LOCATION')]
-            self.data5 = [
-                ('London', 'LOCATION'), (self.name, 'LOCATION')]
-            self.results2 = {'LOCATION': ['London']}
-            self.results3 = {
-                'PERSON': ['Steve Jones'], 'LOCATION': ['London']}
-            self.results4 = {'LOCATION': ['London', self.name]}
+        self.name = 'United Kingdom'
+        self.metadata2 = {'LOCATION': ['London']}
+        self.data2 = [('London', 'LOCATION')]
+        self.data3 = [('Steve Jones', 'PERSON')]
+        self.data4 = [(self.name, 'LOCATION')]
+        self.data5 = [
+            ('London', 'LOCATION'), (self.name, 'LOCATION')]
+        self.results2 = {'LOCATION': ['London']}
+        self.results3 = {
+            'PERSON': ['Steve Jones'], 'LOCATION': ['London']}
+        self.results4 = {'LOCATION': ['London', self.name]}
 
     def test_multiple_sets2(self):
 

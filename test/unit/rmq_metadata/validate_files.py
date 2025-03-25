@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -122,8 +122,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.stanford_jar = "./path/Stanford.jar"
-        msg = "stanford_jar not set to absolute path: %s" % \
-              (self.cfg.stanford_jar)
+        msg = f"stanford_jar not set to absolute path: {self.cfg.stanford_jar}"
 
         mock_lib.chk_crt_file.side_effect = [(True, None),
                                              (False, self.err_msg6)]
@@ -145,8 +144,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.stanford_jar = "./path/Stanford.jar"
-        msg = "stanford_jar not set to absolute path: %s" % \
-              (self.cfg.stanford_jar)
+        msg = f"stanford_jar not set to absolute path: {self.cfg.stanford_jar}"
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 
@@ -222,8 +220,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.lang_module = "./path/Stanford_lang_module"
-        msg = "lang_module not set to absolute path: %s" % \
-              (self.cfg.lang_module) + self.err_msg5
+        msg = f"lang_module not set to absolute path: {self.cfg.lang_module}" \
+              + self.err_msg5
 
         mock_lib.chk_crt_file.side_effect = [(False, self.err_msg5),
                                              (True, None)]
@@ -245,8 +243,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg.lang_module = "./path/Stanford_lang_module"
-        msg = "lang_module not set to absolute path: %s" % \
-              (self.cfg.lang_module)
+        msg = f"lang_module not set to absolute path: {self.cfg.lang_module}"
 
         mock_lib.chk_crt_file.side_effect = [(True, None), (True, None)]
 

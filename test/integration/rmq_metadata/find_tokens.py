@@ -22,9 +22,9 @@ from nltk.tokenize import word_tokenize
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import lib.gen_libs as gen_libs
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -57,40 +57,25 @@ class UnitTest(unittest.TestCase):
         config_dir = os.path.join(base_path, "config")
         self.cfg = gen_libs.load_module("rabbitmq", config_dir)
 
-        if sys.version_info < (3, 0):
-            self.categorized_text = [
-                (u'First', u'O'), (u'up', u'O'), (u'in', u'O'),
-                (u'London', u'LOCATION'), (u'will', u'O'), (u'be', u'O'),
-                (u'Riccardo', u'PERSON'), (u'Tisci', u'PERSON'), (u',', u'O'),
-                (u'onetime', u'O'), (u'Givenchy', u'ORGANIZATION'),
-                (u'darling', u'O'), (u',', u'O'), (u'favorite', u'O'),
-                (u'of', u'O'), (u'Kardashian', u'PERSON'), (u'-', u'O'),
-                (u'Jenners', u'O'), (u'everywhere', u'O'), (u',', u'O'),
-                (u'who', u'O'), (u'returns', u'O'), (u'to', u'O'),
-                (u'the', u'O'), (u'catwalk', u'O'), (u'with', u'O'),
-                (u'Burberry', u'O'), (u'after', u'O'), (u'the', u'O'),
-                (u'departure', u'O'), (u'of', u'O'), (u'Chri', u'O'),
-                (u'stopher', u'O'), (u'Bailey', u'PERSON'), (u'.', u'O')]
-
-        else:
-            self.categorized_text = [
-                ('First', 'O'), ('up', 'O'), ('in', 'O'),
-                ('London', 'LOCATION'), ('will', 'O'), ('be', 'O'),
-                ('Riccardo', 'PERSON'), ('Tisci', 'PERSON'), (',', 'O'),
-                ('onetime', 'O'), ('Givenchy', 'ORGANIZATION'),
-                ('darling', 'O'), (',', 'O'), ('favorite', 'O'),
-                ('of', 'O'), ('Kardashian', 'PERSON'), ('-', 'O'),
-                ('Jenners', 'O'), ('everywhere', 'O'), (',', 'O'),
-                ('who', 'O'), ('returns', 'O'), ('to', 'O'), ('the', 'O'),
-                ('catwalk', 'O'), ('with', 'O'), ('Burberry', 'O'),
-                ('after', 'O'), ('the', 'O'), ('departure', 'O'),
-                ('of', 'O'), ('Chri', 'O'), ('stopher', 'O'),
-                ('Bailey', 'PERSON'), ('.', 'O')]
+        self.categorized_text = [
+            ('First', 'O'), ('up', 'O'), ('in', 'O'),
+            ('London', 'LOCATION'), ('will', 'O'), ('be', 'O'),
+            ('Riccardo', 'PERSON'), ('Tisci', 'PERSON'), (',', 'O'),
+            ('onetime', 'O'), ('Givenchy', 'ORGANIZATION'),
+            ('darling', 'O'), (',', 'O'), ('favorite', 'O'),
+            ('of', 'O'), ('Kardashian', 'PERSON'), ('-', 'O'),
+            ('Jenners', 'O'), ('everywhere', 'O'), (',', 'O'),
+            ('who', 'O'), ('returns', 'O'), ('to', 'O'), ('the', 'O'),
+            ('catwalk', 'O'), ('with', 'O'), ('Burberry', 'O'),
+            ('after', 'O'), ('the', 'O'), ('departure', 'O'),
+            ('of', 'O'), ('Chri', 'O'), ('stopher', 'O'),
+            ('Bailey', 'PERSON'), ('.', 'O')]
 
         # Read in PDF file.
         pdf_dir = os.path.join(base_path, "testfiles")
         self.filename = os.path.join(pdf_dir, "TestPDF.pdf")
-        pdf = open(self.filename, "rb")
+        pdf = open(                                     # pylint:disable=R1732
+            self.filename, mode="rb", encoding="UTF-8")
         pdfreader = PyPDF2.PdfFileReader(pdf)
         text = ""
         count = 0

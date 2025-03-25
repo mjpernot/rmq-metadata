@@ -1,7 +1,25 @@
-#!/usr/bin/python
+#!/bin/sh
 # Classification (U)
 
-"""Program:  rmq_metadata.py
+# Shell commands follow
+# Next line is bilingual: it starts a comment in Python & is a no-op in shell
+""":"
+
+# Find a suitable python interpreter (can adapt for specific needs)
+# NOTE: Ignore this section if passing the -h option to the program.
+#   This code must be included in the program's initial docstring.
+for cmd in python3.12 python3.9 ; do
+   command -v > /dev/null $cmd && exec $cmd $0 "$@"
+done
+
+echo "OMG Python not found, exiting...."
+
+exit 2
+
+# Previous line is bilingual: it ends a comment in Python & is a no-op in shell
+# Shell commands end here
+
+   Program:  rmq_metadata.py
 
     Description:  Processes PDFs from a RabbitMQ.  The program will offload a
         PDF file from a RabbitMQ, decode the PDF, extract meta-data from the
@@ -222,11 +240,10 @@
         Service:
             service rmq_metadata start
 
-"""
+":"""
+# Python program follows
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -258,16 +275,15 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import rabbit_lib.rabbitmq_class as rabbitmq_class
-    import mongo_lib.mongo_libs as mongo_libs
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import rabbit_lib.rabbitmq_class as rabbitmq_class  # pylint:disable=R0402
+    import mongo_lib.mongo_libs as mongo_libs           # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
 
 # Global Variables
-DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
 
 
 def help_message():
@@ -384,13 +400,13 @@ def validate_files(cfg, status_flag, err_msg):
 
     # Check on Stanford NLP language module file.
     if not os.path.isabs(cfg.lang_module):
-        msg = "lang_module not set to absolute path: %s" % (cfg.lang_module)
+        msg = f"lang_module not set to absolute path: {cfg.lang_module}"
         err_msg = err_msg + msg
         status_flag = False
 
     else:
-        status, msg = gen_libs.chk_crt_file(cfg.lang_module, read=True,
-                                            no_print=True)
+        status, msg = gen_libs.chk_crt_file(
+            cfg.lang_module, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -398,13 +414,13 @@ def validate_files(cfg, status_flag, err_msg):
 
     # Check on Stanford NLP jar file.
     if not os.path.isabs(cfg.stanford_jar):
-        msg = "stanford_jar not set to absolute path: %s" % (cfg.stanford_jar)
+        msg = f"stanford_jar not set to absolute path: {cfg.stanford_jar}"
         err_msg = err_msg + msg
         status_flag = False
 
     else:
-        status, msg = gen_libs.chk_crt_file(cfg.stanford_jar, read=True,
-                                            no_print=True)
+        status, msg = gen_libs.chk_crt_file(
+            cfg.stanford_jar, read=True, no_print=True)
 
         if not status:
             err_msg = err_msg + msg
@@ -413,7 +429,8 @@ def validate_files(cfg, status_flag, err_msg):
     return status_flag, err_msg
 
 
-def non_proc_msg(rmq, log, cfg, data, subj, r_key):
+def non_proc_msg(                               # pylint:disable=R0913,R0914
+        rmq, log, cfg, data, subj, r_key):
 
     """Function:  non_proc_msg
 
@@ -429,25 +446,24 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
 
     """
 
-    global DTG_FORMAT
-
     log.log_info(
-        "non_proc_msg:  Processing failed message: Routing Key: %s" % (r_key))
+        f"non_proc_msg:  Processing failed message: Routing Key: {r_key}")
     frm_line = getpass.getuser() + "@" + socket.gethostname()
     rdtg = datetime.datetime.now()
     msecs = str(int(rdtg.microsecond / 100))
-    dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + "." + msecs
+    dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + "." + msecs
     f_name = rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
     subj = "rmq_metadata: " + subj
-    line1 = "RabbitMQ message was not processed due to: %s" % (subj)
-    line2 = "Exchange: %s, Routing Key: %s" % (rmq.exchange, r_key)
-    line3 = "Check log file: %s near timestamp: %s for more information." \
-            % (cfg.log_file, dtg)
-    line4 = "Body of message saved to: %s" % (f_path)
+    line1 = f"RabbitMQ message was not processed due to: {subj}"
+    line2 = f"Exchange: {rmq.exchange}, Routing Key: {r_key}"
+    line3 = \
+        f"Check log file: {cfg.log_file} near timestamp: {dtg} for more" \
+        f" information."
+    line4 = f"Body of message saved to: {f_path}"
 
     if cfg.to_line:
-        log.log_info("Sending email to: %s..." % (cfg.to_line))
+        log.log_info(f"Sending email to: {cfg.to_line}")
         email = gen_class.Mail(cfg.to_line, subj, frm_line)
         email.add_2_msg(line1)
         email.add_2_msg(line2)
@@ -479,12 +495,10 @@ def process_msg(rmq, log, cfg, method, body):
 
     """
 
-    global DTG_FORMAT
-
     r_key = method.routing_key
     queue = None
     log.log_info(
-        "process_msg:  Processing message body from Routing Key: %s" % (r_key))
+        f"process_msg:  Processing message body from Routing Key: {r_key}")
 
     for item in cfg.queue_list:
 
@@ -494,13 +508,12 @@ def process_msg(rmq, log, cfg, method, body):
             if queue["archive"] and cfg.archive_dir:
                 rdtg = datetime.datetime.now()
                 msecs = str(int(rdtg.microsecond / 100))
-                dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + \
+                dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + \
                     "." + msecs
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
                     dtg + ".body"
                 f_path = os.path.join(cfg.archive_dir, f_name)
-                log.log_info(
-                    "process_msg:  Archiving message to: %s" % (f_path))
+                log.log_info(f"process_msg:  Archiving message to: {f_path}")
                 gen_libs.write_file(f_path, data=body, mode="w")
 
             break
@@ -512,7 +525,8 @@ def process_msg(rmq, log, cfg, method, body):
         non_proc_msg(rmq, log, cfg, body, "No queue detected", r_key)
 
 
-def convert_data(rmq, log, cfg, queue, body, r_key):
+def convert_data(                               # pylint:disable=R0913,R0914
+        rmq, log, cfg, queue, body, r_key):
 
     """Function:  convert_data
 
@@ -531,7 +545,7 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
     prename = ""
     postname = ""
     ext = ""
-    log.log_info("_convert_data:  Converting data in message body.")
+    log.log_info("convert_data:  Converting data in message body.")
     rdtg = datetime.datetime.now()
     msecs = str(int(rdtg.microsecond / 100))
     dtg = datetime.datetime.strftime(rdtg, "%Y%m%d%H%M%S") + "." + msecs
@@ -550,31 +564,33 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
     f_filename = prename + rmq.exchange + "_" + r_key + "_" + dtg + \
         postname + ext
     f_name = os.path.join(cfg.tmp_dir, f_filename)
-    log.log_info("Starting processing of: %s" % (f_name))
+    log.log_info(f"Starting processing of: {f_name}")
     gen_libs.write_file(t_file, data=body, mode="w")
 
     if queue["stype"] == "encoded":
-        log.log_info("_convert_data:  Decoding data in message body.")
-        base64.decode(io.open(t_file, "rb"), io.open(f_name, "wb"))
+        log.log_info("convert_data:  Decoding data in message body.")
+        base64.decode(
+            io.open(t_file, "rb"),                      # pylint:disable=R1732
+            io.open(f_name, "wb"))                      # pylint:disable=R1732
         os.remove(t_file)
 
     else:
-        log.log_info("_convert_data:  No encoding setting detected.")
+        log.log_info("convert_data:  No encoding setting detected.")
         gen_libs.rename_file(t_filename, f_filename, cfg.tmp_dir)
 
     status = process_message(queue, cfg, f_name, log)
 
     if status:
-        log.log_info("Finished processing of: %s" % (f_filename))
+        log.log_info(f"Finished processing of: {f_filename}")
 
     else:
-        log.log_err("Insert or extractions failed on: %s" % (f_filename))
+        log.log_err(f"Insert or extractions failed on: {f_filename}")
         log.log_info("Body of message being saved to a file - see below")
         non_proc_msg(rmq, log, cfg, body,
                      "All extractions or Mongo insertion failure", r_key)
         os.remove(f_name)
         log.log_info("Cleanup of temporary files completed.")
-        log.log_info("Finished processing of: %s" % (f_filename))
+        log.log_info(f"Finished processing of: {f_filename}")
 
 
 def read_pdf(filename, log):
@@ -593,7 +609,7 @@ def read_pdf(filename, log):
 
     text = ""
     status = True
-    pdf = io.open(filename, "rb")
+    pdf = io.open(filename, "rb")                       # pylint:disable=R1732
     pdfreader = PyPDF2.PdfFileReader(pdf)
 
     if pdfreader.isEncrypted:
@@ -658,7 +674,7 @@ def summarize_data(categorized_text, token_types):
         current_type, data_list, tmp_data = sort_data(
             item, current_type, data_list, tmp_data, token_types)
 
-    else:
+    else:                                               # pylint:disable=W0120
         if tmp_data:
             data_list = merge_data(data_list, tmp_data)
 
@@ -836,7 +852,7 @@ def extract_pdf(f_name, log, char_encoding=None):
 
             else:
                 log.log_err("extract_pdf:  Error detected.")
-                log.log_err("Error Message:  %s" % msg)
+                log.log_err(f"Error Message:  {msg}")
 
     else:
         try:
@@ -851,7 +867,7 @@ def extract_pdf(f_name, log, char_encoding=None):
 
             else:
                 log.log_err("extract_pdf:  Error detected.")
-                log.log_err("Error Message:  %s" % msg)
+                log.log_err(f"Error Message:  {msg}")
 
     return status, text
 
@@ -887,8 +903,8 @@ def get_textract_data(f_name, cfg, log):
 
         if data["confidence"] == 1.0:
             char_encoding = data["encoding"]
-            log.log_info("get_textract_data:  Detected character encode: %s" %
-                         (char_encoding))
+            log.log_info(f"get_textract_data:  Detected character encode:"
+                         f" {char_encoding}")
 
         _, rawtext = extract_pdf(f_name, log, char_encoding)
         log.log_info("get_textract_data:  Running word_tokenizer.")
@@ -902,9 +918,8 @@ def get_textract_data(f_name, cfg, log):
             if str(msg).find(suberrstr) >= 0 \
                and msg.args[0] in cfg.textract_codes:
                 char_encoding = msg.args[0]
-                log.log_info(
-                    "get_textract_data:  New encoding code detected: %s" %
-                    (char_encoding))
+                log.log_info(f"get_textract_data:  New encoding code detected:"
+                             f" {char_encoding}")
                 _, rawtext = extract_pdf(f_name, log, char_encoding)
                 log.log_info("get_textract_data:  Re-running word_tokenizer.")
                 tokens = word_tokenize(rawtext)
@@ -962,7 +977,7 @@ def pdf_to_string(f_name, log):
             status = False
             text = ""
 
-    data = (out_string.getvalue())
+    data = out_string.getvalue()
     text = data.replace(".", "")
 
     return status, text
@@ -1018,11 +1033,10 @@ def process_message(queue, cfg, f_name, log):
 
     """
 
-    global DTG_FORMAT
-
     status = True
     log.log_info("process_message:  Extracting and processing metadata.")
-    dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
+    dtg = datetime.datetime.strftime(
+        datetime.datetime.now(), "%Y-%m-%d_%H:%M:%S")
     metadata = {"FileName": os.path.basename(f_name),
                 "Directory": queue["directory"],
                 "DateTime": dtg}
@@ -1055,12 +1069,12 @@ def process_message(queue, cfg, f_name, log):
 
         if not mongo_stat[0]:
             log.log_err("process_message: Insert of data into MongoDB failed.")
-            log.log_err("Mongo error message:  %s" % (mongo_stat[1]))
+            log.log_err(f"Mongo error message:  {mongo_stat[1]}")
             status = False
 
         else:
             log.log_info(
-                "process_message:  Moving PDF to: %s" % (queue["directory"]))
+                f'process_message:  Moving PDF to: {queue["directory"]}')
             gen_libs.mv_file2(
                 f_name, queue["directory"], os.path.basename(f_name))
 
@@ -1083,7 +1097,7 @@ def monitor_queue(cfg, log):
 
     """
 
-    def callback(channel, method, properties, body):
+    def callback(channel, method, properties, body):    # pylint:disable=W0613
 
         """Function:  callback
 
@@ -1097,11 +1111,11 @@ def monitor_queue(cfg, log):
 
         """
 
-        log.log_info("callback:  Processing message with Routing Key: %s" %
-                     (method.routing_key))
+        log.log_info(f"callback:  Processing message with Routing Key:"
+                     f" {method.routing_key}")
         process_msg(rmq, log, cfg, method, body)
         log.log_info(
-            "Deleting message with Routing Key: %s" % (method.routing_key))
+            f"Deleting message with Routing Key: {method.routing_key}")
         rmq.ack(method.delivery_tag)
 
     log.log_info("monitor_queue:  Initialize monitoring of queues...")
@@ -1114,16 +1128,16 @@ def monitor_queue(cfg, log):
             x_durable=cfg.x_durable, q_durable=cfg.q_durable,
             auto_delete=cfg.auto_delete)
 
-        log.log_info("Initializing:  Queue: %s, Routing Key: %s" %
-                     (queue["queue"], queue["routing_key"]))
+        log.log_info(f'Initializing:  Queue: {queue["queue"]}, Routing Key:'
+                     f' {queue["routing_key"]}')
         connect_status, err_msg = rmq.create_connection()
 
         if connect_status and rmq.channel.is_open:
-            log.log_info("Initialized RabbitMQ node: %s" % (queue["queue"]))
+            log.log_info(f'Initialized RabbitMQ node: {queue["queue"]}')
 
         else:
-            log.log_err("Initialization failed RabbuitMQ: %s -> Msg: %s" %
-                        (queue["queue"], err_msg))
+            log.log_err(f'Initialization failed RabbuitMQ: {queue["queue"]}'
+                        f' -> Msg: {err_msg}')
 
         rmq.drop_connection()
 
@@ -1138,7 +1152,7 @@ def monitor_queue(cfg, log):
         x_durable=cfg.x_durable, q_durable=cfg.q_durable,
         auto_delete=cfg.auto_delete)
 
-    log.log_info("Connection info: %s->%s" % (cfg.host, cfg.exchange_name))
+    log.log_info(f"Connection info: {cfg.host}->{cfg.exchange_name}")
     connect_status, err_msg = rmq.create_connection()
 
     if connect_status and rmq.channel.is_open:
@@ -1146,14 +1160,14 @@ def monitor_queue(cfg, log):
 
         # Setup the RabbitMQ Consume callback on multiple queues.
         for queue in cfg.queue_list:
-            log.log_info("Monitoring RabbitMQ Queue: %s, Routing Key: %s" %
-                         (queue["queue"], queue["routing_key"]))
+            log.log_info(f'Monitoring RabbitMQ Queue: {queue["queue"]},'
+                         f' Routing Key: {queue["routing_key"]}')
             rmq.consume(callback, queue=queue["queue"])
 
         rmq.start_loop()
 
     else:
-        log.log_err("Failed to connnect to RabbuitMQ -> Msg: %s" % (err_msg))
+        log.log_err(f"Failed to connnect to RabbuitMQ -> Msg: {err_msg}")
 
 
 def run_program(args, func_dict, **kwargs):
@@ -1179,17 +1193,17 @@ def run_program(args, func_dict, **kwargs):
             cfg.log_file, cfg.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
         str_val = "=" * 80
-        log.log_info("%s:%s Initialized" % (cfg.host, cfg.exchange_name))
-        log.log_info("%s" % (str_val))
-        log.log_info("Exchange Name:  %s" % (cfg.exchange_name))
+        log.log_info(f"{cfg.host}:{cfg.exchange_name} Initialized")
+        log.log_info(f"{str_val}")
+        log.log_info(f"Exchange Name:  {cfg.exchange_name}")
         log.log_info("Queue Configuration:")
 
         for queue in cfg.queue_list:
-            log.log_info("\tQueue Name:  %s, Routing Key: %s" %
-                         (queue["queue"], queue["routing_key"]))
+            log.log_info(f'\tQueue Name:  {queue["queue"]}, Routing Key:'
+                         f' {queue["routing_key"]}')
 
-        log.log_info("To Email:  %s" % (cfg.to_line))
-        log.log_info("%s" % (str_val))
+        log.log_info(f"To Email:  {cfg.to_line}")
+        log.log_info(f"{str_val}")
 
         try:
             flavor_id = args.get_val("-y", def_val=cfg.exchange_name)
@@ -1202,7 +1216,7 @@ def run_program(args, func_dict, **kwargs):
             del prog_lock
 
         except gen_class.SingleInstanceException:
-            log.log_warn("rmq_metadata lock in place for: %s" % (flavor_id))
+            log.log_warn(f"rmq_metadata lock in place for: {flavor_id}")
 
         log.log_close()
 
