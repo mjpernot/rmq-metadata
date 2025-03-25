@@ -21,11 +21,11 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import lib.gen_class as gen_class
-import lib.gen_libs as gen_libs
-import mongo_lib.mongo_class as mongo_class
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import mongo_lib.mongo_class as mclass      # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -75,7 +75,7 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
-        self.mongo = mongo_class.Coll(
+        self.mongo = mclass.Coll(
             self.cfg.mongo.name, self.cfg.mongo.user, self.cfg.mongo.japd,
             self.cfg.mongo.host, self.cfg.mongo.port, db=self.cfg.mongo.dbs,
             coll=self.cfg.mongo.tbl, auth=self.cfg.mongo.auth, use_arg=True,

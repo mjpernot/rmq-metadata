@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.8] - 2025-03-21
+Breaking changes
+
+- Removed support for Python 2.7.
+- Add pre-header check on allowable Python versions to run.
+- Updated pymongo==4.10.1
+- Updated urllib3==1.26.20
+- Added certifi==2024.12.14
+- Updated rabbitmq-lib to v2.3.0
+- Updated mongo-lib to v4.5.1
+- Updated python-lib to v4.0.0
+
+### Changed
+- Refactored open file command and added "encoding" argument to open() command.
+- Replaced dict() with {} and list() with [].
+- Converted strings to f-strings.
+- Documentation changes.
+
+
 ## [0.1.7] - 2024-11-12
 - Updated Pillow==8.4.0 for Python 3.
 - Updated PyPDF2==3.0.1 for Python 3.

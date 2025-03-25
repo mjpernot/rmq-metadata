@@ -14,7 +14,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
 
 # Standard
 import os
@@ -24,8 +23,8 @@ import email.Parser
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
-import rabbit_lib.rabbitmq_class as rabbitmq_class
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import rabbit_lib.rabbitmq_class as rcls    # pylint:disable=E0401,C0413,R0402
 
 
 def parse_email_file(fname):
@@ -39,7 +38,8 @@ def parse_email_file(fname):
     """
 
     parser = email.Parser.Parser()
-    msg = parser.parse(open(fname))
+    msg = parser.parse(open(                            # pylint:disable=R1732
+        fname, mode="r", encoding="UTF-8"))
 
     return msg
 
@@ -57,7 +57,8 @@ def publish_msg(rmq, fname):
     status = True
     err_msg = None
 
-    with open(fname, "r") as f_hldr:
+    with open(                                          # pylint:disable=R1732
+            fname, mode="r", encoding="UTF-8") as f_hldr:
         body = f_hldr.read()
 
     if not rmq.publish_msg(body):
@@ -77,7 +78,7 @@ def create_rq_pub(cfg):
 
     """
 
-    rmq = rabbitmq_class.RabbitMQPub(
+    rmq = rcls.RabbitMQPub(
         cfg.user, cfg.japd, cfg.host, cfg.port,
         exchange_name=cfg.exchange_name, exchange_type=cfg.exchange_type,
         queue_name=cfg.queue_list[0]["queue"],
@@ -90,7 +91,7 @@ def create_rq_pub(cfg):
         return rmq
 
     print("Error:  Failed to connect to RabbitMQ as Publisher.")
-    print("Error Message: %s" % (err_msg))
+    print(f"Error Message: {err_msg}")
 
     return None
 
@@ -126,11 +127,16 @@ def run_program(fname):
             for item in msg.walk():
                 if item.get_content_type() in ["application/pdf"]:
                     filename = os.path.join(tmp_dir, item.get_filename())
-                    open(filename, "wb").write(item.get_payload(decode=True))
+                    open(                               # pylint:disable=R1732
+                        filename, mode="wb",
+                        encoding="UTF-8").write(item.get_payload(decode=True))
                     break
 
     base64_file = filename + ".encoded"
-    base64.encode(open(filename, "rb"), open(base64_file, "wb"))
+    base64.encode(
+        open(filename, mode="rb", encoding="UTF-8"),    # pylint:disable=R1732
+        open(                                           # pylint:disable=R1732
+            base64_file, mode="wb", encoding="UTF-8"))
     cfg = gen_libs.load_module("rabbitmq", config_dir)
     rmq = create_rq_pub(cfg)
 
@@ -138,7 +144,7 @@ def run_program(fname):
         status, err_msg = publish_msg(rmq, base64_file)
 
         if not status:
-            print("Error Message:  %s" % (err_msg))
+            print(f"Error Message:  {err_msg}")
             print("Error:  Publish failed\n")
 
     else:

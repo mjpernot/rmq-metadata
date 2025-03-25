@@ -20,10 +20,10 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import lib.gen_class as gen_class
-import lib.gen_libs as gen_libs
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -68,17 +68,10 @@ class UnitTest(unittest.TestCase):
             self.log_file, self.log_file, "INFO",
             "%(asctime)s %(levelname)s %(message)s", "%Y-%m-%dT%H:%M:%SZ")
 
-        if sys.version_info < (3, 0):
-            self.final_data = [
-                (u'London', u'LOCATION'), (u'Riccardo Tisci', u'PERSON'),
-                (u'Givenchy', u'ORGANIZATION'), (u'Kardashian', u'PERSON'),
-                (u'Bailey', u'PERSON')]
-
-        else:
-            self.final_data = [
-                ('London', 'LOCATION'), ('Riccardo Tisci', 'PERSON'),
-                ('Givenchy', 'ORGANIZATION'), ('Kardashian', 'PERSON'),
-                ('Bailey', 'PERSON')]
+        self.final_data = [
+            ('London', 'LOCATION'), ('Riccardo Tisci', 'PERSON'),
+            ('Givenchy', 'ORGANIZATION'), ('Kardashian', 'PERSON'),
+            ('Bailey', 'PERSON')]
 
     def test_extract_failed(self):
 

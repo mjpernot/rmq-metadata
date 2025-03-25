@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Logger(object):
+class Logger():
 
     """Class:  Logger
 
@@ -41,7 +41,8 @@ class Logger(object):
 
     """
 
-    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+    def __init__(                                       # pylint:disable=R0913
+            self, job_name, job_log, log_type, log_format, log_time):
 
         """Method:  __init__
 
@@ -96,7 +97,7 @@ class Logger(object):
         self.data = data
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -210,8 +211,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.chardet.detect")
     @mock.patch("rmq_metadata.extract_pdf")
-    def test_extract_successful(self, mock_extract, mock_chardet, mock_token,
-                                mock_find, mock_sum):
+    def test_extract_successful(                        # pylint:disable=R0913
+            self, mock_extract, mock_chardet, mock_token, mock_find, mock_sum):
 
         """Function:  test_extract_successful
 
@@ -260,8 +261,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.chardet.detect")
     @mock.patch("rmq_metadata.extract_pdf")
-    def test_categorized_text(self, mock_extract, mock_chardet, mock_token,
-                              mock_find, mock_sum):
+    def test_categorized_text(                          # pylint:disable=R0913
+            self, mock_extract, mock_chardet, mock_token, mock_find, mock_sum):
 
         """Function:  test_categorized_text
 
@@ -286,8 +287,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.chardet.detect")
     @mock.patch("rmq_metadata.extract_pdf")
-    def test_confidence2(self, mock_extract, mock_chardet, mock_token,
-                         mock_find, mock_sum):
+    def test_confidence2(                               # pylint:disable=R0913
+            self, mock_extract, mock_chardet, mock_token, mock_find, mock_sum):
 
         """Function:  test_confidence2
 
@@ -312,8 +313,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.chardet.detect")
     @mock.patch("rmq_metadata.extract_pdf")
-    def test_confidence(self, mock_extract, mock_chardet, mock_token,
-                        mock_find, mock_sum):
+    def test_confidence(                                # pylint:disable=R0913
+            self, mock_extract, mock_chardet, mock_token, mock_find, mock_sum):
 
         """Function:  test_confidence
 
@@ -338,8 +339,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("rmq_metadata.word_tokenize")
     @mock.patch("rmq_metadata.chardet.detect")
     @mock.patch("rmq_metadata.extract_pdf")
-    def test_get_textract_data(self, mock_extract, mock_chardet, mock_token,
-                               mock_find, mock_sum):
+    def test_get_textract_data(                         # pylint:disable=R0913
+            self, mock_extract, mock_chardet, mock_token, mock_find, mock_sum):
 
         """Function:  test_get_textract_data
 

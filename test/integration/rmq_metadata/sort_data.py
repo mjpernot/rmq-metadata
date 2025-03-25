@@ -20,8 +20,8 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -54,29 +54,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if sys.version_info < (3, 0):
-            self.item = (u'Text', u'O')
-            self.item2 = (u'London', u'LOCATION')
-            self.item3 = (u'SW1W9AX', u'LOCATION')
-            self.item4 = (u'Smith', u'PERSON')
-            self.tmp_data2 = [(u'London', u'LOCATION')]
-            self.result_list2 = [(u'London', u'LOCATION')]
-            self.result_tmp2 = [(u'London', u'LOCATION')]
-            self.result_tmp3 = [
-                (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
-            self.result_tmp4 = [(u'Smith', u'PERSON')]
-
-        else:
-            self.item = ('Text', 'O')
-            self.item2 = ('London', 'LOCATION')
-            self.item3 = ('SW1W9AX', 'LOCATION')
-            self.item4 = ('Smith', 'PERSON')
-            self.tmp_data2 = [('London', 'LOCATION')]
-            self.result_list2 = [('London', 'LOCATION')]
-            self.result_tmp2 = [('London', 'LOCATION')]
-            self.result_tmp3 = [
-                ('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
-            self.result_tmp4 = [('Smith', 'PERSON')]
+        self.item = ('Text', 'O')
+        self.item2 = ('London', 'LOCATION')
+        self.item3 = ('SW1W9AX', 'LOCATION')
+        self.item4 = ('Smith', 'PERSON')
+        self.tmp_data2 = [('London', 'LOCATION')]
+        self.result_list2 = [('London', 'LOCATION')]
+        self.result_tmp2 = [('London', 'LOCATION')]
+        self.result_tmp3 = [('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
+        self.result_tmp4 = [('Smith', 'PERSON')]
 
         self.current_type = ""
         self.current_type2 = "O"
