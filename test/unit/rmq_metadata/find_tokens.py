@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class StanfordNERTagger(object):
+class StanfordNERTagger():                              # pylint:disable=R0903
 
     """Class:  StanfordNERTagger
 
@@ -54,15 +54,8 @@ class StanfordNERTagger(object):
         self.encoding = encoding
         self.tokenized_text = None
 
-        if sys.version_info < (3, 0):
-            self.categorized_text = [
-                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
-                (u'SW1W9AX', u'O')]
-
-        else:
-            self.categorized_text = [
-                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
-                ('SW1W9AX', 'O')]
+        self.categorized_text = [
+            (',', 'O'), ('London', 'LOCATION'), (',', 'O'), ('SW1W9AX', 'O')]
 
     def tag(self, tokenized_text):
 
@@ -79,7 +72,7 @@ class StanfordNERTagger(object):
         return self.categorized_text
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -151,19 +144,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        if sys.version_info < (3, 0):
-            self.tokenized_text = [
-                u'2.08', u'%', u'BalanceTransfer22.9', u'%', u'1.74']
-            self.categorized_text = [
-                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
-                (u'SW1W9AX', u'O')]
-
-        else:
-            self.tokenized_text = [
-                '2.08', '%', 'BalanceTransfer22.9', '%', '1.74']
-            self.categorized_text = [
-                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
-                ('SW1W9AX', 'O')]
+        self.tokenized_text = [
+            '2.08', '%', 'BalanceTransfer22.9', '%', '1.74']
+        self.categorized_text = [
+            (',', 'O'), ('London', 'LOCATION'), (',', 'O'), ('SW1W9AX', 'O')]
 
         self.cfg = CfgTest()
         self.nlp = StanfordNERTagger(

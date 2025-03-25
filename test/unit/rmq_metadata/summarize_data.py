@@ -21,8 +21,8 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -53,39 +53,19 @@ class UnitTest(unittest.TestCase):
         self.token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
         self.loop1 = ("O", [], [])
 
-        if sys.version_info < (3, 0):
-            self.categorized_text = [
-                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
-                (u'SW1W9AX', u'O')]
-            self.categorized_text2 = [
-                (u',', u'O'), (u'London', u'LOCATION'), (u',', u'O'),
-                (u'SW1W9AX', u'LOCATION')]
-            self.loop2 = ("LOCATION", [], [(u'London', u'LOCATION')])
-            self.loop3 = ("O", [(u'London', u'LOCATION')], [])
-            self.loop4 = ("O", [(u'London', u'LOCATION')], [])
-            self.loop4a = (
-                "O", [(u'London', u'LOCATION')], [(u'SW1W9AX', u'LOCATION')])
-            self.data_list = [
-                (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
-            self.results = [(u'London', u'LOCATION')]
-            self.results2 = [
-                (u'London', u'LOCATION'), (u'SW1W9AX', u'LOCATION')]
-
-        else:
-            self.categorized_text = [
-                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
-                ('SW1W9AX', 'O')]
-            self.categorized_text2 = [
-                (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
-                ('SW1W9AX', 'LOCATION')]
-            self.loop2 = ("LOCATION", [], [('London', 'LOCATION')])
-            self.loop3 = ("O", [('London', 'LOCATION')], [])
-            self.loop4 = ("O", [('London', 'LOCATION')], [])
-            self.loop4a = (
-                "O", [('London', 'LOCATION')], [('SW1W9AX', 'LOCATION')])
-            self.data_list = [('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
-            self.results = [('London', 'LOCATION')]
-            self.results2 = [('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
+        self.categorized_text = [
+            (',', 'O'), ('London', 'LOCATION'), (',', 'O'), ('SW1W9AX', 'O')]
+        self.categorized_text2 = [
+            (',', 'O'), ('London', 'LOCATION'), (',', 'O'),
+            ('SW1W9AX', 'LOCATION')]
+        self.loop2 = ("LOCATION", [], [('London', 'LOCATION')])
+        self.loop3 = ("O", [('London', 'LOCATION')], [])
+        self.loop4 = ("O", [('London', 'LOCATION')], [])
+        self.loop4a = (
+            "O", [('London', 'LOCATION')], [('SW1W9AX', 'LOCATION')])
+        self.data_list = [('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
+        self.results = [('London', 'LOCATION')]
+        self.results2 = [('London', 'LOCATION'), ('SW1W9AX', 'LOCATION')]
 
     @mock.patch("rmq_metadata.merge_data")
     @mock.patch("rmq_metadata.sort_data")

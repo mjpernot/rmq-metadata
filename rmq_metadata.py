@@ -284,7 +284,6 @@ except (ValueError, ImportError) as err:
 __version__ = version.__version__
 
 # Global Variables
-DTG_FORMAT = "%Y-%m-%d_%H:%M:%S"
 
 
 def help_message():
@@ -430,7 +429,8 @@ def validate_files(cfg, status_flag, err_msg):
     return status_flag, err_msg
 
 
-def non_proc_msg(rmq, log, cfg, data, subj, r_key):
+def non_proc_msg(                               # pylint:disable=R0913,R0914
+        rmq, log, cfg, data, subj, r_key):
 
     """Function:  non_proc_msg
 
@@ -446,21 +446,19 @@ def non_proc_msg(rmq, log, cfg, data, subj, r_key):
 
     """
 
-    global DTG_FORMAT
-
     log.log_info(
         f"non_proc_msg:  Processing failed message: Routing Key: {r_key}")
     frm_line = getpass.getuser() + "@" + socket.gethostname()
     rdtg = datetime.datetime.now()
     msecs = str(int(rdtg.microsecond / 100))
-    dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + "." + msecs
+    dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + "." + msecs
     f_name = rmq.exchange + "_" + r_key + "_" + dtg + ".txt"
     f_path = os.path.join(cfg.message_dir, f_name)
     subj = "rmq_metadata: " + subj
     line1 = f"RabbitMQ message was not processed due to: {subj}"
     line2 = f"Exchange: {rmq.exchange}, Routing Key: {r_key}"
     line3 = \
-        f"Check log file: {cfg.log_file} near timestamp: {dtg} for more"
+        f"Check log file: {cfg.log_file} near timestamp: {dtg} for more" \
         f" information."
     line4 = f"Body of message saved to: {f_path}"
 
@@ -497,8 +495,6 @@ def process_msg(rmq, log, cfg, method, body):
 
     """
 
-    global DTG_FORMAT
-
     r_key = method.routing_key
     queue = None
     log.log_info(
@@ -512,7 +508,7 @@ def process_msg(rmq, log, cfg, method, body):
             if queue["archive"] and cfg.archive_dir:
                 rdtg = datetime.datetime.now()
                 msecs = str(int(rdtg.microsecond / 100))
-                dtg = datetime.datetime.strftime(rdtg, DTG_FORMAT) + \
+                dtg = datetime.datetime.strftime(rdtg, "%Y-%m-%d_%H:%M:%S") + \
                     "." + msecs
                 f_name = rmq.exchange + "_" + queue["routing_key"] + "_" + \
                     dtg + ".body"
@@ -529,7 +525,8 @@ def process_msg(rmq, log, cfg, method, body):
         non_proc_msg(rmq, log, cfg, body, "No queue detected", r_key)
 
 
-def convert_data(rmq, log, cfg, queue, body, r_key):
+def convert_data(                               # pylint:disable=R0913,R0914
+        rmq, log, cfg, queue, body, r_key):
 
     """Function:  convert_data
 
@@ -572,7 +569,9 @@ def convert_data(rmq, log, cfg, queue, body, r_key):
 
     if queue["stype"] == "encoded":
         log.log_info("convert_data:  Decoding data in message body.")
-        base64.decode(io.open(t_file, "rb"), io.open(f_name, "wb"))
+        base64.decode(
+            io.open(t_file, "rb"),                      # pylint:disable=R1732
+            io.open(f_name, "wb"))                      # pylint:disable=R1732
         os.remove(t_file)
 
     else:
@@ -610,7 +609,7 @@ def read_pdf(filename, log):
 
     text = ""
     status = True
-    pdf = io.open(filename, "rb")
+    pdf = io.open(filename, "rb")                       # pylint:disable=R1732
     pdfreader = PyPDF2.PdfFileReader(pdf)
 
     if pdfreader.isEncrypted:
@@ -675,7 +674,7 @@ def summarize_data(categorized_text, token_types):
         current_type, data_list, tmp_data = sort_data(
             item, current_type, data_list, tmp_data, token_types)
 
-    else:
+    else:                                               # pylint:disable=W0120
         if tmp_data:
             data_list = merge_data(data_list, tmp_data)
 
@@ -978,7 +977,7 @@ def pdf_to_string(f_name, log):
             status = False
             text = ""
 
-    data = (out_string.getvalue())
+    data = out_string.getvalue()
     text = data.replace(".", "")
 
     return status, text
@@ -1034,11 +1033,10 @@ def process_message(queue, cfg, f_name, log):
 
     """
 
-    global DTG_FORMAT
-
     status = True
     log.log_info("process_message:  Extracting and processing metadata.")
-    dtg = datetime.datetime.strftime(datetime.datetime.now(), DTG_FORMAT)
+    dtg = datetime.datetime.strftime(
+        datetime.datetime.now(), "%Y-%m-%d_%H:%M:%S")
     metadata = {"FileName": os.path.basename(f_name),
                 "Directory": queue["directory"],
                 "DateTime": dtg}
@@ -1099,7 +1097,7 @@ def monitor_queue(cfg, log):
 
     """
 
-    def callback(channel, method, properties, body):
+    def callback(channel, method, properties, body):    # pylint:disable=W0613
 
         """Function:  callback
 
@@ -1138,8 +1136,8 @@ def monitor_queue(cfg, log):
             log.log_info(f'Initialized RabbitMQ node: {queue["queue"]}')
 
         else:
-            log.log_err("Initialization failed RabbuitMQ: %s -> Msg: %s" %
-                        (queue["queue"], err_msg))
+            log.log_err(f'Initialization failed RabbuitMQ: {queue["queue"]}'
+                        f' -> Msg: {err_msg}')
 
         rmq.drop_connection()
 

@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Logger(object):
+class Logger():
 
     """Class:  Logger
 
@@ -40,7 +40,8 @@ class Logger(object):
 
     """
 
-    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+    def __init__(                                       # pylint:disable=R0913
+            self, job_name, job_log, log_type, log_format, log_time):
 
         """Method:  __init__
 
@@ -82,7 +83,7 @@ class Logger(object):
         self.data = data
 
 
-class CfgTest2(object):
+class CfgTest2():                                       # pylint:disable=R0903
 
     """Class:  CfgTest2
 
@@ -115,7 +116,7 @@ class CfgTest2(object):
         self.db_auth = None
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 

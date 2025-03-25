@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_metadata
-import version
+import rmq_metadata                             # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Logger(object):
+class Logger():
 
     """Class:  Logger
 
@@ -40,7 +40,8 @@ class Logger(object):
 
     """
 
-    def __init__(self, job_name, job_log, log_type, log_format, log_time):
+    def __init__(                                       # pylint:disable=R0913
+            self, job_name, job_log, log_type, log_format, log_time):
 
         """Method:  __init__
 
@@ -82,7 +83,7 @@ class Logger(object):
         self.data = data
 
 
-class PageExtract(object):
+class PageExtract():                                    # pylint:disable=R0903
 
     """Class:  PageExtract
 
@@ -103,13 +104,9 @@ class PageExtract(object):
 
         """
 
-        if sys.version_info < (3, 0):
-            self.body = u'Intheseunprecedentedtimeswewanttomakesurewecankeep'
+        self.body = 'Intheseunprecedentedtimeswewanttomakesurewecankeep'
 
-        else:
-            self.body = 'Intheseunprecedentedtimeswewanttomakesurewecankeep'
-
-    def extractText(self):
+    def extractText(self):                              # pylint:disable=C0103
 
         """Method:  extractText
 
@@ -122,7 +119,7 @@ class PageExtract(object):
         return self.body
 
 
-class PyPDF2(object):
+class PyPDF2():                                         # pylint:disable=R0903
 
     """Class:  PyPDF2
 
@@ -145,11 +142,11 @@ class PyPDF2(object):
         """
 
         self.fname = fname
-        self.numPages = 1
+        self.numPages = 1                               # pylint:disable=C0103
         self.pagenum = None
-        self.isEncrypted = False
+        self.isEncrypted = False                        # pylint:disable=C0103
 
-    def getPage(self, pagenum):
+    def getPage(self, pagenum):                         # pylint:disable=C0103
 
         """Method:  getPage
 
