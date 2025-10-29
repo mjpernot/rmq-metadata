@@ -254,7 +254,8 @@ import datetime
 import io
 import base64
 import chardet
-import PyPDF2
+#import PyPDF2
+import pypdf
 import textract
 from nltk.tokenize import word_tokenize
 from nltk.tag import StanfordNERTagger
@@ -597,7 +598,7 @@ def read_pdf(filename, log):
 
     """Function:  read_pdf
 
-    Description:  Extract text from a PDF file using the PyPDF2 module.
+    Description:  Extract text from a PDF file using the pypdf module.
 
     Arguments:
         (input) filename -> PDF file name
@@ -609,22 +610,28 @@ def read_pdf(filename, log):
 
     text = ""
     status = True
-    pdf = io.open(filename, "rb")                       # pylint:disable=R1732
-    pdfreader = PyPDF2.PdfFileReader(pdf)
+#    pdf = io.open(filename, "rb")                       # pylint:disable=R1732
+    pdf = io.open(filename, "rb")
+#    pdfreader = PyPDF2.PdfFileReader(pdf)
+    pdfreader = pypdf.PdfReader(pdf)
 
-    if pdfreader.isEncrypted:
+#    if pdfreader.isEncrypted:
+    if pdfreader.is_encrypted:
         log.log_err("read_pdf:  PDF is encrypted.")
         status = False
 
     else:
         log.log_info("read_pdf:  Extracting data...")
         count = 0
-        num_pages = pdfreader.numPages
+#        num_pages = pdfreader.numPages
+        num_pages = pdfreader.get_num_pages()
 
         while count < num_pages:
-            page = pdfreader.getPage(count)
+#            page = pdfreader.getPage(count)
+            page = pdfreader.get_page(count)
             count += 1
-            text += page.extractText()
+#            text += page.extractText()
+            text += page.extract_text()
 
     return status, text
 
@@ -759,7 +766,7 @@ def get_pypdf2_data(f_name, cfg, log):
     """Function:  get_pypdf2_data
 
     Description:  Tokenize, categorize, summarize the raw data from the PDF
-        file extracted using PyPDF2 module.
+        file extracted using pypdf module.
 
     Arguments:
         (input) f_name -> PDF file name
@@ -770,7 +777,7 @@ def get_pypdf2_data(f_name, cfg, log):
 
     """
 
-    log.log_info("get_pypdf2_data:  Extracting data using PyPDF2.")
+    log.log_info("get_pypdf2_data:  Extracting data using pypdf.")
     final_data = []
     status, rawtext = read_pdf(f_name, log)
 
@@ -1041,21 +1048,21 @@ def process_message(queue, cfg, f_name, log):
                 "Directory": queue["directory"],
                 "DateTime": dtg}
 
-    # Use the PyPDF2 module to extract data.
+    # Use the pypdf module to extract data
     status_pypdf2, final_data = get_pypdf2_data(f_name, cfg, log)
 
     if status_pypdf2:
-        log.log_info("process_message:  Adding metadata from pypdf2.")
+        log.log_info("process_message:  Adding metadata from pypdf.")
         metadata = create_metadata(metadata, final_data)
 
-    # Use the textract module to extract data.
+    # Use the textract module to extract data
     status_textract, final_data = get_textract_data(f_name, cfg, log)
 
     if status_textract:
         log.log_info("process_message:  Adding metadata from textract.")
         metadata = create_metadata(metadata, final_data)
 
-    # Use the pdfminer module to extract data.
+    # Use the pdfminer module to extract data
     status_pdfminer, final_data = get_pdfminer_data(f_name, cfg, log)
 
     if status_pdfminer:

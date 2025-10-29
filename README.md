@@ -169,8 +169,8 @@ Make the appropriate changes to the RabbitMQ environment.
 
 ```
 cp config/rabbitmq.py.TEMPLATE config/rabbitmq.py
-vim config/rabbitmq.py
 chmod 600 config/rabbitmq.py
+vim config/rabbitmq.py
 ```
 
 Create Mongodb configuration file.  Make the appropriate change to the environment.
@@ -220,8 +220,8 @@ set.
 
 ```
 cp config/mongo.py.TEMPLATE config/mongo.py
-vim config/mongo.py
 chmod 600 config/mongo.py
+vim config/mongo.py
 ```
 
 (Optional)  Setup program to be ran as a service.
@@ -341,8 +341,8 @@ Make the appropriate changes to the RabbitMQ environment.
 
 ```
 cp config/rabbitmq.py.TEMPLATE test/integration/rmq_metadata/rabbitmq.py
-vim test/integration/rmq_metadata/rabbitmq.py
 chmod 600 test/integration/rmq_metadata/rabbitmq.py
+vim test/integration/rmq_metadata/rabbitmq.py
 ```
 
 Make the appropriate changes to the Mongo environment.
@@ -367,8 +367,8 @@ Make the appropriate changes to the Mongo environment.
 
 ```
 cp config/mongo.py.TEMPLATE test/integration/rmq_metadata/mongo.py
-vim test/integration/rmq_metadata/mongo.py
 chmod 600 test/integration/rmq_metadata/mongo.py
+vim test/integration/rmq_metadata/mongo.py
 ```
 
 ### Testing:

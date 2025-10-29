@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.9] - 2025-10-29
+- Updated supporting library modules for Python 3.9
+- Added support for Python 3.13
+- Updated python-lib to v4.1.1
+- Updated rabbitmq-lib to v2.4.2
+- Updated mongo-lib to v4.5.4
+- Updated simplejson=3.19.2
+- Updated mock==5.2.0
+- Updated Pillow==11.3.0
+- Updated typing-extensions==4.15.0
+- Updated XlsxWriter==3.2.9
+- Updated joblib==1.5.2
+- Updated tqdm==4.67.1
+- Updated click==8.1.8
+- Updated regex==2025.10.23
+- Updated nltk==3.9.2
+- Updated pycryptodome==3.23.0
+- Updated pdfminer==20191110
+- Updated soupsieve==2.8
+- Updated docx2txt==0.9
+- Updated argcomplete==1.10.3
+- Updated tzlocal==5.3.1
+- Updated python-pptx==0.6.23
+- Updated olefile==0.47
+- Updated beautifulsoup4==4.8.2
+- Updated extract-msg==0.28.7
+- Updated textract==1.6.5
+- Added compressed-rtf==1.0.7
+- Added ebcdic==1.1.1
+- Added pypdf==6.1.3
+- Removed PyPDF2 library module
+- Removed EbookLib library module
+- Removed pytz library module
+
+### Changed
+- read_pdf: Replaced "PyPDF2" with "pypdf" and updated associated attributes and methods with the methods from "pypdf".
+- Replaced library module PyPDF2 with pypdf.
+- Documentation changes.
+
+### Deprecated
+- Support for Mongo 4.2
+
+
 ## [0.1.8] - 2025-03-21
 Breaking changes
 

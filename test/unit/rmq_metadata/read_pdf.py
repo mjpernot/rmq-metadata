@@ -91,6 +91,7 @@ class PageExtract():                                    # pylint:disable=R0903
 
     Methods:
         __init__
+        extract_text
 
     """
 
@@ -106,9 +107,9 @@ class PageExtract():                                    # pylint:disable=R0903
 
         self.body = 'Intheseunprecedentedtimeswewanttomakesurewecankeep'
 
-    def extractText(self):                              # pylint:disable=C0103
+    def extract_text(self):
 
-        """Method:  extractText
+        """Method:  extract_text
 
         Description:  Extract data from page.
 
@@ -119,15 +120,16 @@ class PageExtract():                                    # pylint:disable=R0903
         return self.body
 
 
-class PyPDF2():                                         # pylint:disable=R0903
+class pypdf():
 
-    """Class:  PyPDF2
+    """Class:  pypdf
 
-    Description:  Class which is a representation of PyPDF2 class.
+    Description:  Class which is a representation of pypdf class.
 
     Methods:
         __init__
-        getPage
+        get_page
+        get_num_pages
 
     """
 
@@ -142,13 +144,13 @@ class PyPDF2():                                         # pylint:disable=R0903
         """
 
         self.fname = fname
-        self.numPages = 1                               # pylint:disable=C0103
+        self.num_pages = 1
         self.pagenum = None
-        self.isEncrypted = False                        # pylint:disable=C0103
+        self.is_encrypted = False
 
-    def getPage(self, pagenum):                         # pylint:disable=C0103
+    def get_page(self, pagenum):
 
-        """Method:  getPage
+        """Method:  get_page
 
         Description:  Data from page number passed.
 
@@ -159,6 +161,18 @@ class PyPDF2():                                         # pylint:disable=R0903
         self.pagenum = pagenum
 
         return PageExtract()
+
+    def get_num_pages(self):
+
+        """Method:  get_num_pages
+
+        Description:  Return number of pages in document.
+
+        Arguments:
+
+        """
+
+        return self.num_pages
 
 
 class UnitTest(unittest.TestCase):
@@ -189,10 +203,10 @@ class UnitTest(unittest.TestCase):
                              "%m-%d-%YT%H:%M:%SZ|")
         self.tmpdir = "./test/unit/rmq_metadata/testfiles"
         self.filename = os.path.join(self.tmpdir, "t_file.txt")
-        self.pdfr = PyPDF2(self.filename)
+        self.pdfr = pypdf(self.filename)
         self.body = "Intheseunprecedentedtimeswewanttomakesurewecankeep"
 
-    @mock.patch("rmq_metadata.PyPDF2.PdfFileReader")
+    @mock.patch("rmq_metadata.pypdf.PdfReader")
     def test_is_encrypted(self, mock_pypdf):
 
         """Function:  test_is_encrypted
@@ -203,14 +217,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.pdfr.isEncrypted = True
+        self.pdfr.is_encrypted = True
 
         mock_pypdf.return_value = self.pdfr
 
-        self.assertEqual(rmq_metadata.read_pdf(self.filename, self.logger),
-                         (False, ""))
+        self.assertEqual(
+            rmq_metadata.read_pdf(self.filename, self.logger), (False, ""))
 
-    @mock.patch("rmq_metadata.PyPDF2.PdfFileReader")
+    @mock.patch("rmq_metadata.pypdf.PdfReader")
     def test_not_encrypted(self, mock_pypdf):
 
         """Function:  test_not_encrypted
@@ -223,10 +237,11 @@ class UnitTest(unittest.TestCase):
 
         mock_pypdf.return_value = self.pdfr
 
-        self.assertEqual(rmq_metadata.read_pdf(self.filename, self.logger),
-                         (True, self.body))
+        self.assertEqual(
+            rmq_metadata.read_pdf(
+                self.filename, self.logger), (True, self.body))
 
-    @mock.patch("rmq_metadata.PyPDF2.PdfFileReader")
+    @mock.patch("rmq_metadata.pypdf.PdfReader")
     def test_read_pdf(self, mock_pypdf):
 
         """Function:  test_read_pdf
@@ -239,8 +254,9 @@ class UnitTest(unittest.TestCase):
 
         mock_pypdf.return_value = self.pdfr
 
-        self.assertEqual(rmq_metadata.read_pdf(self.filename, self.logger),
-                         (True, self.body))
+        self.assertEqual(
+            rmq_metadata.read_pdf(
+                self.filename, self.logger), (True, self.body))
 
 
 if __name__ == "__main__":
