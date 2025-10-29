@@ -30,10 +30,16 @@
 
 # Prerequisites:
   * List of Linux packages that need to be installed on the server.
-    - openjdk-8-jdk
+    - openjdk-8-jdk or better
     - python3-pip
     - python3-devel
     - gcc
+
+  * Stanford Named Entity Recognizer:  Require the use the English language module and Stanford jar.  These are part of the Stanford NER package which can be downloaded from https://nlp.stanford.edu/software/CRF-NER.html#Download site.  Download the "stanford-ner-4.2.0.zip" file with a v4.2.0 or better.
+    - Install this in the user's directory who will run this program and will need access to the "english.all.3class.distsim.crf.ser.gz" and "stanford-ner.jar" files.
+    - In the config/rabbitmq.py:
+      lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
+      stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
 
   * Secure Environment:  If operating in a Secure environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.  In addition, other modules may require to have the same modification as the auth.py module.  If a stacktrace occurs and it states "= hashlib.md5()" is the problem, then note the module name "= hashlib.md5()" is in and make the same change as in auth.py:  "usedforsecurity=False".
     - Locate the auth.py file python installed packages on the system in the pymongo package directory.
