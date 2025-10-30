@@ -1,0 +1,19 @@
+[Unit]
+Description=RabbitMQ to Metadata
+After=rabbitmq-server.service
+
+[Service]
+Type=simple
+User=root
+
+WorkingDirectory=/opt/local/rmq-metadata
+ExecStart=/opt/local/rmq-sysmon/daemon_rmq_metadata.py -a start -c rabbitmq -d /opt/local/rmq-metadata/config -M
+ExecStop=/opt/local/rmq-sysmon/daemon_rmq_metadata.py -a stop -c rabbitmq -d /opt/local/rmq-metadata/config -M
+
+# optional items below
+Restart=on-failure
+RestartSec=10
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

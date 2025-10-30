@@ -96,39 +96,6 @@ class ArgParser():
         return list(self.args_array.keys())
 
 
-class CfgTest2():                                       # pylint:disable=R0903
-
-    """Class:  CfgTest2
-
-    Description:  Class which is a representation of a cfg module.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Initialization instance of the CfgTest class.
-
-        Arguments:
-
-        """
-
-        self.host = "IP_Address"
-        self.port = 27017
-        self.name = "HostName"
-        self.conf_file = None
-        self.auth = True
-        self.dbs = "Database_Name"
-        self.tbl = "Table_Name"
-        self.repset = None
-        self.repset_hosts = None
-        self.db_auth = None
-
-
 class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
@@ -180,8 +147,6 @@ class CfgTest():                                        # pylint:disable=R0903
              "ext": "pdf",
              "stype": "encoded",
              "archive": False}]
-        self.mongo_cfg = "mongo"
-        self.mongo = None
 
 
 class ProgramLock():                                    # pylint:disable=R0903
@@ -247,7 +212,6 @@ class UnitTest(unittest.TestCase):
             "-c": "config_file", "-d": "config_dir", "-M": True,
             "-y": "flavorid"}
         self.cfg = CfgTest()
-        self.mongo_cfg = CfgTest2()
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
         self.func_names = {"-M": monitor_queue}
 
@@ -266,7 +230,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
-        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_load.return_value = self.cfg
         mock_valid.return_value = (self.cfg, True, "")
         mock_class.Logger.log_close.return_value = True
         mock_class.ProgramLock.return_value = self.proglock
@@ -289,7 +253,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
-        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_load.return_value = self.cfg
         mock_valid.return_value = (self.cfg, True, "")
         mock_class.Logger.log_close.return_value = True
         mock_class.ProgramLock.return_value = self.proglock
@@ -311,7 +275,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_log.return_value = True
-        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_load.return_value = self.cfg
         mock_valid.return_value = (self.cfg, False, "Failed to load cfg")
 
         with gen_libs.no_std_out():
@@ -332,7 +296,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_log.return_value = rmq_metadata.gen_class.Logger
-        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_load.return_value = self.cfg
         mock_valid.return_value = (self.cfg, True, "")
         mock_log.log_close.return_value = True
 
@@ -356,7 +320,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_class.Logger.return_value = rmq_metadata.gen_class.Logger
-        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_load.return_value = self.cfg
         mock_valid.return_value = (self.cfg, True, "")
         mock_class.Logger.log_close.return_value = True
         mock_class.ProgramLock.return_value = self.proglock
@@ -382,7 +346,7 @@ class UnitTest(unittest.TestCase):
         mock_log.return_value = rmq_metadata.gen_class.Logger
         mock_log.log_info.return_value = True
         mock_log.log_close.return_value = True
-        mock_load.side_effect = [self.cfg, self.mongo_cfg]
+        mock_load.return_value = self.cfg
         mock_valid.return_value = (self.cfg, True, "")
 
         self.assertFalse(rmq_metadata.run_program(self.args, self.func_names))

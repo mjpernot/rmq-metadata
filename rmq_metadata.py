@@ -1,43 +1,20 @@
-#!/bin/sh
+#!/usr/bin/python
 # Classification (U)
 
-# Shell commands follow
-# Next line is bilingual: it starts a comment in Python & is a no-op in shell
-""":"
-
-# Find a suitable python interpreter (can adapt for specific needs)
-# NOTE: Ignore this section if passing the -h option to the program.
-#   This code must be included in the program's initial docstring.
-for cmd in python3.12 python3.9 ; do
-   command -v > /dev/null $cmd && exec $cmd $0 "$@"
-done
-
-echo "OMG Python not found, exiting...."
-
-exit 2
-
-# Previous line is bilingual: it ends a comment in Python & is a no-op in shell
-# Shell commands end here
-
-   Program:  rmq_metadata.py
+"""Program:  rmq_metadata.py
 
     Description:  Processes PDFs from a RabbitMQ.  The program will offload a
         PDF file from a RabbitMQ, decode the PDF, extract meta-data from the
         PDF, tokenize and classify the meta-data.  The meta-data will then be
-        summarized and inserted into a Mongo database and the PDF written to a
-        file.
+        summarized and saved to a metadata file and the PDF written to a file.
 
     Usage:
-        rmq_metadata.py -c config_file -d dir_path
-            {-M}
-            [-y flavor_id]
+        rmq_metadata.py -c config_file -d dir_path {-M} [-y flavor_id]
             [-v | -h]
 
     Arguments:
-        -c config_file => RabbitMQ/Mongo configuration file.
-            Required argument.
+        -c config_file => RabbitMQ configuration file.
         -d dir_path => Directory path for option '-c'.
-            Required argument.
 
         -M => Monitor and process messages from a RabbitMQ queue.
 
@@ -77,87 +54,16 @@ exit 2
             token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
             textract_codes = ["utf-8", "ascii", "iso-8859-1"]
             queue_list = [
-                    {"queue": "QUEUE_NAME",
-                     "routing_key": "ROUTING_KEY",
-                     "directory": "DIR_PATH",
-                     "prename": "",
-                     "postname": "",
-                     "mode": "w",
-                     "ext": "pdf",
-                     "stype": "encoded",
-                     "archive": True
-                    },
-                    {"queue": "QUEUE_NAME",
-                     "routing_key": "ROUTING_KEY",
-                     "directory": "DIR_PATH",
-                     "prename": "",
-                     "postname": "",
-                     "mode": "w",
-                     "ext": "pdf",
-                     "stype": "encoded",
-                     "flatten": True
-                    }
-                ]
-            mongo_cfg = "mongo"
-            mongo = None
-
-        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
-            configuration file format is for connecting to a Mongo database or
-            replica set for monitoring.  A second configuration file can also
-            be used to connect to a Mongo database or replica set to insert the
-            results of the performance monitoring into.
-
-            There are two ways to connect methods:  single Mongo database or a
-            Mongo replica set.
-
-            Single database connection:
-
-            # Single Configuration file for Mongo Database Server.
-            user = "USER"
-            japd = "PSWORD"
-            host = "HOST_IP"
-            name = "HOSTNAME"
-            port = 27017
-            conf_file = None
-            auth = True
-            auth_db = "admin"
-            auth_mech = "SCRAM-SHA-1"
-            use_arg = True
-            use_uri = False
-            db = "DATABASE"
-            tbl = "TABLE"
-
-            Replica set connection:  Same format as above, but with these
-                additional entries at the end of the configuration file.  By
-                default all these entries are set to None to represent not
-                connecting to a replica set.
-
-            repset = "REPLICA_SET_NAME"
-            repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
-            db_auth = "AUTHENTICATION_DATABASE"
-
-            If Mongo is set to use TLS or SSL connections, then one or more of
-                the following entries will need to be completed to connect
-                using TLS or SSL protocols.
-                Note:  Read the configuration file to determine which entries
-                    will need to be set.
-
-                SSL:
-                    auth_type = None
-                    ssl_client_ca = None
-                    ssl_client_key = None
-                    ssl_client_cert = None
-                    ssl_client_phrase = None
-                TLS:
-                    auth_type = None
-                    tls_ca_certs = None
-                    tls_certkey = None
-                    tls_certkey_phrase = None
-
-            Note:  Secure Environment for Mongo.
-              See README.md under the Prerequisites section.
-            - Will require the Mongo configuration file entry auth_mech to be
-                set to: SCRAM-SHA-1 or SCRAM-SHA-256.
+                {"queue": "QUEUE_NAME",
+                 "routing_key": "ROUTING_KEY",
+                 "directory": "DIR_PATH",
+                 "prename": "",
+                 "postname": "",
+                 "mode": "w",
+                 "ext": "pdf",
+                 "stype": "encoded",
+                 "archive": True
+                }]
 
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
@@ -172,8 +78,7 @@ exit 2
         Service:
             service rmq_metadata start
 
-":"""
-# Python program follows
+"""
 
 # Libraries and Global Variables
 
@@ -186,7 +91,6 @@ import datetime
 import io
 import base64
 import chardet
-#import PyPDF2
 import pypdf
 import textract
 from nltk.tokenize import word_tokenize
@@ -204,14 +108,12 @@ try:
     from .lib import gen_libs
     from .lib import gen_class
     from .rabbit_lib import rabbitmq_class
-    from .mongo_lib import mongo_libs
     from . import version
 
 except (ValueError, ImportError) as err:
     import lib.gen_libs as gen_libs                     # pylint:disable=R0402
     import lib.gen_class as gen_class                   # pylint:disable=R0402
     import rabbit_lib.rabbitmq_class as rabbitmq_class  # pylint:disable=R0402
-    import mongo_lib.mongo_libs as mongo_libs           # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -517,10 +419,9 @@ def convert_data(                               # pylint:disable=R0913,R0914
         log.log_info(f"Finished processing of: {f_filename}")
 
     else:
-        log.log_err(f"Insert or extractions failed on: {f_filename}")
+        log.log_err(f"Extractions failed on: {f_filename}")
         log.log_info("Body of message being saved to a file - see below")
-        non_proc_msg(rmq, log, cfg, body,
-                     "All extractions or Mongo insertion failure", r_key)
+        non_proc_msg(rmq, log, cfg, body, "All extractions failed", r_key)
         os.remove(f_name)
         log.log_info("Cleanup of temporary files completed.")
         log.log_info(f"Finished processing of: {f_filename}")
@@ -564,6 +465,8 @@ def read_pdf(filename, log):
             count += 1
 #            text += page.extractText()
             text += page.extract_text()
+
+    pdf.close()
 
     return status, text
 
@@ -1002,20 +905,9 @@ def process_message(queue, cfg, f_name, log):
         metadata = create_metadata(metadata, final_data)
 
     if status_pypdf2 or status_textract or status_pdfminer:
-        log.log_info("process_message:  Insert metadata into MongoDB.")
-        mongo_stat = mongo_libs.ins_doc(cfg.mongo, cfg.mongo.dbs,
-                                        cfg.mongo.tbl, metadata)
-
-        if not mongo_stat[0]:
-            log.log_err("process_message: Insert of data into MongoDB failed.")
-            log.log_err(f"Mongo error message:  {mongo_stat[1]}")
-            status = False
-
-        else:
-            log.log_info(
-                f'process_message:  Moving PDF to: {queue["directory"]}')
-            gen_libs.mv_file2(
-                f_name, queue["directory"], os.path.basename(f_name))
+#       Enter code to save metadata to a file.
+        log.log_info(f'process_message:  Moving PDF to: {queue["directory"]}')
+        gen_libs.mv_file2(f_name, queue["directory"], os.path.basename(f_name))
 
     else:
         log.log_err("process_message:  All extractions methods failed.")
@@ -1124,7 +1016,6 @@ def run_program(args, func_dict, **kwargs):
 
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
-    cfg.mongo = gen_libs.load_module(cfg.mongo_cfg, args.get_val("-d"))
     cfg, status_flag, err_msg = validate_create_settings(cfg)
 
     if status_flag:

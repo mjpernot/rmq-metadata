@@ -1,1 +1,0 @@
-git+ssh://git@sc.appdev.proj.coe.ic.gov/JAC-DSXD/mongo-lib.git@4.5.4#egg=mongo-lib

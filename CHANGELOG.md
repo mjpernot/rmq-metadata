@@ -5,11 +5,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.1.9] - 2025-10-29
-- Updated supporting library modules for Python 3.9
-- Added support for Python 3.13
+- Updated supporting library modules for Python 3.9.
+- Removed ability to insert into Mongo database.
+- Added support for Python 3.13.
 - Updated python-lib to v4.1.1
 - Updated rabbitmq-lib to v2.4.2
-- Updated mongo-lib to v4.5.4
 - Updated simplejson=3.19.2
 - Updated mock==5.2.0
 - Updated Pillow==11.3.0
@@ -34,17 +34,26 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added compressed-rtf==1.0.7
 - Added ebcdic==1.1.1
 - Added pypdf==6.1.3
-- Removed PyPDF2 library module
-- Removed EbookLib library module
-- Removed pytz library module
+- Removed PyPDF2 library module.
+- Removed EbookLib library module.
+- Removed pytz library module.
+- Removed pymongo library module.
+- Removed psutil library module.
 
 ### Changed
+- convert_data: Removed reference to Mongo.
+- run_program: Removed setting up configuration for Mongo.
+- process_message: Removed the mongo_libs.ins_doc call and associated error checking code.
 - read_pdf: Replaced "PyPDF2" with "pypdf" and updated associated attributes and methods with the methods from "pypdf".
 - Replaced library module PyPDF2 with pypdf.
 - Documentation changes.
 
 ### Deprecated
 - Support for Mongo 4.2
+
+### Removed
+- config/mongo.py.TEMPLATE: Mongo configuration file.
+- Removed pre-header check on allowable Python versions to run.
 
 
 ## [0.1.8] - 2025-03-21

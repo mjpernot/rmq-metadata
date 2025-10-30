@@ -2,15 +2,15 @@
 # Classification (U)
 
 # Description:
-  Python program that processes PDF files from RabbitMQ.  The program will decode the PDF file, extract meta-data from the PDF file, create a JSON object of the meta-data and insert the data into a Mongo database.
+  Python program that processes PDF files from RabbitMQ.  The program will decode the PDF file, extract meta-data from the PDF file, create a JSON object of the meta-data and write to a file.
 
 
 ###  This README file is broken down into the following sections:
  * Features
  * Prerequisites
-   - Secure Environment
  * Installation
  * Configuration
+ * System Service
  * Running
  * Program Help Function
  * Testing
@@ -23,7 +23,7 @@
  * Extract meta-data from the PDF file.
  * Tokenize and classify the extracted meta-data.
  * Summarize the meta-data and convert to a JSON object.
- * Insert JSON object into a Mongo database and save PDF to a Linux file.
+ * Save PDF and JSON metadata to a file.
  * Run the monitor program as a service/daemon.
  * Setup the program up as a service.
 
@@ -40,12 +40,6 @@
     - In the config/rabbitmq.py:
       lang_module = "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
       stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
-
-  * Secure Environment:  If operating in a Secure environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.  In addition, other modules may require to have the same modification as the auth.py module.  If a stacktrace occurs and it states "= hashlib.md5()" is the problem, then note the module name "= hashlib.md5()" is in and make the same change as in auth.py:  "usedforsecurity=False".
-    - Locate the auth.py file python installed packages on the system in the pymongo package directory.
-    - Edit the file and locate the \_password_digest function.
-    - In the \_password_digest function there is an line that should match: "md5hash = hashlib.md5()".  Change it to "md5hash = hashlib.md5(usedforsecurity=False)".
-    - Lastly, it will require the configuration file entry auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
 # Installation:
 
@@ -71,8 +65,6 @@ Install supporting classes and libraries.
 
 ```
 python -m pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-python -m pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-python -m pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 python -m pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
@@ -165,69 +157,11 @@ Make the appropriate changes to the RabbitMQ environment.
       -> Archive the raw body of the RMQ PDF file.
       -> The archive_dir must be set above for this to take place.
       -> Default:  True.
-  * Mongo configuration file name.
-    - mongo_cfg = "mongo"
-      -> Do not change the default unless changing the mongo configuration file name in the next section.
-      -> Only requires the base name of the file name.
-    - mongo = None
-      -> Mongo configuration instance.
-      -> For internal use.  Do not change.
 
 ```
 cp config/rabbitmq.py.TEMPLATE config/rabbitmq.py
 chmod 600 config/rabbitmq.py
 vim config/rabbitmq.py
-```
-
-Create Mongodb configuration file.  Make the appropriate change to the environment.
-  * Make the appropriate changes to connect to a Mongo database.
-    - user = "USER"
-    - japd = "PSWORD"
-    - host = "HOST_IP"
-    - name = "HOSTNAME"
-
-  * Change these entries only if required:
-    - port = 27017
-    - conf_file = None
-    - auth = True
-    - auth_db = "admin"
-    - auth_mech = "SCRAM-SHA-1"
-    - use_arg = True
-    - use_uri = False
-
-  * Notes for auth_mech configuration entry:
-    - NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
-    - NOTE 2:  FIPS 140-2 environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
-
-  * If connecting to a Mongo replica set, otherwise set to None.
-    - repset = "REPLICA_SET_NAME"
-    - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
-    - db_auth = "AUTHENTICATION_DATABASE"
-
-  * If Mongo is set to use TLS or SSL connections, then one or more of the following entries will need to be completed to connect using TLS or SSL protocols.  Note:  Read the configuration file to determine which entries will need to be
-set.
-    - SSL:
-        -> auth_type = None
-        -> ssl_client_ca = None
-        -> ssl_client_key = None
-        -> ssl_client_cert = None
-        -> ssl_client_phrase = None
-    - TLS:
-        -> auth_type = None
-        -> tls_ca_certs = None
-        -> tls_certkey = None
-        -> tls_certkey_phrase = None 
-
-  * Secure Environment for Mongo:  See Prerequisites -> Secure Environment section for details.
-
-  * Set the database and collection names where the data will be inserted into.
-    - dbs = "DATABASE"
-    - tbl = "TABLE"
-
-```
-cp config/mongo.py.TEMPLATE config/mongo.py
-chmod 600 config/mongo.py
-vim config/mongo.py
 ```
 
 (Optional)  Setup program to be ran as a service.
@@ -253,26 +187,42 @@ sudo chown USER_NAME config/rabbitmq.py
 ```
 
 
-# Running
+# System Service
 
-### Running as a service.
+Modify the systemctl file to change the variables to reflect the environment setup.
+  * Change the working or program directory in rmq-metadata.service file, if installed differently.
+  * Change the RabbitMQ configuration file if using a different name.
+    - WorkingDirectory=/opt/local/rmq-metadata
+    - ExecStart=/opt/local/rmq-sysmon/daemon_rmq_metadata.py -a start -c rabbitmq -d /opt/local/rmq-metadata/config -M
+    - ExecStop=/opt/local/rmq-sysmon/daemon_rmq_metadata.py -a start -c rabbitmq -d /opt/local/rmq-metadata/config -M
 
 ```
-service rmq_metadata start
-service rmq_metadata stop
+sudo cp rmq-metadata.service /etc/systemd/system
+sudo vim /etc/systemd/system/rmq-metadata.service
+sudo systemctl enable rmq-metadata.service
+```
+
+
+# Running
+
+### Running as a systemctl.
+
+```
+sudo systemctl start rmq-metadata.service
+sudo systemctl stop rmq-metadata.service
 ```
 
 ### Running as a daemon.
 
 ```
-{Python_Project}/rmq-metadata/daemon_rmq_metadata.py -a start -c rabbitmq -d {Python_Project}/rmq-metadata/config -M
-{Python_Project}/rmq-metadata/daemon_rmq_metadata.py -a stop -c rabbitmq -d {Python_Project}/rmq-metadata/config -M
+/opt/local/rmq-metadata/daemon_rmq_metadata.py -a start -c rabbitmq -d /opt/local/rmq-metadata/config -M
+/opt/local/rmq-metadata/daemon_rmq_metadata.py -a stop -c rabbitmq -d /opt/local/rmq-metadata/config -M
 ```
 
 ### Running from the command line.
 
 ```
-{Python_Project}/rmq-metadata/rmq_metadata.py -c rabbitmq -d {Python_Project}/rmq-metadata/config -M
+/opt/local/rmq-metadata/rmq_metadata.py -c rabbitmq -d /opt/local/rmq-metadata/config -M
 <Ctrl-C>
 ```
 
@@ -305,7 +255,7 @@ test/unit/daemon_rmq_metadata/code_coverage.sh
 
 
 # Integration Testing:
-  * Note:  This test will require the use of a running RabbitMQ instance and a Mongo database or replica set.
+  * Note:  This test will require the use of a running RabbitMQ instance.
 
 ### Installation:
 
@@ -351,31 +301,6 @@ chmod 600 test/integration/rmq_metadata/rabbitmq.py
 vim test/integration/rmq_metadata/rabbitmq.py
 ```
 
-Make the appropriate changes to the Mongo environment.
-  * Change these entries in the mongo.py file.  The "user", "japd", "host", and "name" variables are the connection information to a Mongo database, the other variables use the "Change to" settings.
-
-    - user = "USER"
-    - japd = "PSWORD"
-    - host = "HOST_IP"
-    - name = "HOSTNAME"
-    - port = 27017
-    - conf_file = None
-    - auth = True
-    - auth_db = "admin"
-    - auth_mech = "SCRAM-SHA-1"
-    - use_arg = True
-    - use_uri = False
-
-  * If connecting to a Mongo replica set:
-    - repset = "REPLICA_SET_NAME"
-    - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
-    - db_auth = "AUTHENTICATION_DATABASE"
-
-```
-cp config/mongo.py.TEMPLATE test/integration/rmq_metadata/mongo.py
-chmod 600 test/integration/rmq_metadata/mongo.py
-vim test/integration/rmq_metadata/mongo.py
-```
 
 ### Testing:
 
