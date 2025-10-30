@@ -54,79 +54,28 @@ exit 2
 
         RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
 
-            # RabbitMQ Configuration file
             user = "USER"
             japd = "PSWORD"
             host = "HOSTNAME"
-            # RabbitMQ Exchange name being monitored.
             exchange_name = "EXCHANGE_NAME"
-            # Email address(es) to send non-processed messages to or None.
-            # None state no emails are required to be sent.
             to_line = "EMAIL_ADDRESS@EMAIL_DOMAIN"
-            # RabbitMQ listening port.
-            # Default is 5672.
             port = 5672
-            # Type of exchange.
-            # Names allowed:  direct, topic, fanout, headers
             exchange_type = "direct"
-            # Is exchange durable: True|False
             x_durable = True
-            # Are queues durable: True|False
             q_durable = True
-            # Queues automatically delete message after processing: True|False
             auto_delete = False
-            # Directory name for archived messages.
-            # Must be set if archive in any of the queue entries is set to
-            #   True.
-            # Note: If absolute paths are used in the message_dir, log_dir,
-            #   archive_dir, or tmp_dir entries, then they will be used in
-            #   place of combining the base directory and directory name.
             base_dir = "DIRECTORY_PATH"
-            # Directory name for non-processed messages.
             message_dir = "message_dir"
-            # Directory name for log files.
             log_dir = "logs"
-            # File name to program log.
-            # Note:  Name chould be changed to include the exchange name being
-            #   processed.
             log_file = "rmq_metadata.log"
-            # Directory name for archived messages.
-            # Must be set if archive in any of the queues is set to True.
-            # None states no archiving will take place.
-            # Syntax:  archive_dir = "archive"
             archive_dir = None
-            # Directory name for temporary message processing.
             tmp_dir = "tmp"
-            # These entries for the Stanford NLP library module.
-            # Path to Stanford language module.
-            # By default lang_module will point to the English language module.
             lang_module =
             "DIRECTORY_PATH/classifiers/english.all.3class.distsim.crf.ser.gz"
-            # Path to Stanford jar.
             stanford_jar = "DIRECTORY_PATH/stanford-ner.jar"
-            # Encoding code for Stanford module.
-            # Default setting is the utf-8 encoding code.
             encoding = "utf-8"
-            # List of Token types.
-            # Do not change unless you understand Stanford NLP and textract
-            #   modules.
             token_types = ["LOCATION", "PERSON", "ORGANIZATION"]
-            # List of textract module decodes.
-            # Do not change unless you understand textract module.
             textract_codes = ["utf-8", "ascii", "iso-8859-1"]
-            # List of queues to monitor.
-            # Make a copy of the dictionary for each combination of a queue
-                name and routing key.
-            # -> queue:  "QUEUE_NAME" - Name of queue to monitor.
-            # -> routing_key:  "ROUTING_KEY" - Name of routing key for queue.
-            # -> directory:  "/DIR_PATH" - Directory path to where a PDF will
-                be written to.
-            # -> prename:  "NAME" - Static pre-file name string.
-            # -> postname:  "NAME" - Static post-file name string.
-            # -> mode:  "a"|"w" - Write mode to the file.  Default is write.
-            # -> ext:  "pdf" - Extension name to the file name.
-            # -> stype:  "encode" - Require the PDF file to be decoded.
-            # -> archive:  True|False - Archive the RMQ body.
             queue_list = [
                     {"queue": "QUEUE_NAME",
                      "routing_key": "ROUTING_KEY",
@@ -149,11 +98,7 @@ exit 2
                      "flatten": True
                     }
                 ]
-            # Mongo configuration file
-            # Default is the name used in the README setup.
             mongo_cfg = "mongo"
-            # Mongo config setup.
-            # For internal use.  Do not change.
             mongo = None
 
         Mongo configuration file format (config/mongo.py.TEMPLATE).  The
@@ -179,6 +124,8 @@ exit 2
             auth_mech = "SCRAM-SHA-1"
             use_arg = True
             use_uri = False
+            db = "DATABASE"
+            tbl = "TABLE"
 
             Replica set connection:  Same format as above, but with these
                 additional entries at the end of the configuration file.  By
@@ -207,25 +154,10 @@ exit 2
                     tls_certkey = None
                     tls_certkey_phrase = None
 
-            Note:  FIPS Environment for Mongo.
-              If operating in a FIPS 104-2 environment, this package will
-              require at least a minimum of pymongo==3.8.0 or better.  It will
-              also require a manual change to the auth.py module in the pymongo
-              package.  See below for changes to auth.py.
-
-            - Locate the auth.py file python installed packages on the system
-                in the pymongo package directory.
-            - Edit the file and locate the "_password_digest" function.
-            - In the "_password_digest" function there is an line that should
-                match: "md5hash = hashlib.md5()".  Change it to
-                "md5hash = hashlib.md5(usedforsecurity=False)".
-            - Lastly, it will require the Mongo configuration file entry
-                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
-
-            # Name of Mongo database for data insertion
-            db = "DATABASE"
-            # Name of Mongo table/collection.
-            tbl = "TABLE"
+            Note:  Secure Environment for Mongo.
+              See README.md under the Prerequisites section.
+            - Will require the Mongo configuration file entry auth_mech to be
+                set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
@@ -319,7 +251,7 @@ def validate_create_settings(cfg):
     err_msg = ""
     status_flag = True
 
-    # Check on non-processed messages directory.
+    # Check on non-processed messages directory
     if not os.path.isabs(cfg.message_dir):
         cfg.message_dir = os.path.join(cfg.base_dir, cfg.message_dir)
 
@@ -346,7 +278,7 @@ def validate_create_settings(cfg):
         err_msg = err_msg + msg
         status_flag = False
 
-    # Check on archived messages directory.
+    # Check on archived messages directory
     if cfg.archive_dir and not os.path.isabs(cfg.archive_dir):
         cfg.archive_dir = os.path.join(cfg.base_dir, cfg.archive_dir)
 
@@ -358,7 +290,7 @@ def validate_create_settings(cfg):
             err_msg = err_msg + msg
             status_flag = False
 
-    # Check on temporary message processing directory.
+    # Check on temporary message processing directory
     if not os.path.isabs(cfg.tmp_dir):
         cfg.tmp_dir = os.path.join(cfg.base_dir, cfg.tmp_dir)
 
@@ -372,7 +304,7 @@ def validate_create_settings(cfg):
     # Check on file entries.
     status_flag, err_msg = validate_files(cfg, status_flag, err_msg)
 
-    # Check on final directory for each queue.
+    # Check on final directory for each queue
     for queue in cfg.queue_list:
         status, msg = gen_libs.chk_crt_dir(
             queue["directory"], write=True, read=True, no_print=True)
@@ -399,7 +331,7 @@ def validate_files(cfg, status_flag, err_msg):
 
     """
 
-    # Check on Stanford NLP language module file.
+    # Check on Stanford NLP language module file
     if not os.path.isabs(cfg.lang_module):
         msg = f"lang_module not set to absolute path: {cfg.lang_module}"
         err_msg = err_msg + msg
@@ -413,7 +345,7 @@ def validate_files(cfg, status_flag, err_msg):
             err_msg = err_msg + msg
             status_flag = False
 
-    # Check on Stanford NLP jar file.
+    # Check on Stanford NLP jar file
     if not os.path.isabs(cfg.stanford_jar):
         msg = f"stanford_jar not set to absolute path: {cfg.stanford_jar}"
         err_msg = err_msg + msg
@@ -1150,7 +1082,7 @@ def monitor_queue(cfg, log):
 
     log.log_info("monitor_queue:  Start monitoring queue...")
 
-    # Connect to first queue as only one connection required.
+    # Connect to first queue as only one connection required
     rmq = rabbitmq_class.RabbitMQCon(
         cfg.user, cfg.japd, cfg.host, cfg.port,
         exchange_name=cfg.exchange_name, exchange_type=cfg.exchange_type,
@@ -1259,7 +1191,7 @@ def main(**kwargs):
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-y"]
 
-    # Process argument list from command line.
+    # Process argument list from command line
     args = gen_class.ArgParser(sys.argv, opt_val=opt_val_list)
 
     if args.arg_parse2()                                            \
